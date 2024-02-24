@@ -1,17 +1,14 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { TodoService } from './todo.service';
 import { TodoController } from './todo.controller';
 import { UserModule } from 'src/user/user.module';
-import { TypeOrmExModule } from 'src/db/typeorm-ex.module';
-import { TodoRepository } from 'src/db/repositories/TodoRepository';
-import { UserRepository } from 'src/db/repositories/UserRepository';
+import { Todo } from './entities/todo.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Module({
-  imports: [
-    TypeOrmExModule.forCustomRepository([TodoRepository, UserRepository]),
-    UserModule,
-  ],
+  imports: [TypeOrmModule.forFeature([User, Todo]), UserModule],
   controllers: [TodoController],
   providers: [TodoService],
   exports: [TodoService],
