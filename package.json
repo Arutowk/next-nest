@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": true,
   "workspaces": [
     "client",
     "server"
   ],
-  "scripts": {},
+  "scripts": {
+    "start:client": "cd client && yarn start",
+    "start:server": "cd server && yarn start:dev"
+  },
   "keywords": [],
-  "author": "arutowk",
-  "license": "MIT"
+  "author": "arutowk"
 }
