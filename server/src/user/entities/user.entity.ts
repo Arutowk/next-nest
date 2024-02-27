@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-// import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import {
+  BeforeInsert,
   //   BeforeInsert,
   Column,
   Entity,
@@ -36,9 +37,9 @@ export class User {
   @OneToMany(() => Todo, (todo) => todo.author, { cascade: true })
   todos: Todo[];
 
-  //   @BeforeInsert()
-  //   private async hashPassword() {
-  //     const salt = await bcrypt.genSalt();
-  //     this.password = await bcrypt.hash(this.password, salt);
-  //   }
+  @BeforeInsert()
+  private async hashPassword() {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 }
