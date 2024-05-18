@@ -1,112 +1,289 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import { socket, userName } from '../socket';
+
+let peerConfiguration = {
+  iceServers: [
+    {
+      urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'],
+    },
+  ],
+};
 
 export default function Home() {
+  const localVideoEl = useRef<HTMLVideoElement>(null!);
+  const remoteVideoEl = useRef<HTMLVideoElement>(null!);
+
+  const peerConnection = useRef<RTCPeerConnection>(null!);
+  // const localStream = useRef<MediaStream>(null!);
+  // const remoteStream = useRef<MediaStream>(null!);
+
+  const [localStream, setLocalStream] = useState<MediaStream | null>(null);
+  const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
+
+  const [isConnected, setIsConnected] = useState(false);
+  const [transport, setTransport] = useState('N/A');
+
+  const [didIOffer, setDidIOffer] = useState(false);
+
+  useEffect(() => {
+    if (socket.connected) {
+      onConnect();
+    }
+
+    function onConnect() {
+      setIsConnected(true);
+      setTransport(socket.io.engine.transport.name);
+
+      socket.io.engine.on('upgrade', (transport) => {
+        setTransport(transport.name);
+      });
+    }
+
+    function onDisconnect() {
+      setIsConnected(false);
+      setTransport('N/A');
+    }
+
+    function createOfferEls(offers: any[]) {
+      //make green answer button for this new offer
+      const answerEl = document.querySelector('#answer');
+      offers.forEach((o) => {
+        console.log(o);
+        const newOfferEl = document.createElement('div');
+        newOfferEl.innerHTML = `<button class="btn btn-success col-1">Answer ${o.offererUserName}</button>`;
+        newOfferEl.addEventListener('click', () => answerOffer(o));
+        answerEl!.appendChild(newOfferEl);
+      });
+    }
+
+    //on connection get all available offers and call createOfferEls
+    function availableOffers(offers: any) {
+      console.log(offers);
+      createOfferEls(offers);
+    }
+
+    //someone just made a new offer and we're already here - call createOfferEls
+    function newOfferAwaiting(offers: any) {
+      console.log('newOfferAwaiting...');
+      createOfferEls(offers);
+    }
+
+    function answerResponse(offerObj: any) {
+      console.log('answerResponse...');
+      console.log(offerObj);
+      addAnswer(offerObj);
+    }
+
+    function receivedIceCandidateFromServer(iceCandidate: any) {
+      console.log('receivedIceCandidateFromServer...');
+      addNewIceCandidate(iceCandidate);
+      console.log(iceCandidate);
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on('availableOffers', availableOffers);
+    socket.on('newOfferAwaiting', newOfferAwaiting);
+    socket.on('answerResponse', answerResponse);
+    socket.on('receivedIceCandidateFromServer', receivedIceCandidateFromServer);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off('availableOffers', availableOffers);
+      socket.off('newOfferAwaiting', newOfferAwaiting);
+      socket.off('answerResponse', answerResponse);
+      socket.off(
+        'receivedIceCandidateFromServer',
+        receivedIceCandidateFromServer,
+      );
+      socket.disconnect();
+    };
+  }, []);
+
+  const call = async () => {
+    await fetchUserMedia();
+
+    //peerConnection is all set with our STUN servers sent over
+    await createPeerConnection();
+
+    //create offer time!
+    try {
+      console.log('Creating offer...');
+      const offer = await peerConnection.current.createOffer();
+      console.log(offer);
+      peerConnection.current.setLocalDescription(offer);
+      setDidIOffer(true);
+      socket.emit('newOffer', offer); //send offer to signalingServer
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const answerOffer = async (offerObj: any) => {
+    await fetchUserMedia();
+    await createPeerConnection(offerObj);
+    const answer = await peerConnection.current.createAnswer({}); //just to make the docs happy
+    await peerConnection.current.setLocalDescription(answer); //this is CLIENT2, and CLIENT2 uses the answer as the localDesc
+    console.log(offerObj);
+    console.log(answer);
+    // console.log(peerConnection.signalingState) //should be have-local-pranswer because CLIENT2 has set its local desc to it's answer (but it won't be)
+    //add the answer to the offerObj so the server knows which offer this is related to
+    offerObj.answer = answer;
+    //emit the answer to the signaling server, so it can emit to CLIENT1
+    //expect a response from the server with the already existing ICE candidates
+    const offerIceCandidates = await socket.emitWithAck('newAnswer', offerObj);
+    offerIceCandidates.forEach((c: RTCIceCandidateInit) => {
+      peerConnection.current.addIceCandidate(c);
+      console.log('======Added Ice Candidate======');
+    });
+    console.log(offerIceCandidates);
+  };
+
+  const addAnswer = async (offerObj: any) => {
+    //addAnswer is called in socketListeners when an answerResponse is emitted.
+    //at this point, the offer and answer have been exchanged!
+    //now CLIENT1 needs to set the remote
+    await peerConnection.current.setRemoteDescription(offerObj.answer);
+    // console.log(peerConnection.signalingState)
+  };
+
+  const fetchUserMedia = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          // audio: true,
+        });
+        localVideoEl.current.srcObject = stream;
+        setLocalStream(stream);
+        resolve(1);
+      } catch (err) {
+        console.log(err);
+        reject();
+      }
+    });
+  };
+
+  const createPeerConnection = (offerObj?: any) => {
+    return new Promise(async (resolve, reject) => {
+      //RTCPeerConnection is the thing that creates the connection
+      //we can pass a config object, and that config object can contain stun servers
+      //which will fetch us ICE candidates
+      peerConnection.current = await new RTCPeerConnection(peerConfiguration);
+      setRemoteStream(new MediaStream());
+      remoteVideoEl.current!.srcObject = remoteStream;
+
+      localStream?.getTracks().forEach((track) => {
+        //add localtracks so that they can be sent once the connection is established
+        peerConnection.current?.addTrack(track, localStream);
+      });
+
+      peerConnection.current.addEventListener(
+        'signalingstatechange',
+        (event) => {
+          console.log(event);
+          console.log(peerConnection.current.signalingState);
+        },
+      );
+
+      peerConnection.current.addEventListener('icecandidate', (e) => {
+        console.log('........Ice candidate found!......');
+        console.log(e);
+        if (e.candidate) {
+          socket.emit('sendIceCandidateToSignalingServer', {
+            iceCandidate: e.candidate,
+            iceUserName: userName,
+            didIOffer,
+          });
+        }
+      });
+
+      peerConnection.current.addEventListener('track', (e) => {
+        console.log('Got a track from the other peer!! How excting');
+        console.log(e);
+        e.streams[0].getTracks().forEach((track) => {
+          remoteStream?.addTrack(track);
+          console.log("Here's an exciting moment... fingers cross");
+        });
+      });
+
+      if (offerObj) {
+        //this won't be set when called from call();
+        //will be set when we call from answerOffer()
+        // console.log(peerConnection.signalingState) //should be stable because no setDesc has been run yet
+        await peerConnection.current.setRemoteDescription(offerObj.offer);
+        // console.log(peerConnection.signalingState) //should be have-remote-offer, because client2 has setRemoteDesc on the offer
+      }
+      resolve(1);
+    });
+  };
+
+  const addNewIceCandidate = (iceCandidate: RTCIceCandidateInit) => {
+    peerConnection.current.addIceCandidate(iceCandidate);
+    console.log('======Added Ice Candidate======');
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="flex min-h-screen flex-col items-center justify-between p-12">
+      <div className="flex">
+        <div id="user-name"></div>
+        <button
+          id="call"
+          onClick={call}
+          className="bg-sky-400 w-20 h-10 rounded mx-4 hover:bg-sky-500 focus:ring"
+        >
+          Call!
+        </button>
+        <button
+          id="hangup"
+          className="bg-rose-400 w-20 h-10 rounded mx-4 hover:bg-rose-500 focus:ring"
+        >
+          Hangup
+        </button>
+        <div id="answer" className="col"></div>
+      </div>
+      <div
+        id="videos"
+        className="w-full grid max-xl:grid-rows-2 xl:grid-cols-2 xl:h-96 justify-items-center"
+      >
+        <div id="video-wrapper">
+          <div id="waiting">Waiting for answer...</div>
+          <video
+            className=" h-72"
+            id="local-video"
+            autoPlay
+            playsInline
+            controls
+            ref={localVideoEl}
+          ></video>
+        </div>
+        <div id="video-wrapper">
+          <div id="waiting">Waiting for answer...</div>
+          <video
+            className=" h-72"
+            id="remote-video"
+            autoPlay
+            playsInline
+            controls
+            ref={remoteVideoEl}
+          ></video>
         </div>
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className="flex justify-center items-center">
+        status:
+        {isConnected ? (
+          <div className=" bg-green-500 w-4 h-4"></div>
+        ) : (
+          <div className=" bg-red-500 w-4 h-4"></div>
+        )}
+        {isConnected ? (
+          <span className="text-lime-500">online</span>
+        ) : (
+          <span className="text-rose-400">offline</span>
+        )}
       </div>
     </main>
   );

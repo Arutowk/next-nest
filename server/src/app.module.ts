@@ -7,6 +7,7 @@ import { TodoModule } from './todo/todo.module';
 import { UserModule } from './user/user.module';
 import { baseConfig } from '../db/config';
 import { AuthModule } from './auth/auth.module';
+import { SignalingModule } from './signaling/signaling.mudule';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
     TodoModule,
     UserModule,
     AuthModule,
+    SignalingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
