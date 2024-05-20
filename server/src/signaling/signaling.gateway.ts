@@ -17,6 +17,9 @@ import { SignalingExceptonFilter } from './signaling.filter';
     origin: ['https://localhost:3000', 'https://192.168.1.9:3000'],
     methods: ['GET', 'POST'],
   },
+  secure: true,
+  reconnect: true,
+  rejectUnauthorized: false,
 })
 export class Signaling
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
@@ -38,7 +41,6 @@ export class Signaling
 
     const userName = client.handshake.auth.userName;
     const password = client.handshake.auth.password;
-
     if (password !== 'x') {
       client.disconnect(true);
       return;
@@ -58,6 +60,7 @@ export class Signaling
     console.log(`${client.id} disconnected!`);
 
     this.connectedSockets.filter((item) => client.id === item.socketId);
+    console.log(this.connectedSockets);
   }
 
   @SubscribeMessage('message')
@@ -82,19 +85,19 @@ export class Signaling
       answer: null,
       answererIceCandidates: [],
     });
+    console.log(this.offers);
     // console.log(newOffer.sdp.slice(50))
     //send out to all connected sockets EXCEPT the caller
     client.broadcast.emit('newOfferAwaiting', this.offers.slice(-1));
   }
 
   @SubscribeMessage('newAnswer')
-  onNewAnswer(
+  async onNewAnswer(
     @MessageBody()
-    payload: { offerObj: any; ackFunction: (value: any) => void },
+    offerObj: any,
     @ConnectedSocket() client: Socket,
-  ) {
+  ): Promise<any> {
     console.log('onNewAnswer...');
-    const { offerObj, ackFunction } = payload;
     console.log(offerObj);
     //emit this answer (offerObj) back to CLIENT1
     //in order to do that, we need CLIENT1's socketid
@@ -115,13 +118,14 @@ export class Signaling
       console.log('No OfferToUpdate');
       return;
     }
-    //send back to the answerer all the iceCandidates we have already collected
-    ackFunction(offerToUpdate.offerIceCandidates);
+
     offerToUpdate.answer = offerObj.answer;
     offerToUpdate.answererUserName = client.handshake.auth.userName;
     //socket has a .to() which allows emiting to a "room"
     //every socket has it's own room
     client.to(socketIdToAnswer).emit('answerResponse', offerToUpdate);
+    //send back to the answerer all the iceCandidates we have already collected
+    return Promise.resolve(offerToUpdate.offerIceCandidates);
   }
 
   @SubscribeMessage('sendIceCandidateToSignalingServer')

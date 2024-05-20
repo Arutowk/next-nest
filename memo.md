@@ -10,7 +10,7 @@ yarn workspace client add XXX
 
 - 启动服务
 
-nest服务端 端口3001
+nest服务端 端口3002
 
 ```js
 yarn start:server

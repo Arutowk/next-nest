@@ -5,12 +5,13 @@ import * as fs from 'fs';
 import { AppModule } from './app.module';
 
 const httpsOptions = {
-  key: fs.readFileSync('./secrets/cert.key'),
-  cert: fs.readFileSync('./secrets/cert.crt'),
+  key: fs.readFileSync('./secrets/localhost+1-key.pem'),
+  cert: fs.readFileSync('./secrets/localhost+1.pem'),
 };
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { httpsOptions });
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .addBearerAuth()
@@ -21,6 +22,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3001);
+  await app.listen(3002);
 }
 bootstrap();
