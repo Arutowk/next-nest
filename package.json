@@ -2,16 +2,26 @@
   "name": "next-nest",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "private": true,
-  "workspaces": [
-    "client",
-    "server"
-  ],
   "scripts": {
-    "start:client": "cd client && yarn dev",
-    "start:server": "cd server && yarn start:dev"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "tsc --noEmit"
   },
-  "keywords": [],
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "prettier": "^3.2.5",
+    "turbo": "^2.5.0"
+  },
+
+  "packageManager": "pnpm@8.15.5",
+  "engines": {
+    "node": ">=18"
+  },
   "author": "arutowk"
 }
