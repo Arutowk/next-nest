@@ -1,31 +1,46 @@
-- nest\next\webrtc 学习
+This Turborepo includes the following packages/apps:
 
-- 工作区添加依赖
+### Apps and Packages
 
-```js
-yarn workspace server add XXX
+    .
+    ├── apps
+    │   ├── XXX-api                       # NestJS app (https://nestjs.com).
+    │   └── XXX-web                       # Next.js app (https://nextjs.org).
+    └── packages
+        ├── @repo/api                 # Shared `NestJS` resources.
+        ├── @repo/eslint-config       # `eslint` configurations (includes `prettier`)
+        ├── @repo/jest-config         # `jest` configurations
+        ├── @repo/typescript-config   # `tsconfig.json`s used throughout the monorepo
+        └── @repo/ui                  # Shareable stub React component library.
+
+Each package and application are 100% TypeScript safe.
+
+### Utilities
+
+- [TypeScript](https://www.typescriptlang.org/) for static type-safety
+- [ESLint](https://eslint.org/) for code linting
+- [Prettier](https://prettier.io) for code formatting
+- [Jest](https://prettier.io) & [Playwright](https://playwright.dev/) for testing
+
+### Commands
+
+#### Install
+
+```bash
+pnpm install
 ```
 
-```js
-yarn workspace client add XXX
+#### Develop
+
+```bash
+trubo run XXX-web#dev XXX-api#dev
+# or
+trubo run dev --filter=XXX-web --filter=XXX-api
 ```
 
-- 启动服务
+#### Manage Packages
 
-nest服务端 端口3002 https://localhost:3002/api （查看api文档地址）
-
-```js
-yarn start:server
-```
-
-next客户端 端口3000 https://localhost:3000/
-
-```js
-yarn start:client
-```
-
-或者使用turbo同时启动
-
-```js
-turbo dev
+```bash
+pnpm add XXX --filter appname
+pnpm remove XXX --filter appname
 ```

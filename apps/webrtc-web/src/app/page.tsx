@@ -65,7 +65,7 @@ export default function Home() {
       peerConnection.current.addEventListener('track', (e) => {
         console.log('Got a track from the other peer!! How excting');
         console.log(e);
-        e.streams[0].getTracks().forEach((track) => {
+        e.streams[0]?.getTracks().forEach((track) => {
           remoteStream.current.addTrack(track);
           console.log("Here's an exciting moment... fingers cross");
         });
