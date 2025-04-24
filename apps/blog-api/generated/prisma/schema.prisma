@@ -1,6 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+//https://www.prisma.io/docs/orm/prisma-schema/overview/generators
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -17,7 +18,7 @@ model User {
   email     String
   bio       String?
   avatar    String?
-  password  String
+  password  String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   posts     Post[]

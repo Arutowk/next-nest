@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import globals from "globals";
 import eslintConfigPrettier from 'eslint-config-prettier';
 import tseslint from 'typescript-eslint';
 import { config as baseConfig } from './base.js';
@@ -20,9 +21,11 @@ export const nestJsConfig = [
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
     },
-    env: {
-      node: true,
-      jest: true,
-    },
-  },
+    languageOptions:{
+      globals:{
+        ...globals.node,
+        ...globals.jest
+      }
+    }
+  }
 ];
