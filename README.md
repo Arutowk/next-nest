@@ -44,3 +44,9 @@ trubo run dev --filter=XXX-web --filter=XXX-api
 pnpm add XXX --filter appname
 pnpm remove XXX --filter appname
 ```
+
+#### Adding a Next.js application to an existing repository
+
+```bash
+pnpm dlx create-next-app@latest apps/appname-web
+```
