@@ -4,7 +4,7 @@
 //https://www.prisma.io/docs/orm/prisma-schema/overview/generators
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
