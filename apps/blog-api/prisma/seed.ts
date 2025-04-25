@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { PrismaClient } from "../generated/prisma";
+import { PrismaClient } from "../src/generated/prisma";
 
 const prisma=new PrismaClient()
 
@@ -32,7 +32,7 @@ async function main() {
         published:true
     }))
 
-    Promise.all(
+    await Promise.all(
         posts.map(async(post)=>await prisma.post.create({
             data:{
                 ...post,
