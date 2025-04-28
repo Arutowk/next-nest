@@ -1,0 +1,28 @@
+{
+    "name": "@repo/database",
+    "version": "0.0.0",
+    "scripts": {
+        "db:generate": "prisma generate --no-hints",
+        "db:migrate": "prisma migrate dev --skip-generate",
+        "db:deploy": "prisma migrate deploy",
+        "db:seed": "ts-node ./prisma/seed.ts"
+    },
+    "devDependencies": {
+        "@repo/typescript-config": "workspace:*",
+        "@types/node": "^22.15.2",
+        "prisma": "^6.6.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    },
+    "dependencies": {
+        "@faker-js/faker": "^9.7.0",
+        "@prisma/client": "6.6.0"
+    },
+    "exports": {
+        ".": {
+            "require": "./generated/prisma/index.js",
+            "import": "./src/index.ts",
+            "types": "./generated/prisma/index.d.ts"
+        }
+    }
+}

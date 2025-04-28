@@ -1,7 +1,37 @@
+// {
+//   "extends": "@repo/typescript-config/nestjs.json",
+//   "compilerOptions": {
+//     "baseUrl": "./",
+//     "outDir": "./dist",
+//     // "moduleResolution": "Bundler",
+//     // "module": "es2022",
+//     "moduleResolution": "nodenext",
+//     "module": "nodenext",
+//     "paths":{
+//       "@prisma-client":["node_modules/@repo/database/src/index"]
+//     }
+//   }
+// }
+
 {
-  "extends": "@repo/typescript-config/nestjs.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Nest.js",
   "compilerOptions": {
-    "baseUrl": "./",
+    "target": "ES2022",
+    "module": "NodeNext",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
     "outDir": "./dist",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
   }
 }
