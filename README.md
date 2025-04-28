@@ -1,4 +1,4 @@
-This Turborepo includes the following packages/apps:
+This Turborepo includes the following packages&apps:
 
 ### Apps and Packages
 
@@ -11,7 +11,8 @@ This Turborepo includes the following packages/apps:
         ├── @repo/eslint-config       # `eslint` configurations (includes `prettier`)
         ├── @repo/jest-config         # `jest` configurations
         ├── @repo/typescript-config   # `tsconfig.json`s used throughout the monorepo
-        └── @repo/ui                  # Shareable stub React component library.
+        ├── @repo/ui                  # Shareable stub React component library.
+        └── @repo/database            # Shareable prisma database.
 
 Each package and application are 100% TypeScript safe.
 
@@ -24,13 +25,19 @@ Each package and application are 100% TypeScript safe.
 
 ### Commands
 
-#### Install
+#### 1-Install
 
 ```bash
+# root menu
 pnpm install
 ```
+#### 2-Turbo Build
 
-#### Develop
+```bash
+turbo run build --force
+```
+
+#### 3-Develop
 
 ```bash
 trubo run XXX-web#dev XXX-api#dev

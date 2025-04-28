@@ -45,61 +45,24 @@ type Post {
   comments: [Comment!]!
 }
 
-type Like {
-  id: Int!
-  user: User!
-  post: Post!
-  createAt: DateTime!
-}
-
 type Query {
   posts: [Post!]!
-  user(id: Int!): User!
-  comment(id: Int!): Comment!
-  like(id: Int!): Like!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
-  createComment(createCommentInput: CreateCommentInput!): Comment!
-  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
-  removeComment(id: Int!): Comment!
-  createLike(createLikeInput: CreateLikeInput!): Like!
-  updateLike(updateLikeInput: UpdateLikeInput!): Like!
-  removeLike(id: Int!): Like!
+  signIn(signInInput: SignInInput!): String!
 }
 
 input CreateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  password: String!
+  email: String!
+  bio: String
+  avatar: String
 }
 
-input UpdateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input CreateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input CreateLikeInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateLikeInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input SignInInput {
+  email: String!
+  password: String!
 }
