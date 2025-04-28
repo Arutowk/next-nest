@@ -5,10 +5,11 @@ import { verify } from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
 import { User } from '@repo/database';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-    constructor( private prisma:PrismaService,private jwtService:JwtService){}
+    constructor( private prisma:PrismaService,private jwtService:JwtService,private configService: ConfigService,){}
 
     async validateLocalUser({ email, password }: SignInInput) {
         const user=await this.prisma.user.findUnique({
@@ -30,8 +31,8 @@ export class AuthService {
         const accessToken=await this.jwtService.signAsync(
             payload,
             {
-                expiresIn:process.env.JWT_EXPIRIES_IN,
-                secret:process.env.JWT_SECRET
+                expiresIn:this.configService.get<string>('JWT_EXPIRIES_IN'),
+                secret:this.configService.get<string>('JWT_SECRET')
             }
         )
         return { accessToken };
@@ -45,5 +46,18 @@ export class AuthService {
           avatar: user.avatar,
           accessToken,
         };
+    }
+
+    async validateJwtUser(userId:number){
+        const user=await this.prisma.user.findUnique({
+            where:{
+                id:userId
+            }
+        })
+
+        if(!user)throw new UnauthorizedException("User not found!")
+
+        const currentUser={id:user.id}
+        return currentUser
     }
 }
