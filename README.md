@@ -31,6 +31,7 @@ Each package and application are 100% TypeScript safe.
 # root menu
 pnpm install
 ```
+
 #### 2-Turbo Build
 
 ```bash
@@ -40,9 +41,9 @@ turbo run build --force
 #### 3-Develop
 
 ```bash
-trubo run XXX-web#dev XXX-api#dev
+turbo run XXX-web#dev XXX-api#dev
 # or
-trubo run dev --filter=XXX-web --filter=XXX-api
+turbo run dev --filter=XXX-web --filter=XXX-api
 ```
 
 #### Manage Packages

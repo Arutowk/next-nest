@@ -15,13 +15,13 @@ const SideBar = (props: Props) => {
 
   return (
     <>
-      <div ref={navRef} className="w-full h-16 flex">
+      <div ref={navRef} className="w-full h-16 flex fixed bg-amber-50">
         <OpenClose open={show} onClick={setShow} />
       </div>
       <div
         ref={menuRef}
         className={cn(
-          'w-60 absolute top-16 z-10 transition-all bg-white rounded-r-md min-h-screen',
+          'w-60 absolute top-16 z-10 transition-all duration-300 bg-white rounded-r-md min-h-screen',
           {
             '-left-full': !show,
             'left-0': show,
