@@ -5,7 +5,8 @@ export type PostType = Post & {
     likes: number;
     comments: number;
   };
-  tags: Tag[];
+  author: UserType;
+  tags?: Tag[];
 };
 
 export type UserType = Omit<User, 'password'>;

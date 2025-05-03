@@ -40,7 +40,7 @@ model Post{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   comments Comment[]
-  tag Tag[] @relation("PostTags")
+  tags Tag[] @relation("PostTags")
   likes Like[]
 }
 
