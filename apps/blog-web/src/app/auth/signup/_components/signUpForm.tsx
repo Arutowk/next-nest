@@ -10,9 +10,6 @@ const SignUpForm = () => {
   const [state, action] = useActionState(signUp, undefined);
   return (
     <form action={action} className="flex flex-col gap-2">
-      {!!state?.message && (
-        <p className="text-red-500 text-sm">{state.message}</p>
-      )}
       <div>
         <Label htmlFor="name">Name</Label>
         <Input
@@ -60,6 +57,9 @@ const SignUpForm = () => {
         </div>
       )}
       <SubmitButton>Sign Up</SubmitButton>
+      {!!state?.message && (
+        <p className="text-red-500 text-sm">{state.message}</p>
+      )}
     </form>
   );
 };
