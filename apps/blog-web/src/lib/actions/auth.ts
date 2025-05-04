@@ -8,6 +8,7 @@ import { CREATE_USER_MUTATION, SIGN_IN_MUTATION } from '../graphql/user';
 import { redirect } from 'next/navigation';
 import { LoginFormSchema } from '../zodSchemas/loginFormSchema';
 import { revalidatePath } from 'next/cache';
+import { createSession } from '../session';
 
 export async function signUp(
   state: SignUpFormState,
@@ -66,7 +67,15 @@ export async function signIn(
         'Invalid Credentials',
     };
   }
-  // Todo: create a session
+  // create a session
+  await createSession({
+    user: {
+      id: result.data.signIn.id,
+      name: result.data.signIn.name,
+      avatar: result.data.signIn.avatar,
+    },
+    accessToken: result.data.signIn.accessToken,
+  });
 
   revalidatePath('/');
   redirect('/');

@@ -1,5 +1,7 @@
 import { calculatePageNumbers } from '@/lib/helpers';
 import { cn } from '@/lib/utils';
+import { ChevronRightIcon } from '@heroicons/react/20/solid';
+import { ChevronLeftIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
 
 type Props = {
@@ -9,12 +11,12 @@ type Props = {
   className?: string;
 };
 
-function Pagination({
+const Pagination = ({
   totalPages,
   currentPage,
   pageNeighbors = 2,
   className,
-}: Props) {
+}: Props) => {
   //  ... 3 4 5 6 7 ...
   const pageNumbers = calculatePageNumbers({
     pageNeighbors,
@@ -26,7 +28,9 @@ function Pagination({
       {/* pervious page button */}
       {currentPage !== 1 && (
         <button className={cn('rounded-md bg-slate-200 py-2 px-2')}>
-          <Link href={`?page=${currentPage - 1}`}>{'<'}</Link>
+          <Link href={`?page=${currentPage - 1}`}>
+            <ChevronLeftIcon className="w-4" />
+          </Link>
         </button>
       )}
 
@@ -46,11 +50,13 @@ function Pagination({
       {/* next page button */}
       {currentPage !== totalPages && (
         <button className="rounded-md bg-slate-200 py-2 px-2">
-          <Link href={`?page=${currentPage + 1}`}>{'>'}</Link>
+          <Link href={`?page=${currentPage + 1}`}>
+            <ChevronRightIcon className="w-4" />
+          </Link>
         </button>
       )}
     </div>
   );
-}
+};
 
 export default Pagination;
