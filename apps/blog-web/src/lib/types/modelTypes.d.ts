@@ -9,8 +9,8 @@ export type PostType = Post & {
   tags?: Tag[];
 };
 
-export type UserType = Omit<User, 'password'>;
+export type UserType = Omit<User, 'password' | 'avatar'> & { avatar?: string };
 
 export type TagType = Tag;
 
-export type CommentType = Comment;
+export type CommentType = Comment & { author: UserType };

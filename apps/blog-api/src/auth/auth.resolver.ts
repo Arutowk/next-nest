@@ -7,10 +7,11 @@ import { AuthPayload } from './entities/auth-payload.entity';
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(()=>AuthPayload)
-  async signIn(@Args("signInInput") signInInput:SignInInput){
-    const user=await this.authService.validateLocalUser(signInInput)
+  //{"authorization":"Bearer XXX"}
+  @Mutation(() => AuthPayload)
+  async signIn(@Args('signInInput') signInInput: SignInInput) {
+    const user = await this.authService.validateLocalUser(signInInput);
 
-    return await this.authService.login(user)
+    return await this.authService.login(user);
   }
 }

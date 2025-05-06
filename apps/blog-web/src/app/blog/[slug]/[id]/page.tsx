@@ -1,6 +1,8 @@
 import { fetchPostById } from '@/lib/actions/postActions';
 import Image from 'next/image';
 import SanitizedContent from './_components/SanitizedContent';
+import Comments from './_components/comments';
+import { getSession } from '@/lib/session';
 
 //https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
 type Props = {
@@ -11,6 +13,8 @@ type Props = {
 const PostPage = async ({ params }: Props) => {
   const postId = (await params).id;
   const post = await fetchPostById(+postId);
+  const session = await getSession();
+
   return (
     <main className="container mx-auto px-4 py-8 mt-16">
       <h1 className="text-4xl font-bold mb-4 text-slate-700">{post.title}</h1>
@@ -28,6 +32,8 @@ const PostPage = async ({ params }: Props) => {
       </div>
 
       <SanitizedContent content={post.content} />
+
+      <Comments user={session?.user} postId={post.id}></Comments>
     </main>
   );
 };
