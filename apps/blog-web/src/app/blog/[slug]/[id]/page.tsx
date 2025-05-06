@@ -3,6 +3,7 @@ import Image from 'next/image';
 import SanitizedContent from './_components/SanitizedContent';
 import Comments from './_components/comments';
 import { getSession } from '@/lib/session';
+import Like from './_components/like';
 
 //https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
 type Props = {
@@ -32,6 +33,8 @@ const PostPage = async ({ params }: Props) => {
       </div>
 
       <SanitizedContent content={post.content} />
+
+      <Like postId={post.id} user={session?.user} />
 
       <Comments user={session?.user} postId={post.id}></Comments>
     </main>
