@@ -4,37 +4,49 @@ import { Tag } from '../../tag/entities/tag.entity';
 import { Comment } from '../../comment/entities/comment.entity';
 
 @ObjectType()
+export class Count {
+  @Field(() => Int)
+  likes: number;
+
+  @Field(() => Int)
+  comments: number;
+}
+
+@ObjectType()
 export class Post {
   @Field(() => Int)
   id: number;
 
   @Field()
-  title:string
-  
-  @Field({nullable:true})
-  slug?:string
+  title: string;
 
-  @Field({nullable:true})
-  thumbnail?:string
-  
+  @Field({ nullable: true })
+  slug?: string;
+
+  @Field({ nullable: true })
+  thumbnail?: string;
+
   @Field()
-  content:string
+  content: string;
 
   @Field(() => Boolean)
   published: boolean;
 
   @Field()
-  createdAt:Date
-  
+  createdAt: Date;
+
   @Field()
-  updatedAt:Date
+  updatedAt: Date;
 
-  @Field(()=>User)
-  author:User
+  @Field(() => User)
+  author: User;
 
-  @Field(()=>[Tag])
-  tags:Tag[]
+  @Field(() => [Tag])
+  tags: Tag[];
 
-  @Field(()=>[Comment])
-  comments:Comment[]
+  @Field(() => [Comment])
+  comments: Comment[];
+
+  @Field(() => Count)
+  _count: Count;
 }
