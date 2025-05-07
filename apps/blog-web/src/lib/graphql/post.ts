@@ -22,6 +22,7 @@ export const GET_POST_BY_ID = gql`
       thumbnail
       content
       createdAt
+      published
       author {
         name
       }
@@ -57,5 +58,19 @@ export const CREATE_POST_MUTATION = gql`
     createPost(createPostInput: $input) {
       id
     }
+  }
+`;
+
+export const UPDATE_POST_MUTATION = gql`
+  mutation UpdatePost($input: UpdatePostInput!) {
+    updatePost(updatePostInput: $input) {
+      id
+    }
+  }
+`;
+
+export const DELETE_POST_MUTATION = gql`
+  mutation DeletePost($postId: Int!) {
+    deletePost(postId: $postId)
   }
 `;

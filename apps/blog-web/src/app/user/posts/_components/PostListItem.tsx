@@ -9,7 +9,7 @@ type Props = {
 
 const PostListItem = ({ post }: Props) => {
   return (
-    <div className="grid grid-cols-8 m-2 rounded-md overflow-hidden border shadow hover:scale-[101%] transition text-center bg-white">
+    <div className="grid grid-cols-8 m-2 rounded-md overflow-hidden border shadow hover:bg-blue-300 transition text-center bg-white">
       <div className="relative w-48 h-32">
         <Image src={post.thumbnail || '/no-image.png'} alt={post.title} fill />
       </div>
