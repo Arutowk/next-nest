@@ -6,7 +6,8 @@
     "./hooks": "./src/hooks/index.ts",
     "./button": "./src/components/button.tsx",
     "./card": "./src/components/card.tsx",
-    "./code": "./src/components/code.tsx"
+    "./code": "./src/components/code.tsx",
+    "./utils": "./src/utils/index.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

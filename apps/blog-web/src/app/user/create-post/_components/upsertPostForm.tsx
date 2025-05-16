@@ -8,6 +8,9 @@ import { PostFormState } from '@/lib/types/formState';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { toast, Toaster } from 'sonner';
+import { Editor } from './DynamicEditor';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   state: PostFormState;
@@ -16,6 +19,9 @@ type Props = {
 
 const UpsertPostForm = ({ state, formAction }: Props) => {
   const [imageUrl, setImageUrl] = useState('');
+  const router = useRouter();
+  const [content, setContent] = useState(state?.data?.content || '');
+
   useEffect(() => {
     if (state?.message && state?.ok === true) {
       toast.success('Success', { description: state?.message });
@@ -30,9 +36,15 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
       <Toaster richColors={true} />
       <form
         action={formAction}
-        className="flex flex-col gap-5 [&>div>label]:text-slate-500 [&>div>input]:transition [&>div>textarea]:transition"
+        className="flex flex-col  md:grid md:grid-cols-3 gap-5 [&>div>label]:text-slate-500 [&>div>input]:transition"
       >
         <input hidden name="postId" defaultValue={state?.data?.postId} />
+        <input
+          hidden
+          name="content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
         <div>
           <Label htmlFor="title">Title</Label>
           <Input
@@ -40,23 +52,10 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
             placeholder="Enter The Title of Your Post"
             defaultValue={state?.data?.title}
           />
+          {!!state?.errors?.title && (
+            <p className="text-red-500 animate-shake">{state.errors.title}</p>
+          )}
         </div>
-        {!!state?.errors?.title && (
-          <p className="text-red-500 animate-shake">{state.errors.title}</p>
-        )}
-
-        <div>
-          <Label htmlFor="content">Content</Label>
-          <Textarea
-            name="content"
-            placeholder="Write Your Post Content Here"
-            rows={6}
-            defaultValue={state?.data?.content}
-          />
-        </div>
-        {!!state?.errors?.content && (
-          <p className="text-red-500 animate-shake">{state.errors.content}</p>
-        )}
         <div>
           <Label htmlFor="thumbnail">Thumbnail</Label>
           <Input
@@ -89,27 +88,43 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
             placeholder="Enter tags (comma-separated)"
             defaultValue={state?.data?.tags}
           />
+          {!!state?.errors?.tags && (
+            <p className="text-red-500 animate-shake">{state.errors.tags}</p>
+          )}
         </div>
-        {!!state?.errors?.tags && (
-          <p className="text-red-500 animate-shake">{state.errors.tags}</p>
-        )}
-        <div className="flex items-center">
-          <input
-            className="mx-2 w-4 h-4"
-            type="checkbox"
-            name="published"
-            defaultChecked={state?.data?.published === 'on' ? true : false}
-          />
-          <Label htmlFor="published">Published Now</Label>
-        </div>
-        {!!state?.errors?.isPublished && (
-          <p className="text-red-500 animate-shake">
-            {state.errors.isPublished}
-          </p>
-        )}
 
-        <SubmitButton>Save</SubmitButton>
+        <div className="flex justify-between items-center">
+          <div className="flex flex-col items-center">
+            <div className="flex">
+              <input
+                className="mx-2 w-4 h-4"
+                type="checkbox"
+                name="published"
+                defaultChecked={state?.data?.published === 'on' ? true : false}
+              />
+              <Label htmlFor="published">Published Now</Label>
+              {!!state?.errors?.isPublished && (
+                <p className="text-red-500 animate-shake">
+                  {state.errors.isPublished}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div className="flex justify-around">
+          <Button className="w-20" onClick={() => router.back()}>
+            return
+          </Button>
+          <SubmitButton className="w-20">Save</SubmitButton>
+        </div>
       </form>
+      <div className="w-2/3">
+        {!!state?.errors?.content && (
+          <p className="text-red-500 animate-shake">{state.errors.content}</p>
+        )}
+        <Editor updateContent={setContent} />
+      </div>
     </>
   );
 };

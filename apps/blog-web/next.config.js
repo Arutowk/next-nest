@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 module.exports = {
   transpilePackages: ['@repo/ui'],
@@ -16,5 +18,8 @@ module.exports = {
         pathname: '/**',
       },
     ],
+  },
+  sassOptions: {
+    includePaths: [path.join(__dirname, 'src/styles')],
   },
 };

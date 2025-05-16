@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { useClickOutside } from '@repo/ui/hooks';
-import { PropsWithChildren, ReactNode, useRef, useState } from 'react';
+import { PropsWithChildren, useRef, useState } from 'react';
 import OpenClose from './OpenClose';
 
 type Props = PropsWithChildren;
@@ -15,7 +15,7 @@ const SideBar = (props: Props) => {
 
   return (
     <>
-      <div ref={navRef} className="w-full h-16 flex fixed bg-amber-50">
+      <div ref={navRef} className="w-full h-16 bg-amber-50 sticky">
         <OpenClose open={show} onClick={setShow} />
       </div>
       <div

@@ -82,13 +82,13 @@ export async function saveNewPost(
 
   // Todo: call garphql api
   const { postId, ...resDtata } = validatedFields.data;
+  console.log(resDtata);
   const result = await authFetchGraphQL(print(CREATE_POST_MUTATION), {
     input: {
       ...resDtata,
       thumbnail: thumbnailUrl,
     },
   });
-
   if (result.data) return { message: 'Success! New Post Saved', ok: true };
   return {
     message: 'Oops, Something Went Wrong',

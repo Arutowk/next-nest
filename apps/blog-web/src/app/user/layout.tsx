@@ -2,12 +2,12 @@ import { PropsWithChildren } from 'react';
 
 type Props = PropsWithChildren;
 
-const PostsLayout = ({ children }: Props) => {
+const UserLayout = ({ children }: Props) => {
   return (
-    <div className="mt-24 flex flex-col justify-center items-center">
+    <div className="flex flex-col items-center pb-10 h-[calc(100vh-80px)] overflow-y-scroll">
       {children}
     </div>
   );
 };
 
-export default PostsLayout;
+export default UserLayout;

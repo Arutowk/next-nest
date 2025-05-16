@@ -23,13 +23,16 @@ const DesktopNavbar = (props: Props) => {
 
   const isScrollDown = scrollPosition > 10;
   const isHome = pathname === '/';
+  const isCreatePost = pathname === '/user/create-post';
   return (
     <nav
       className={cn(
-        'hidden fixed transition-colors w-full z-50 text-white top-0 md:block',
+        'hidden transition-colors w-full z-50 text-white top-0',
         {
           'bg-white text-gray-700 shadow-md': isScrollDown || !isHome,
         },
+        isHome ? 'fixed' : 'sticky',
+        isCreatePost ? 'md:hidden' : 'md:block',
       )}
     >
       <div className="flex items-center px-4 py-4">{props.children}</div>
