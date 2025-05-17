@@ -210,7 +210,13 @@ export default function BlogEditor({
   const debouncedUpdate = useCallback(
     debounce((props: EditorEvents['update']) => {
       const html = props.editor.getHTML();
-      updateContent(html);
+      const json = props.editor.getJSON();
+      const data = {
+        html: html,
+        json: json,
+      };
+      const dataString = JSON.stringify(data);
+      updateContent(dataString);
     }, 1000),
     [],
   );

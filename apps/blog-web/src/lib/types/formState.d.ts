@@ -45,7 +45,7 @@ export type PostFormState =
         content?: string[];
         thumbnail?: string[];
         tags?: string[];
-        isPublished?: string[];
+        published?: string[];
       };
       message?: string;
       ok?: boolean;

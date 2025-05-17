@@ -3,7 +3,6 @@
 import SubmitButton from '@/components/SubmitButton';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { PostFormState } from '@/lib/types/formState';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -34,6 +33,23 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
   return (
     <>
       <Toaster richColors={true} />
+      <div>
+        {!!imageUrl || !!state?.data?.previousThumbnailUrl ? (
+          <Image
+            src={(imageUrl || state?.data?.previousThumbnailUrl) ?? ''}
+            alt="post thumbnail"
+            width={200}
+            height={150}
+          />
+        ) : (
+          <Image
+            src="/no-image.jpg"
+            alt="post thumbnail"
+            width={200}
+            height={150}
+          />
+        )}
+      </div>
       <form
         action={formAction}
         className="flex flex-col  md:grid md:grid-cols-3 gap-5 [&>div>label]:text-slate-500 [&>div>input]:transition"
@@ -45,6 +61,8 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
+        <input hidden name="published" defaultValue={'off'} />
+
         <div>
           <Label htmlFor="title">Title</Label>
           <Input
@@ -56,6 +74,7 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
             <p className="text-red-500 animate-shake">{state.errors.title}</p>
           )}
         </div>
+
         <div>
           <Label htmlFor="thumbnail">Thumbnail</Label>
           <Input
@@ -72,15 +91,8 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
               {state.errors.thumbnail}
             </p>
           )}
-          {(!!imageUrl || !!state?.data?.previousThumbnailUrl) && (
-            <Image
-              src={(imageUrl || state?.data?.previousThumbnailUrl) ?? ''}
-              alt="post thumbnail"
-              width={200}
-              height={150}
-            />
-          )}
         </div>
+
         <div>
           <Label htmlFor="tags">Tags (comma-separated)</Label>
           <Input
@@ -103,17 +115,23 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
                 defaultChecked={state?.data?.published === 'on' ? true : false}
               />
               <Label htmlFor="published">Published Now</Label>
-              {!!state?.errors?.isPublished && (
+              {!!state?.errors?.published && (
                 <p className="text-red-500 animate-shake">
-                  {state.errors.isPublished}
+                  {state.errors.published}
                 </p>
               )}
             </div>
           </div>
         </div>
         <div></div>
-        <div className="flex justify-around">
-          <Button className="w-20" onClick={() => router.back()}>
+        <div className="flex justify-around items-center">
+          <Button
+            className="w-20"
+            onClick={(e) => {
+              e.preventDefault();
+              router.back();
+            }}
+          >
             return
           </Button>
           <SubmitButton className="w-20">Save</SubmitButton>
@@ -123,7 +141,10 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
         {!!state?.errors?.content && (
           <p className="text-red-500 animate-shake">{state.errors.content}</p>
         )}
-        <Editor updateContent={setContent} />
+        <Editor
+          updateContent={setContent}
+          defaultContent={state?.data?.content}
+        />
       </div>
     </>
   );

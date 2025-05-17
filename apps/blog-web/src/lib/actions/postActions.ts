@@ -69,20 +69,22 @@ export async function saveNewPost(
   const validatedFields = PostFormSchema.safeParse(
     Object.fromEntries(formData.entries()),
   );
-
-  if (!validatedFields.success)
+  console.log('server action');
+  if (!validatedFields.success) {
     return {
       data: Object.fromEntries(formData.entries()),
       errors: validatedFields.error.flatten().fieldErrors,
     };
-  let thumbnailUrl = '';
-  // Todo:Upload Thumbnail to supabase
-  if (validatedFields.data.thumbnail)
-    thumbnailUrl = await uploadThumbnail(validatedFields.data.thumbnail);
+  }
 
-  // Todo: call garphql api
+  let thumbnailUrl = '';
+  // Upload Thumbnail to supabase
+  if (validatedFields.data.thumbnail) {
+    thumbnailUrl = await uploadThumbnail(validatedFields.data.thumbnail);
+  }
+
+  // call garphql api
   const { postId, ...resDtata } = validatedFields.data;
-  console.log(resDtata);
   const result = await authFetchGraphQL(print(CREATE_POST_MUTATION), {
     input: {
       ...resDtata,

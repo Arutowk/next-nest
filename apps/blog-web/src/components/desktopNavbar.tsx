@@ -23,7 +23,9 @@ const DesktopNavbar = (props: Props) => {
 
   const isScrollDown = scrollPosition > 10;
   const isHome = pathname === '/';
-  const isCreatePost = pathname === '/user/create-post';
+  const isCreateOrUpdatePost =
+    pathname === '/user/create-post' ||
+    new RegExp(/(\/user\/posts\/)(\d)+(\/update)/g).test(pathname);
   return (
     <nav
       className={cn(
@@ -32,7 +34,7 @@ const DesktopNavbar = (props: Props) => {
           'bg-white text-gray-700 shadow-md': isScrollDown || !isHome,
         },
         isHome ? 'fixed' : 'sticky',
-        isCreatePost ? 'md:hidden' : 'md:block',
+        isCreateOrUpdatePost ? 'md:hidden' : 'md:block',
       )}
     >
       <div className="flex items-center px-4 py-4">{props.children}</div>

@@ -14,6 +14,7 @@ type Props = {
 const PostPage = async ({ params }: Props) => {
   const postId = (await params).id;
   const post = await fetchPostById(+postId);
+  const content = JSON.parse(post?.content)?.html ?? post.content;
   const session = await getSession();
 
   return (
@@ -32,7 +33,7 @@ const PostPage = async ({ params }: Props) => {
         />
       </div>
 
-      <SanitizedContent content={post.content} />
+      <SanitizedContent content={content} />
 
       <Like postId={post.id} user={session?.user} />
 
