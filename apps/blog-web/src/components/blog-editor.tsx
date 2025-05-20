@@ -6,6 +6,7 @@ import {
   EditorContent,
   EditorContext,
   EditorEvents,
+  JSONContent,
   useEditor,
 } from '@tiptap/react';
 import { debounce } from '@repo/ui/utils';
@@ -75,9 +76,11 @@ import { useCursorVisibility } from '@/hooks/use-cursor-visibility';
 
 // --- Components ---
 import { ThemeToggle } from '@/components/tiptap-templates/simple/theme-toggle';
+import Toc from './Toc';
 
 // --- Lib ---
 import { handleImageUpload, MAX_FILE_SIZE } from '@/lib/tiptap-utils';
+import { generateTocFromJSON, TocItem } from '@/lib/htmljsonToc';
 
 // --- Styles ---
 import '@/components/tiptap-templates/simple/simple-editor.scss';
@@ -190,7 +193,7 @@ const MobileToolbarContent = ({
 
 // --- Types ---
 export type BlogEditorProps = {
-  defaultContent?: string;
+  defaultContent?: JSONContent;
   readonly?: boolean;
   updateContent: Dispatch<SetStateAction<any>>;
 };
@@ -207,6 +210,10 @@ export default function BlogEditor({
   >('main');
   const toolbarRef = React.useRef<HTMLDivElement>(null);
 
+  const [toc, setToc] = React.useState<TocItem[]>(() =>
+    defaultContent ? generateTocFromJSON(defaultContent) : [],
+  );
+
   const debouncedUpdate = useCallback(
     debounce((props: EditorEvents['update']) => {
       const html = props.editor.getHTML();
@@ -215,6 +222,10 @@ export default function BlogEditor({
         html: html,
         json: json,
       };
+      console.log(json);
+      const tocItems = generateTocFromJSON(json);
+      console.log(tocItems);
+      setToc(tocItems);
       const dataString = JSON.stringify(data);
       updateContent(dataString);
     }, 1000),
@@ -272,6 +283,9 @@ export default function BlogEditor({
 
   return (
     <EditorContext.Provider value={{ editor }}>
+      <div className="sidebar">
+        <Toc tocItems={toc} scrollContainer="simple-editor-content" />
+      </div>
       <Toolbar
         ref={toolbarRef}
         style={

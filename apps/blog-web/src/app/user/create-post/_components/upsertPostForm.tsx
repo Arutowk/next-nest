@@ -10,6 +10,7 @@ import { toast, Toaster } from 'sonner';
 import { Editor } from './DynamicEditor';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { JSONContent } from '@tiptap/react';
 
 type Props = {
   state: PostFormState;
@@ -58,7 +59,7 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
         <input
           hidden
           name="content"
-          value={content}
+          value={content as string}
           onChange={(e) => setContent(e.target.value)}
         />
         <input hidden name="published" defaultValue={'off'} />
@@ -143,7 +144,7 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
         )}
         <Editor
           updateContent={setContent}
-          defaultContent={state?.data?.content}
+          defaultContent={state?.data?.content as JSONContent}
         />
       </div>
     </>
