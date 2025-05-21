@@ -10,7 +10,7 @@
       "persistent": true
     },
     "build": {
-      "dependsOn": ["^db:generate","^build"],
+      "dependsOn": ["^db:generate", "^build"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {},
@@ -21,7 +21,7 @@
     },
     "db:migrate": {
       "cache": false,
-      "persistent": true 
+      "persistent": true
     },
     "db:deploy": {
       "cache": false

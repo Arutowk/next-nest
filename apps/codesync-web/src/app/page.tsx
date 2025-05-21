@@ -1,22 +1,22 @@
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-  UserButton,
-} from '@clerk/nextjs';
-import Image from 'next/image';
+import { SignOut } from '@/components/sign-out';
+import { auth } from '@/lib/auth';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
+const Page = async () => {
+  const session = await auth();
+  console.log(session);
+  if (!session) redirect('/sign-in');
+
   return (
-    <div className="m-10">
-      <SignedOut>
-        <SignInButton />
-        <SignUpButton />
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-    </div>
+    <>
+      <div className="bg-gray-100 rounded-lg p-4 text-center mb-6">
+        <p className="text-gray-600">Signed in as:</p>
+        <p className="font-medium">{session.user?.email}</p>
+      </div>
+
+      <SignOut />
+    </>
   );
-}
+};
+
+export default Page;
