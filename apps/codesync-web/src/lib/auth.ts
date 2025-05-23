@@ -1,13 +1,14 @@
 import NextAuth, { type NextAuthResult } from 'next-auth';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcryptjs';
-import { prisma } from '@repo/db-codesync';
 import { schema } from './zodSchemas/loginForm';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
+import { prisma } from './prisma';
 
 const result = NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     GitHub,
     Google,

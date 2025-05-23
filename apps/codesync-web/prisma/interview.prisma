@@ -1,0 +1,49 @@
+model Interview {
+  id          String     @id @default(uuid())
+  title       String     // 面试标题（如"前端工程师-初试"）
+  description String?    // 面试描述
+  status      InterviewStatus @default(SCHEDULED)
+  startTime   DateTime   // 面试开始时间
+  endTime     DateTime?  // 实际结束时间
+  createdAt   DateTime   @default(now())
+  
+  // 关联面试官
+  interviewer   User   @relation("InterviewHost", fields: [interviewerId], references: [id])
+  interviewerId String
+  
+  // 关联候选人
+  candidate   User   @relation("InterviewCandidate", fields: [candidateId], references: [id])
+  candidateId String
+  
+  // 面试反馈
+  feedbacks   Feedback[] @relation("InterviewFeedbacks")  
+
+
+  @@index([status, startTime]) // 常用查询优化
+}
+
+
+model Feedback {
+  id            String   @id @default(uuid())
+  content       String
+  rating        Int      
+  createdAt     DateTime @default(now())
+  // 关联面试官（反馈提供者）
+  interviewer User    @relation("FeedbackInterviewer", fields: [interviewerId], references: [id])
+  interviewerId String
+  
+  // 关联候选人（反馈接收者）
+  candidate   User   @relation("FeedbackCandidate", fields: [candidateId], references: [id])
+  candidateId String
+  
+  // 关联面试
+  interview    Interview  @relation("InterviewFeedbacks", fields: [interviewId], references: [id])
+  interviewId String
+}
+
+enum InterviewStatus {
+  SCHEDULED    // 已安排
+  IN_PROGRESS  // 进行中
+  COMPLETED    // 已完成
+  CANCELLED    // 已取消
+}
