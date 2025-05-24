@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { GithubSignIn } from '@/components/github-sign-in';
-import { auth } from '@/lib/auth';
+import { auth } from '@/auth';
 import { signUpAction } from '@/lib/actions/auth';
 
 const Page = async () => {

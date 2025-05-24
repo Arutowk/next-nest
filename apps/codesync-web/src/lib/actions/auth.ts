@@ -1,13 +1,13 @@
 'use server';
 
-import { signIn, signOut } from '@/lib/auth';
+import { signIn, signOut } from '@/auth';
 
 export const loginWithGithub = async () => {
   await signIn('github', { redirectTo: '/' });
 };
 
 export const logout = async () => {
-  await signOut({ redirectTo: '/' });
+  await signOut({ redirectTo: '/sign-in' });
 };
 
 export const signInAction = async (formData: FormData) => {};

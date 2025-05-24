@@ -1,14 +1,24 @@
 import NextAuth, { type NextAuthResult } from 'next-auth';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import bcrypt from 'bcryptjs';
-import { schema } from './zodSchemas/loginForm';
+import { schema } from './lib/zodSchemas/loginForm';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
-import { prisma } from './prisma';
+import { prisma } from './lib/prisma';
 
 const result = NextAuth({
   adapter: PrismaAdapter(prisma),
+  callbacks: {
+    session({ session, user }) {
+      session.user.role = user.role;
+      return session;
+    },
+    jwt({ token, user }) {
+      token.role = user.role;
+      return token;
+    },
+  },
   providers: [
     GitHub,
     Google,
@@ -23,20 +33,25 @@ const result = NextAuth({
         authorize: async (credentials) => {
           const validatedCredentials = schema.parse(credentials);
 
-          // const user = await prisma.user.findUnique({
-          //   where: { email: validatedCredentials.email },
-          // });
+          const user = await prisma.user.findUnique({
+            where: { email: validatedCredentials.email },
+          });
 
-          // if (!user) {
-          //   throw new Error('Invalid credentials.');
-          // }
+          if (!user) {
+            throw new Error('Invalid credentials.');
+          }
 
-          // if (
-          //   user &&
-          //   bcrypt.compareSync(validatedCredentials.password, user.password)
-          // ) {
-          //   return { id: user.id, email: user.email, name: user.name };
-          // }
+          if (
+            user &&
+            bcrypt.compareSync(validatedCredentials.password, user.password!)
+          ) {
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+              role: user.role,
+            };
+          }
 
           return null;
         },

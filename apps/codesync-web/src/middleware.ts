@@ -1,17 +1,24 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { auth } from '@/lib/auth';
+import { auth } from '@/auth';
 
-const protectedRoutes = ['/interview', '/user'];
+const protectedRoutes = ['dashboard'];
 
-export async function middleware(request: NextRequest) {
-  const session = await auth();
-  const { pathname } = request.nextUrl;
+export default auth((req) => {
+  const isLoggedIn = !!req.auth;
+  const { nextUrl } = req;
 
-  const isProtected = protectedRoutes.some((route) => {
-    pathname.startsWith(route);
-  });
+  const isPrivateRoute = protectedRoutes.some((route) =>
+    nextUrl.pathname.includes(route),
+  );
+  const isApiRoute = nextUrl.pathname.includes('/api');
+  const isAuthRoute = nextUrl.pathname.includes('sign-');
+  if (isApiRoute) return;
+  if (isAuthRoute && !isLoggedIn) return;
+  if (!isLoggedIn && isPrivateRoute) {
+    return Response.redirect(new URL('/sign-in', req.url));
+  }
+});
 
-  if (!session && isProtected)
-    return NextResponse.redirect(new URL('/sign-in', request.url));
-}
+// Optionally, don't invoke Middleware on some paths
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+};

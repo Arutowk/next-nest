@@ -1,5 +1,5 @@
 import { SignOut } from '@/components/sign-out';
-import { auth } from '@/lib/auth';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 
 const Page = async () => {
