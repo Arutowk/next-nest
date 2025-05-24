@@ -9,8 +9,8 @@ export default auth((req) => {
   const isPrivateRoute = protectedRoutes.some((route) =>
     nextUrl.pathname.includes(route),
   );
-  const isApiRoute = nextUrl.pathname.includes('/api');
-  const isAuthRoute = nextUrl.pathname.includes('sign-');
+  const isApiRoute = nextUrl.pathname.startsWith('/api');
+  const isAuthRoute = nextUrl.pathname.startsWith('/sign-');
   if (isApiRoute) return;
   if (isAuthRoute && !isLoggedIn) return;
   if (!isLoggedIn && isPrivateRoute) {
