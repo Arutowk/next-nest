@@ -1,16 +1,10 @@
-import { signIn } from 'next-auth/react';
 import { GithubSignIn } from '@/components/github-sign-in';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { auth } from '@/auth';
+import SignForm from '././_component/signForm';
 import { signInAction } from '@/lib/actions/auth';
 
-const Page = async () => {
-  const session = await auth();
-  if (session) redirect('/');
-
+const Page = () => {
   return (
     <div className="w-full max-w-sm mx-auto space-y-6">
       <h1 className="text-2xl font-bold text-center mb-6">Sign In</h1>
@@ -28,25 +22,7 @@ const Page = async () => {
       </div>
 
       {/* Email/Password Sign In */}
-      <form className="space-y-4" action={signInAction}>
-        <Input
-          name="email"
-          placeholder="Email"
-          type="email"
-          required
-          autoComplete="email"
-        />
-        <Input
-          name="password"
-          placeholder="Password"
-          type="password"
-          required
-          autoComplete="current-password"
-        />
-        <Button className="w-full" type="submit">
-          Sign In
-        </Button>
-      </form>
+      <SignForm formAction={signInAction} text="Sign In" />
 
       <div className="text-center">
         <Button asChild variant="link">

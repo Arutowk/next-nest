@@ -1,15 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { GithubSignIn } from '@/components/github-sign-in';
-import { auth } from '@/auth';
 import { signUpAction } from '@/lib/actions/auth';
+import SignForm from '../sign-in/_component/signForm';
 
-const Page = async () => {
-  const session = await auth();
-  if (session) redirect('/');
-
+const Page = () => {
   return (
     <div className="w-full max-w-sm mx-auto space-y-6">
       <h1 className="text-2xl font-bold text-center mb-6">Create Account</h1>
@@ -28,25 +24,7 @@ const Page = async () => {
       </div>
 
       {/* Email/Password Sign Up */}
-      <form className="space-y-4" action={signUpAction}>
-        <Input
-          name="email"
-          placeholder="Email"
-          type="email"
-          required
-          autoComplete="email"
-        />
-        <Input
-          name="password"
-          placeholder="Password"
-          type="password"
-          required
-          autoComplete="new-password"
-        />
-        <Button className="w-full" type="submit">
-          Sign Up
-        </Button>
-      </form>
+      <SignForm formAction={signUpAction} text="Sign Up" />
 
       <div className="text-center">
         <Button asChild variant="link">

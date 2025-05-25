@@ -1,0 +1,30 @@
+{
+  "name": "@repo/db-codesync",
+  "version": "0.0.0",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "studio": "prisma studio"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.2",
+    "prisma": "^6.8.2",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.8.2"
+  },
+  "exports": {
+    ".": {
+      "require": "./node_modules/.prisma/client/index.js",
+      "import": "./src/index.ts",
+      "types": "./node_modules/.prisma/client/index.d.ts"
+    }
+  },
+  "prisma": {
+    "schema": "./prisma"
+  }
+}

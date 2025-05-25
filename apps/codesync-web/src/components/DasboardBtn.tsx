@@ -6,9 +6,11 @@ import { SparklesIcon } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
 function DasboardBtn() {
-  const session = useSession();
-  const isLoggedIn = !!session.data?.user;
-  const isCandidate = session.data?.user.role === 'CANDIDATE';
+  let isCandidate = false;
+  let isLoggedIn = false;
+  // const session = useSession();
+  // const isLoggedIn = !!session.data?.user;
+  // isCandidate = session.data?.user.role === 'CANDIDATE';
 
   if (!isLoggedIn || isCandidate) return null;
 

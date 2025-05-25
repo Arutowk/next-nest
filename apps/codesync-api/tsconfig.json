@@ -1,7 +1,30 @@
 {
-  "extends": "@repo/typescript-config/nestjs.json",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Nest.js",
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist"
+    "target": "ES2022",
+    "module": "NodeNext",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@repo/db-codesync": [
+        "../../packages/db-codesync/node_modules/.prisma/client/index"
+      ],
+      "@repo/db-codesync/*": [
+        "../../packages/db-codesync/node_modules/.prisma/client/*"
+      ]
+    }
   }
 }

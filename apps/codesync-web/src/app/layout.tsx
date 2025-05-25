@@ -37,9 +37,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="min-h-screen">
-            <SessionProvider>
-              <NavBar />
-            </SessionProvider>
+            {/* <SessionProvider> */}
+            <NavBar />
+            {/* </SessionProvider> */}
 
             <main className="px-4 sm:px-6 lg:px-8">{children}</main>
           </div>
