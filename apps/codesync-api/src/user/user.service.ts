@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { CreateUserInput } from './dto/create-user.input';
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from '@repo/db-codesync';
+import { User } from '.prisma/codesync-client';
 
 @Injectable()
 export class UserService {
@@ -19,9 +19,15 @@ export class UserService {
     });
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOneId(id: string): Promise<User> {
     return await this.prisma.user.findUnique({
       where: { id },
+    });
+  }
+
+  async findOneEmail(email: string): Promise<User> {
+    return await this.prisma.user.findUnique({
+      where: { email },
     });
   }
 }

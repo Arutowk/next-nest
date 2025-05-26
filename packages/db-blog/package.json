@@ -1,8 +1,8 @@
 {
-  "name": "@repo/database",
+  "name": "@repo/db-blog",
   "version": "0.0.0",
   "scripts": {
-    "db:generate": "prisma generate --no-hints",
+    "db:generate": "pnpm exec prisma generate",
     "db:migrate": "prisma migrate dev --skip-generate",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "tsx ./prisma/seed.ts"
@@ -10,20 +10,20 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/node": "^22.15.2",
-    "prisma": "^6.6.0",
+    "prisma": "^6.8.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   },
   "dependencies": {
     "@faker-js/faker": "^9.7.0",
-    "@prisma/client": "6.6.0",
+    "@prisma/client": "^6.8.2",
     "argon2": "^0.43.0"
   },
   "exports": {
     ".": {
-      "require": "./generated/prisma/index.js",
+      "require": "./node_modules/.prisma/client/index.js",
       "import": "./src/index.ts",
-      "types": "./generated/prisma/index.d.ts"
+      "types": "./node_modules/.prisma/client/index.d.ts"
     }
   }
 }

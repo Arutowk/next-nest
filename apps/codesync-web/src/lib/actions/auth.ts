@@ -5,9 +5,11 @@ import { signIn, signOut } from '@/auth';
 import { SignUpFormState } from '../types/formState';
 import { SignUpFormSchema } from '../zodSchemas/signUpFormSchema';
 import { fetchGraphQL } from '../fetchGraphQL';
-import { CREATE_USER_MUTATION, SIGN_IN_MUTATION } from '../graphql/user';
+import { CREATE_USER_MUTATION } from '../graphql/user';
 import { redirect } from 'next/navigation';
 import { LoginFormSchema } from '../zodSchemas/loginFormSchema';
+import { DEFAULT_LOGIN_REDIRECT } from '@/route';
+import { AuthError } from 'next-auth';
 
 export const loginWithGithub = async () => {
   await signIn('github', { redirectTo: '/' });
@@ -58,19 +60,28 @@ export async function signInAction(
       data: Object.fromEntries(formData.entries()),
       errors: validatedFields.error.flatten().fieldErrors,
     };
-
-  const result = await fetchGraphQL(print(SIGN_IN_MUTATION), {
-    input: {
-      ...validatedFields.data,
-    },
-  });
-
-  if (result.errors) {
-    return {
-      data: Object.fromEntries(formData.entries()),
-      message:
-        result.errors.map((item) => item.message).join(',') ||
-        'Invalid Credentials',
-    };
+  const { email, password } = validatedFields.data;
+  try {
+    await signIn('credentials', {
+      email,
+      password,
+      redirectTo: DEFAULT_LOGIN_REDIRECT,
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return {
+            data: Object.fromEntries(formData.entries()),
+            message: 'Invalid credentials',
+          };
+        default:
+          return {
+            data: Object.fromEntries(formData.entries()),
+            message: 'Something went wrong',
+          };
+      }
+    }
+    throw error;
   }
 }

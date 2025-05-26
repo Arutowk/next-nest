@@ -2,17 +2,18 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
+type UserInfo {
   id: ID!
   name: String
   email: String
+  password: String
   image: String
-  role: Role!
+  role: UserRole!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
 
-enum Role {
+enum UserRole {
   INTERVIEWER
   CANDIDATE
 }
@@ -23,11 +24,12 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Query {
-  getUserById(id: ID!): User!
+  getUserById(id: ID!): UserInfo!
+  getUserByEmail(email: String!): UserInfo!
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
+  createUser(createUserInput: CreateUserInput!): UserInfo!
 }
 
 input CreateUserInput {

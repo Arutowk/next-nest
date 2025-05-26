@@ -10,7 +10,11 @@
       "persistent": true
     },
     "build": {
-      "dependsOn": ["db:generate", "^build", "^db:generate"],
+      "dependsOn": [
+        "^build",
+        "@repo/db-blog#db:generate",
+        "@repo/db-codesync#db:generate"
+      ],
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {},

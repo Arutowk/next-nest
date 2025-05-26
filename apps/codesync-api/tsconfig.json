@@ -19,11 +19,8 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@repo/db-codesync": [
+      ".prisma/codesync-client": [
         "../../packages/db-codesync/node_modules/.prisma/client/index"
-      ],
-      "@repo/db-codesync/*": [
-        "../../packages/db-codesync/node_modules/.prisma/client/*"
       ]
     }
   }

@@ -2,7 +2,8 @@
   "name": "@repo/db-codesync",
   "version": "0.0.0",
   "scripts": {
-    "db:generate": "prisma generate",
+    "prepack": "prisma generate",
+    "db:generate": "pnpm exec prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "studio": "prisma studio"
@@ -17,10 +18,21 @@
   "dependencies": {
     "@prisma/client": "^6.8.2"
   },
+    "files": [
+    "prisma",                           
+    "index.js",                        
+    "index.d.ts",                       
+    "node_modules/.prisma"             
+  ],
   "exports": {
     ".": {
+      "require": "./index.js",
+      "import": "./index.js",
+      "types": "./index.d.ts"
+    },
+    "./client": {
       "require": "./node_modules/.prisma/client/index.js",
-      "import": "./src/index.ts",
+      "import": "./node_modules/.prisma/client/index.js",
       "types": "./node_modules/.prisma/client/index.d.ts"
     }
   },

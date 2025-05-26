@@ -1,4 +1,4 @@
-import { type Post, Tag, User, Comment } from '@repo/database';
+import { type Post, Tag, User, Comment } from '.prisma/blog-client';
 
 export type PostType = Post & {
   _count: {

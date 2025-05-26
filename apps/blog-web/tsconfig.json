@@ -8,8 +8,11 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
-    },
+      "@/*": ["./src/*"],
+      ".prisma/blog-client": [
+        "../../packages/db-blog/node_modules/.prisma/client/index"
+      ]
+    }
   },
   "include": [
     "next-env.d.ts",

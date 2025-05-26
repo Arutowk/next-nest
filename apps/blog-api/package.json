@@ -31,7 +31,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@repo/api": "workspace:*",
-    "@repo/database": "workspace:*",
+    "@repo/db-blog": "workspace:*",
     "argon2": "^0.43.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",

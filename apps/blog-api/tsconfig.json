@@ -2,13 +2,6 @@
 //   "extends": "@repo/typescript-config/nestjs.json",
 //   "compilerOptions": {
 //     "baseUrl": "./",
-//     "outDir": "./dist",
-//     // "moduleResolution": "Bundler",
-//     // "module": "es2022",
-//     "moduleResolution": "nodenext",
-//     "module": "nodenext",
-//     "paths":{
-//       "@prisma-client":["node_modules/@repo/database/src/index"]
 //     }
 //   }
 // }
@@ -32,6 +25,12 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "baseUrl": "./",
+    "paths": {
+      ".prisma/blog-client": [
+        "../../packages/db-blog/node_modules/.prisma/client/index"
+      ]
+    }
   }
 }

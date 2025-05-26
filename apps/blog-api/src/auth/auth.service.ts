@@ -4,7 +4,7 @@ import { SignInInput } from './dto/signin.input';
 import { verify } from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { AuthJwtPayload } from './types/auth-jwtPayload';
-import { User } from '@repo/database';
+import { User } from '.prisma/blog-client';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserInput } from '../user/dto/create-user.input';
 

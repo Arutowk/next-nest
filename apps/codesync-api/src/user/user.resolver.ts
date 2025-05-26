@@ -1,24 +1,31 @@
 import { Resolver, Mutation, Args, Query, ID } from '@nestjs/graphql';
 import { UserService } from './user.service';
-import { User } from './entities/user.entity';
+import { UserInfo } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
-import { User as UserType } from '@repo/db-codesync';
+import { User } from '.prisma/codesync-client';
 
-@Resolver(() => User)
+@Resolver(() => UserInfo)
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Mutation(() => User)
+  @Mutation(() => UserInfo)
   async createUser(
     @Args('createUserInput') createUserInput: CreateUserInput,
-  ): Promise<UserType> {
+  ): Promise<User> {
     return await this.userService.create(createUserInput);
   }
 
-  @Query(() => User)
+  @Query(() => UserInfo)
   async getUserById(
-    @Args('id', { type: () => ID }) id: string,
-  ): Promise<UserType> {
-    return this.userService.findOne(id);
+    @Args('id', { type: () => ID! }) id: string,
+  ): Promise<User> {
+    return this.userService.findOneId(id);
+  }
+
+  @Query(() => UserInfo)
+  async getUserByEmail(
+    @Args('email', { type: () => String! }) email: string,
+  ): Promise<User> {
+    return this.userService.findOneEmail(email);
   }
 }

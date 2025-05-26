@@ -19,9 +19,23 @@
     "turbo": "^2.5.0",
     "typescript": "5.8.2"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.11.0",
   "engines": {
     "node": ">=18"
+  },
+  "pnpm": {
+    "overrides": {
+      "prisma": "^6.8.2",
+      "@prisma/client": "^6.8.2"
+    },
+    "onlyBuiltDependencies": [
+      "@apollo/protobufjs",
+      "@nestjs/core",
+      "argon2",
+      "bcrypt",
+      "core-js-pure",
+      "esbuild"
+    ]
   },
   "author": "arutowk"
 }
