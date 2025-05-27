@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { CreateUserInput } from './dto/create-user.input';
 import { PrismaService } from '../prisma/prisma.service';
-import { User } from '.prisma/codesync-client';
+import { User } from '@repo/db-codesync';
 
 @Injectable()
 export class UserService {

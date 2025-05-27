@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("CODESYNC_DATABASE_URL")
+  provider = "postgres"
+  url      = env("DATABASE_URL")
 }
 

@@ -16,7 +16,7 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "prettier": "^3.2.5",
-    "turbo": "^2.5.0",
+    "turbo": "^2.5.3",
     "typescript": "5.8.2"
   },
   "packageManager": "pnpm@10.11.0",
@@ -34,7 +34,16 @@
       "argon2",
       "bcrypt",
       "core-js-pure",
-      "esbuild"
+      "esbuild",
+      "@prisma/client"
+    ],
+    "ignoredBuiltDependencies": [
+      "@parcel/watcher",
+      "@prisma/client",
+      "@prisma/engines",
+      "@tailwindcss/oxide",
+      "prisma",
+      "sharp"
     ]
   },
   "author": "arutowk"

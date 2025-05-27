@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '.prisma/codesync-client';
+import { PrismaClient } from '@repo/db-codesync';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {

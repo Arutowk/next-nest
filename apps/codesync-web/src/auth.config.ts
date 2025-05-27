@@ -4,7 +4,7 @@ import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import bcrypt from 'bcryptjs';
 import { LoginFormSchema } from './lib/zodSchemas/loginFormSchema';
-import { prisma } from './lib/prisma';
+import { prisma } from './prisma';
 
 export const authConfig: NextAuthConfig = {
   providers: [
@@ -19,7 +19,6 @@ export const authConfig: NextAuthConfig = {
       },
       authorize: async (credentials) => {
         const validatedCredentials = LoginFormSchema.parse(credentials);
-        console.log(validatedCredentials);
         const user = await prisma.user.findUnique({
           where: { email: validatedCredentials.email },
         });
@@ -36,25 +35,38 @@ export const authConfig: NextAuthConfig = {
             id: user.id,
             email: user.email,
             name: user.name,
-            role: user.role,
           };
         }
-
         return null;
       },
     }),
   ],
   callbacks: {
-    session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-        session.user.role = user.role;
+    // async signIn({ user }) {
+    //   const existingUser = await prisma.user.findUnique({
+    //     where: { id: user.id },
+    //   });
+    //   if (!existingUser || existingUser.emailVerified) {
+    //     return false;
+    //   }
+    //   return true;
+    // },
+    async session({ session, token }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
       }
-
+      if (token.role && session.user) {
+        session.user.role = token.role;
+      }
       return session;
     },
-    jwt({ token, user }) {
-      token.role = user.role;
+    async jwt({ token }) {
+      if (!token.sub) return token;
+      const existingUser = await prisma.user.findUnique({
+        where: { id: token.sub },
+      });
+      if (!existingUser) return token;
+      token.role = existingUser.role;
       return token;
     },
   },

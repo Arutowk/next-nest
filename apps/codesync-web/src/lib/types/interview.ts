@@ -1,4 +1,4 @@
-import { User, UserRole } from '@repo/db-codesync';
+import { User, UserRole } from '.prisma/codesync-client';
 import { NonNullObject } from '@repo/ui/types';
 
 export type UserType = NonNullObject<User>;

@@ -9,9 +9,6 @@ declare module 'next-auth' {
       accessToken: string;
     } & DefaultSession['user'];
   }
-  interface User {
-    role: RoleType;
-  }
 }
 
 declare module 'next-auth/jwt' {

@@ -1,7 +1,7 @@
 import NextAuth, { type NextAuthResult } from 'next-auth';
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import { prisma } from '@repo/db-codesync';
 import { authConfig } from './auth.config';
+import { prisma } from './prisma';
 
 const result = NextAuth({
   ...authConfig,

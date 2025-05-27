@@ -1,4 +1,4 @@
-import { PrismaClient } from '@repo/db-codesync/client';
+import { PrismaClient } from '@repo/db-codesync';
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 

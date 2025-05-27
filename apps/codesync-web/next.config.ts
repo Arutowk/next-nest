@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+const path = require('path');
 // const { PrismaPlugin } = require('@prisma/nextjs-monorepo-workaround-plugin');
 
 const nextConfig: NextConfig = {
@@ -14,8 +15,8 @@ const nextConfig: NextConfig = {
     serverActions: {
       allowedOrigins: ['localhost:3000'],
     },
-    serverComponentsExternalPackages: ['@prisma/client', '.prisma/client'],
   },
+  serverExternalPackages: ['@prisma/client', '.prisma/client'],
 };
 
 export default nextConfig;
