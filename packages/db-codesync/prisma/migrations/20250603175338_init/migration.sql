@@ -13,6 +13,7 @@ CREATE TABLE "Interview" (
     "startTime" TIMESTAMP(3) NOT NULL,
     "endTime" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "streamCallId" TEXT,
     "interviewerId" TEXT NOT NULL,
     "candidateId" TEXT NOT NULL,
 

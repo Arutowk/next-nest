@@ -70,4 +70,12 @@ export const authConfig: NextAuthConfig = {
       return token;
     },
   },
+  events: {
+    async linkAccount({ user }) {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { emailVerified: new Date() },
+      });
+    },
+  },
 } satisfies NextAuthConfig;

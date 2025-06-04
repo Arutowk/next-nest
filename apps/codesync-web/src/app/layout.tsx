@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from '@/components/provider/theme-provider';
 import NavBar from '@/components/NavBar';
+import { auth } from '@/auth';
 import { SessionProvider } from 'next-auth/react';
 
 const geistSans = Geist({
@@ -25,6 +26,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const session = await auth();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -36,13 +39,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          {/* <SessionProvider session={session}> */}
           <div className="min-h-screen">
-            {/* <SessionProvider> */}
             <NavBar />
-            {/* </SessionProvider> */}
-
             <main className="px-4 sm:px-6 lg:px-8">{children}</main>
           </div>
+          {/* </SessionProvider> */}
         </ThemeProvider>
       </body>
     </html>

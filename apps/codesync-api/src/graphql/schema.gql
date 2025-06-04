@@ -23,17 +23,51 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Interview {
+  id: ID!
+  title: String!
+  description: String
+  status: InterviewStatus!
+  startTime: DateTime!
+  endTime: DateTime!
+  createdAt: DateTime!
+  streamCallId: String
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
 type Query {
   getUserById(id: ID!): UserInfo!
   getUserByEmail(email: String!): UserInfo!
+  interview(id: Int!): Interview!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): UserInfo!
+  createInterview(createInterviewInput: CreateInterviewInput!): Interview!
+  getInterviewsById(id: ID!): [Interview!]!
+  updateInterview(updateInterviewInput: UpdateInterviewInput!): Interview!
+  removeInterview(id: Int!): Interview!
 }
 
 input CreateUserInput {
   name: String
   password: String!
   email: String!
+}
+
+input CreateInterviewInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateInterviewInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }

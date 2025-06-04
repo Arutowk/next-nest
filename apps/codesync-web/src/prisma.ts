@@ -1,4 +1,5 @@
 import { PrismaClient } from '@repo/db-codesync';
+// import { withAccelerate } from '@prisma/extension-accelerate';
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "prepack": "prisma generate",
-    "db:generate": "pnpm exec prisma generate",
+    "db:generate": "prisma generate --no-engine",
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "studio": "prisma studio"
