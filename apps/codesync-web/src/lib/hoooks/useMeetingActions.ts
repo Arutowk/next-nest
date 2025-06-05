@@ -7,7 +7,10 @@ const useMeetingActions = () => {
   const client = useStreamVideoClient();
 
   const createInstantMeeting = async () => {
-    if (!client) return;
+    if (!client) {
+      console.log('==>no client');
+      return;
+    }
 
     try {
       const id = crypto.randomUUID();

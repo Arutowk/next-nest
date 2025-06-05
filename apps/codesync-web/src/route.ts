@@ -1,7 +1,7 @@
 /**
  * @description 可以被所有人访问的公共路由
  */
-export const publicRoutes = ['/'];
+export const publicRoutes = ['/dashboard'];
 
 /**
  * @description 用于登录认证的路由，登陆后会重定位

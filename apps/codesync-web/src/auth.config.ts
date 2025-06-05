@@ -41,41 +41,4 @@ export const authConfig: NextAuthConfig = {
       },
     }),
   ],
-  callbacks: {
-    // async signIn({ user }) {
-    //   const existingUser = await prisma.user.findUnique({
-    //     where: { id: user.id },
-    //   });
-    //   if (!existingUser || existingUser.emailVerified) {
-    //     return false;
-    //   }
-    //   return true;
-    // },
-    async session({ session, token }) {
-      if (token.sub && session.user) {
-        session.user.id = token.sub;
-      }
-      if (token.role && session.user) {
-        session.user.role = token.role;
-      }
-      return session;
-    },
-    async jwt({ token }) {
-      if (!token.sub) return token;
-      const existingUser = await prisma.user.findUnique({
-        where: { id: token.sub },
-      });
-      if (!existingUser) return token;
-      token.role = existingUser.role;
-      return token;
-    },
-  },
-  events: {
-    async linkAccount({ user }) {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { emailVerified: new Date() },
-      });
-    },
-  },
 } satisfies NextAuthConfig;

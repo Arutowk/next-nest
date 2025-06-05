@@ -10,7 +10,6 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
   const [streamVideoClient, setStreamVideoClient] =
     useState<StreamVideoClient>();
   const session = useSession();
-  console.log('stream session', session);
   const user = session.data?.user;
 
   useEffect(() => {
@@ -27,7 +26,7 @@ const StreamVideoProvider = ({ children }: { children: ReactNode }) => {
     });
 
     setStreamVideoClient(client);
-  }, [user]);
+  }, [user?.id]);
 
   if (!streamVideoClient) return <LoaderUI />;
 

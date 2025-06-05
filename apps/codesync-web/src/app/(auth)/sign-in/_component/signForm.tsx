@@ -1,8 +1,10 @@
 'use client';
 
 import SubmitButton from '@/components/SubmitButton';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 import { SignUpFormState } from '@/lib/types/formState';
+import { AlertCircleIcon } from 'lucide-react';
 import { useActionState } from 'react';
 
 type Props = {
@@ -48,6 +50,15 @@ const SignForm = ({ formAction, text }: Props) => {
       />
       {!!state?.errors?.password && (
         <p className="text-red-500 text-sm">{state.errors.password}</p>
+      )}
+      {state?.message && (
+        <Alert variant="destructive">
+          <AlertCircleIcon />
+          <AlertTitle>Unable to sign in.</AlertTitle>
+          <AlertDescription>
+            <p>{state?.message}</p>
+          </AlertDescription>
+        </Alert>
       )}
       <SubmitButton className="w-full">{text}</SubmitButton>
     </form>
