@@ -3,6 +3,7 @@
 import LoaderUI from '@/components/LoaderUI';
 import useGetCallById from '@/lib/hoooks/useGetCallById';
 import { StreamCall, StreamTheme } from '@stream-io/video-react-sdk';
+import { useTheme } from 'next-themes';
 import { use, useState } from 'react';
 import MeetingSetup from './_component/MeetingSetup';
 import MeetingRoom from './_component/MeetingRoom';
@@ -14,6 +15,7 @@ type PageProps = {
 function Meeting({ params }: PageProps) {
   const { id } = use(params);
   const { call, isCallLoading } = useGetCallById(id ?? '');
+  const { theme } = useTheme();
 
   const [isSetupComplete, setIsSetupComplete] = useState(false);
 
@@ -28,7 +30,7 @@ function Meeting({ params }: PageProps) {
 
   return (
     <StreamCall call={call}>
-      <StreamTheme>
+      <StreamTheme className={theme}>
         {!isSetupComplete ? (
           <MeetingSetup onSetupComplete={() => setIsSetupComplete(true)} />
         ) : (

@@ -9,7 +9,7 @@ const useGetCallById = (id: string | string[]) => {
 
   useEffect(() => {
     const getCall = async () => {
-      if (!client) return;
+      if (!client || !id) return;
       try {
         const { calls } = await client.queryCalls({
           filter_conditions: { id },

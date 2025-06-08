@@ -28,12 +28,12 @@ export class Interview {
   @Field(() => Date)
   startTime: Date;
 
-  @Field(() => Date)
+  @Field(() => Date, { nullable: true })
   endTime?: Date;
 
   @Field(() => Date)
   createdAt: Date;
 
-  @Field({ nullable: true })
-  streamCallId?: string;
+  @Field()
+  streamCallId: string;
 }

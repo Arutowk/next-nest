@@ -6,7 +6,7 @@ model Interview {
   startTime   DateTime   // 面试开始时间
   endTime     DateTime?  // 实际结束时间
   createdAt   DateTime   @default(now())
-  streamCallId  String?
+  streamCallId  String  @unique
   
   // 关联面试官
   interviewer   User   @relation("InterviewHost", fields: [interviewerId], references: [id])

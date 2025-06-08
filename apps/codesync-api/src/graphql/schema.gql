@@ -29,9 +29,9 @@ type Interview {
   description: String
   status: InterviewStatus!
   startTime: DateTime!
-  endTime: DateTime!
+  endTime: DateTime
   createdAt: DateTime!
-  streamCallId: String
+  streamCallId: String!
 }
 
 enum InterviewStatus {
@@ -44,15 +44,14 @@ enum InterviewStatus {
 type Query {
   getUserById(id: ID!): UserInfo!
   getUserByEmail(email: String!): UserInfo!
-  interview(id: Int!): Interview!
+  getInterviewsById(id: ID!): [Interview!]!
+  getInterviewByStreamCallId(streamCallId: String!): Interview!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): UserInfo!
   createInterview(createInterviewInput: CreateInterviewInput!): Interview!
-  getInterviewsById(id: ID!): [Interview!]!
   updateInterview(updateInterviewInput: UpdateInterviewInput!): Interview!
-  removeInterview(id: Int!): Interview!
 }
 
 input CreateUserInput {
@@ -62,12 +61,24 @@ input CreateUserInput {
 }
 
 input CreateInterviewInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  title: String!
+  description: String
+  streamCallId: String!
+  startTime: DateTime!
+  endTime: DateTime
+  status: InterviewStatus! = SCHEDULED
+  interviewerId: String!
+  candidateId: String!
 }
 
 input UpdateInterviewInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  title: String
+  description: String
+  streamCallId: String
+  startTime: DateTime
+  endTime: DateTime
+  status: InterviewStatus = SCHEDULED
+  interviewerId: String
+  candidateId: String
   id: Int!
 }

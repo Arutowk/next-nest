@@ -15,19 +15,16 @@ export class InterviewResolver {
     return this.interviewService.create(createInterviewInput);
   }
 
-  @Mutation(() => [Interview])
+  @Query(() => [Interview])
   getInterviewsById(@Args('id', { type: () => ID }) id: string) {
     return this.interviewService.findByUser(id);
   }
 
-  @Query(() => [Interview], { name: 'interview' })
-  findAll() {
-    return this.interviewService.findAll();
-  }
-
-  @Query(() => Interview, { name: 'interview' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.interviewService.findOne(id);
+  @Query(() => Interview)
+  getInterviewByStreamCallId(
+    @Args('streamCallId', { type: () => String }) streamCallId: string,
+  ) {
+    return this.interviewService.findByStreamCallId(streamCallId);
   }
 
   @Mutation(() => Interview)
@@ -38,10 +35,5 @@ export class InterviewResolver {
       updateInterviewInput.id,
       updateInterviewInput,
     );
-  }
-
-  @Mutation(() => Interview)
-  removeInterview(@Args('id', { type: () => Int }) id: number) {
-    return this.interviewService.remove(id);
   }
 }

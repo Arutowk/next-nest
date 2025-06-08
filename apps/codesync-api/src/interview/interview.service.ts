@@ -2,33 +2,44 @@ import { Injectable } from '@nestjs/common';
 import { CreateInterviewInput } from './dto/create-interview.input';
 import { UpdateInterviewInput } from './dto/update-interview.input';
 import { PrismaService } from '../prisma/prisma.service';
+import { InterviewStatus } from './entities/interview.entity';
 
 @Injectable()
 export class InterviewService {
   constructor(private prisma: PrismaService) {}
 
-  findByUser(id: string) {
-    return this.prisma.interview.findMany({
-      where: { id: id },
+  async create(createInterviewInput: CreateInterviewInput) {
+    const { interviewerId, candidateId, ...rest } = createInterviewInput;
+    const status = createInterviewInput.status || InterviewStatus.SCHEDULED;
+    return await this.prisma.interview.create({
+      data: {
+        ...rest,
+        status,
+        interviewer: { connect: { id: interviewerId } },
+        candidate: { connect: { id: candidateId } },
+      },
+      include: {
+        interviewer: true,
+        candidate: true,
+      },
     });
   }
-  create(createInterviewInput: CreateInterviewInput) {
-    return 'This action adds a new interview';
+
+  async findByUser(id: string) {
+    return await this.prisma.interview.findMany({
+      where: {
+        OR: [{ interviewer: { id: id } }, { candidate: { id: id } }],
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all interview`;
+  async findByStreamCallId(streamCallId: string) {
+    return await this.prisma.interview.findUnique({
+      where: { streamCallId: streamCallId },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} interview`;
-  }
-
-  update(id: number, updateInterviewInput: UpdateInterviewInput) {
+  async update(id: number, updateInterviewInput: UpdateInterviewInput) {
     return `This action updates a #${id} interview`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} interview`;
   }
 }
