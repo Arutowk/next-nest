@@ -15,7 +15,7 @@ type Props = { onSetupComplete: () => void };
 
 function MeetingSetup({ onSetupComplete }: Props) {
   const [isCameraDisabled, setIsCameraDisabled] = useState(true);
-  const [isMicDisabled, setIsMicDisabled] = useState(false);
+  const [isMicDisabled, setIsMicDisabled] = useState(true);
   const [joining, setJoining] = useState(false);
 
   const session = useSession();
