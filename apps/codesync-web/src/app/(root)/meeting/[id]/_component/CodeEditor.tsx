@@ -5,6 +5,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
+// If ResizablePanelGroup is a custom component, ensure its props include React.PropsWithChildren
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import {
   Select,
