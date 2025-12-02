@@ -15,9 +15,10 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@types/minimatch": "^5.1.1",
     "prettier": "^3.2.5",
-    "turbo": "^2.5.3",
-    "typescript": "5.8.2"
+    "turbo": "^2.6.1",
+    "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@10.11.0",
   "engines": {
@@ -25,8 +26,11 @@
   },
   "pnpm": {
     "overrides": {
-      "prisma": "^6.8.2",
-      "@prisma/client": "^6.8.2"
+      "typescript": "^5.9.3",
+      "react": "^19.2.0",
+      "react-dom": "^19.2.0",
+      "@types/react": "19.2.7",
+      "@types/react-dom": "19.2.3"
     },
     "onlyBuiltDependencies": [
       "@apollo/protobufjs",

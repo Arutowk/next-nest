@@ -12,7 +12,7 @@ This Turborepo includes the following packages&apps:
         ├── @repo/jest-config         # `jest` configurations
         ├── @repo/typescript-config   # `tsconfig.json`s used throughout the monorepo
         ├── @repo/ui                  # Shareable stub React component library.
-        └── @repo/database            # Shareable prisma database.
+        └── @repo/db-XXX              # Shareable prisma database.
 
 Each package and application are 100% TypeScript safe.
 

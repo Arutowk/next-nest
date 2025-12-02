@@ -25,7 +25,7 @@ export class Signaling
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
   private connectedSockets: Array<{ socketId: string; userName: string }> = [];
-  private offers = [];
+  private offers: any[] = [];
 
   @WebSocketServer()
   server: Server;

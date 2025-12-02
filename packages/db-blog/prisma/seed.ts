@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { PrismaClient } from '../../../node_modules/.prisma/blog-client';
+import { PrismaClient } from '../generated/prisma';
 import { hash } from 'argon2';
 
 const prisma = new PrismaClient();

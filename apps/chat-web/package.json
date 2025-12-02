@@ -7,13 +7,19 @@
     "start": "next start"
   },
   "dependencies": {
+    "@prisma/client-runtime-utils": "^7.0.1",
     "@reduxjs/toolkit": "^2.2.0",
+    "@repo/db-chat": "workspace:*",
+    "@repo/ui": "workspace:*",
     "next": "latest",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-redux": "^9.1.0"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/jest-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "20.2.5",
     "@types/react": "19.2.7",
     "@types/react-dom": "^19.2.3",
