@@ -2,11 +2,10 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "./base.json",
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "removeComments": true,
     "strictPropertyInitialization": false,
-    "allowImportingTsExtensions": true,
-    "noEmit": true
+    "preserveSymlinks": true
   }
 }

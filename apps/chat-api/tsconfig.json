@@ -3,9 +3,6 @@
   "extends": "@repo/typescript-config/nestjs.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "baseUrl": "./",
-    "paths": {
-      "#db-chat": ["../../packages/db-chat/src/index"]
-    }
+    "baseUrl": "./"
   }
 }
