@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import SignUpForm from './SignUpForm';
-import { signUpAction } from '@/lib/actions/auth';
 
 export default function Page() {
   return (

@@ -12,9 +12,9 @@ import { Input } from '@/components/ui/input';
 import { signUpAction } from '@/lib/actions/auth';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { useActionState, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { redirect } from 'next/navigation';
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,10 +24,9 @@ export default function SignUpForm() {
     if (state?.message === 'success') {
       toast.success('Signup successful!');
       redirect('/sign-in');
-    } else {
-      state?.errors && toast.info('Please fix the errors and try again.');
-      state?.message && toast.error(state?.message);
-    }
+    } else if (state?.errors)
+      toast.info('Please fix the errors and try again.');
+    else if (state?.message) toast.error(state?.message);
   }, [state]);
 
   return (

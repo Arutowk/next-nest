@@ -1,6 +1,6 @@
 'use server';
 
-import { SignFormState } from '../types/formState';
+import type { SignFormState } from '../types/formState';
 import { LoginFormSchema } from '../zodSchemas/loginFormSchema';
 import { SignUpFormSchema } from '../zodSchemas/signUpFormSchema';
 import { APIError } from 'better-auth';

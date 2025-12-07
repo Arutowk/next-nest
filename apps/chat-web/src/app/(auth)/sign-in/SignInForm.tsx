@@ -1,15 +1,8 @@
 'use client';
 
 import SubmitButton from '@/components/SubmitButton';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from '@/components/ui/field';
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { signInAction } from '@/lib/actions/auth';
 import { authClient } from '@/lib/auth-client';
@@ -30,10 +23,9 @@ export default function SignInForm() {
         password: state.data.password!,
         callbackURL: '/',
       });
-    } else {
-      state?.errors && toast.info('Please fix the errors and try again.');
-      state?.message && toast.error(state?.message);
-    }
+    } else if (state?.errors)
+      toast.info('Please fix the errors and try again.');
+    else if (state?.message) toast.error(state?.message);
   }, [state]);
 
   return (

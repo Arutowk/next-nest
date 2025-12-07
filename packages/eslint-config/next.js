@@ -1,10 +1,11 @@
 import js from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import tseslint from 'typescript-eslint';
-import pluginReactHooks from 'eslint-plugin-react-hooks';
-import pluginReact from 'eslint-plugin-react';
-import globals from 'globals';
 import pluginNext from '@next/eslint-plugin-next';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import enforceUseClient from 'eslint-plugin-nextjs-enforce-use-client';
+import pluginReact from 'eslint-plugin-react';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 import { config as baseConfig } from './base.js';
 
 /**
@@ -44,6 +45,28 @@ export const nextJsConfig = [
       ...pluginReactHooks.configs.recommended.rules,
       // React scope no longer necessary with new JSX transform.
       'react/react-in-jsx-scope': 'off',
+    },
+  },
+  //客户端组件必须声明'use client'
+  {
+    files: ['**/*.tsx', '**/*.jsx'],
+    ignores: ['**/*.test.ts', '**/*.test.tsx'],
+    plugins: {
+      'nextjs-enforce-use-client': enforceUseClient,
+      rules: {
+        'nextjs-enforce-use-client/enforce-use-client': 'error',
+      },
+    },
+  },
+  //只有类型引入必须声明type
+  {
+    rules: {
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'inline-type-imports',
+        },
+      ],
     },
   },
 ];

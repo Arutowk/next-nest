@@ -1,15 +1,9 @@
 'use client';
-import Image from 'next/image';
 import SignOut from '@/components/SignOut';
 import { authClient } from '@/lib/auth-client';
 
 export default function Home() {
-  const {
-    data: session,
-    isPending, //loading state
-    error, //error object
-    refetch, //refetch the session
-  } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const isLoggedIn = !!session?.user;
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
