@@ -1,6 +1,6 @@
+import { BACKEND_BASE_URL } from '@/lib/default';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query';
 import { User } from 'chat-api';
-import { BACKEND_BASE_URL } from '../baseUrl';
 
 export const authApiSlice = createApi({
   reducerPath: 'authApi',

@@ -1,39 +1,37 @@
-import { authConfig } from '@/app/auth.config';
-import NextAuth from 'next-auth';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { headers } from 'next/headers';
+import { auth } from '@/lib/auth';
 import {
-  apiAuthPrefix,
+  APIAUTH_PREFIX,
   authRoutes,
   DEFAULT_LOGIN_REDIRECT,
   publicRoutes,
 } from '@/app/routeConfig';
 
-// Use only one of the two middleware options below
-// 1. Use middleware directly
-// export const { auth: middleware } = NextAuth(authConfig)
+export async function proxy(request: NextRequest) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const isLoggedIn = !!session;
+  const { nextUrl } = request;
 
-// 2. Wrapped middleware option
-const { auth } = NextAuth(authConfig);
-
-export default auth((req) => {
-  const isLoggedIn = !!req.auth;
-  const { nextUrl } = req;
-
-  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isApiAuthRoute = nextUrl.pathname.startsWith(APIAUTH_PREFIX);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-  if (isApiAuthRoute) return;
+  if (isApiAuthRoute) return NextResponse.next();
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    return;
+    return NextResponse.next();
   }
   if (!isLoggedIn && !isPublicRoute) {
     return Response.redirect(new URL('/sign-in', nextUrl));
   }
-  return;
-});
+  return NextResponse.next();
+}
 
 // Optionally, don't invoke Middleware on some paths
 export const config = {

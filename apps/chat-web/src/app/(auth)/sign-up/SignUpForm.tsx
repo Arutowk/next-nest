@@ -12,11 +12,23 @@ import { Input } from '@/components/ui/input';
 import { signUpAction } from '@/lib/actions/auth';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { redirect } from 'next/navigation';
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [state, action] = useActionState(signUpAction, undefined);
+  const [state, action, isPending] = useActionState(signUpAction, undefined);
+
+  useEffect(() => {
+    if (state?.message === 'success') {
+      toast.success('Signup successful!');
+      redirect('/sign-in');
+    } else {
+      state?.errors && toast.info('Please fix the errors and try again.');
+      state?.message && toast.error(state?.message);
+    }
+  }, [state]);
 
   return (
     <form action={action}>
@@ -29,17 +41,12 @@ export default function SignUpForm() {
             type="email"
             name="email"
             placeholder="m@example.com"
+            disabled={isPending}
           />
           <FieldDescription>
             {state?.errors?.email ? (
-              state.errors.email.map((err, idx) => (
-                <span key={idx} className="text-red-500">
-                  {err + '. '}
-                </span>
-              ))
-            ) : (
-              <span>We&apos;ll use this to contact you.</span>
-            )}
+              <span className="text-red-500">{state.errors.email[0]}</span>
+            ) : null}
           </FieldDescription>
         </Field>
         <Field>
@@ -50,6 +57,7 @@ export default function SignUpForm() {
               name="password"
               id="password"
               type={showPassword ? 'text' : 'password'}
+              disabled={isPending}
             />
             <Button
               type="button"
@@ -70,29 +78,22 @@ export default function SignUpForm() {
           </div>
           <FieldDescription>
             {state?.errors?.password ? (
-              state.errors.password.map((err, idx) => (
-                <span key={idx} className="text-red-500">
-                  {err + '. '}
-                </span>
-              ))
-            ) : (
-              <span>Must be at least 8 characters long.</span>
-            )}
+              <span className="text-red-500">{state.errors.password[0]}</span>
+            ) : null}
           </FieldDescription>
         </Field>
         <Field>
           <FieldLabel htmlFor="name">Name</FieldLabel>
-          <Input defaultValue={state?.data.name} id="name" name="name" />
+          <Input
+            defaultValue={state?.data.name}
+            id="name"
+            name="name"
+            disabled={isPending}
+          />
           <FieldDescription>
             {state?.errors?.name ? (
-              state.errors.name.map((err, idx) => (
-                <span key={idx} className="text-red-500">
-                  {err + '. '}
-                </span>
-              ))
-            ) : (
-              <span>Please input your nickname.</span>
-            )}
+              <span className="text-red-500">{state.errors.name[0]}</span>
+            ) : null}
           </FieldDescription>
         </Field>
         <FieldGroup>

@@ -1,62 +1,42 @@
 'use server';
 
-import { signIn, signOut } from '@/app/auth';
-import { DEFAULT_LOGIN_REDIRECT } from '@/app/routeConfig';
 import { SignFormState } from '../types/formState';
-import { AuthError } from 'next-auth';
 import { LoginFormSchema } from '../zodSchemas/loginFormSchema';
 import { SignUpFormSchema } from '../zodSchemas/signUpFormSchema';
-import { redirect } from 'next/navigation';
-import { BACKEND_BASE_URL } from '../features/baseUrl';
-
-export const loginWithGithub = async () => {
-  await signIn('github', { redirectTo: '/' });
-};
-
-export const loginWithGoogle = async () => {
-  await signIn('google', { redirectTo: '/' });
-};
-
-export const logout = async () => {
-  await signOut({ redirectTo: '/sign-in' });
-};
+import { APIError } from 'better-auth';
+import { auth } from '../auth';
+import { headers } from 'next/headers';
 
 export async function signInAction(
   state: SignFormState,
   formData: FormData,
 ): Promise<SignFormState> {
-  const validatedFields = LoginFormSchema.safeParse(
-    Object.fromEntries(formData.entries()),
-  );
+  const fields = Object.fromEntries(formData.entries());
+  const validatedFields = LoginFormSchema.safeParse(fields);
 
   if (!validatedFields.success)
     return {
-      data: Object.fromEntries(formData.entries()),
+      data: fields,
       errors: validatedFields.error.flatten().fieldErrors,
     };
-  const { email, password } = validatedFields.data;
+
   try {
-    await signIn('credentials', {
-      email,
-      password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
+    const result = await auth.api.signInEmail({
+      body: { ...validatedFields.data },
+      headers: await headers(),
     });
+    console.log('result:', result);
+    return {
+      data: fields,
+      message: 'success',
+    };
   } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return {
-            data: Object.fromEntries(formData.entries()),
-            message: 'Invalid credentials',
-          };
-        default:
-          return {
-            data: Object.fromEntries(formData.entries()),
-            message: 'Something went wrong',
-          };
-      }
+    if (error instanceof APIError) {
+      return {
+        data: fields,
+        message: error.message,
+      };
     }
-    throw error;
   }
 }
 
@@ -64,32 +44,30 @@ export async function signUpAction(
   state: SignFormState,
   formData: FormData,
 ): Promise<SignFormState> {
-  const validateFields = SignUpFormSchema.safeParse(
-    Object.fromEntries(formData.entries()),
-  );
+  const fields = Object.fromEntries(formData.entries());
+  const validateFields = SignUpFormSchema.safeParse(fields);
   if (!validateFields.success)
     return {
-      data: Object.fromEntries(formData.entries()),
+      data: fields,
       errors: validateFields.error.flatten().fieldErrors,
     };
 
-  const result = await fetch(`${BACKEND_BASE_URL}/user/signup`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      ...validateFields.data,
-    }),
-  })
-    .then((res) => res.json())
-    .catch(() => ({ errors: [{ message: 'Network error' }] }));
-
-  if (result.errors)
+  try {
+    await auth.api.signUpEmail({
+      body: {
+        ...validateFields.data,
+      },
+    });
     return {
-      data: Object.fromEntries(formData.entries()),
-      message:
-        result.errors
-          .map((item: { message: string }) => item.message)
-          .join(',') || 'Something went wrong',
+      data: fields,
+      message: 'success',
     };
-  redirect('/sign-in');
+  } catch (error) {
+    if (error instanceof APIError) {
+      return {
+        data: fields,
+        message: error.message,
+      };
+    }
+  }
 }

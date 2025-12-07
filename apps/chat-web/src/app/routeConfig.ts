@@ -11,6 +11,6 @@ export const authRoutes = ['/sign-in', '/sign-up'];
 /**
  * @description prefix for api authentication routes
  */
-export const apiAuthPrefix = '/api/auth';
+export const APIAUTH_PREFIX = '/api/auth';
 
 export const DEFAULT_LOGIN_REDIRECT = '/';

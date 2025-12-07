@@ -1,0 +1,12 @@
+{
+  "name": "@repo/database",
+  "version": "1.0.0",
+  "scripts": {
+    "clean:chat-api": "rimraf \"../../apps/chat-api/prisma/models\" ",
+    "copy:chat-api": "copyfiles -a -u 1 \"chat/**/*\" ../../apps/chat-api/prisma/models/ "
+  },
+  "dependencies": {
+    "copyfiles": "^2.4.1",
+    "rimraf": "^6.1.2"
+  }
+}

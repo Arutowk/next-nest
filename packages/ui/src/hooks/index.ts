@@ -1,5 +1,6 @@
 import useClickOutside from './useClickOutside';
 import useDebouncedState from './useDebouncedState';
+import useUpdateEffect from './useUpdateEffect';
 import { useCountdown, usePreciseCountdown } from './useCountdown';
 
 export {
@@ -7,4 +8,5 @@ export {
   useDebouncedState,
   useCountdown,
   usePreciseCountdown,
+  useUpdateEffect,
 };

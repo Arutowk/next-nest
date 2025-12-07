@@ -10,7 +10,7 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from 'prisma/src';
+import { User } from 'src/generated/prisma/client';
 
 @Controller('user')
 export class UserController {

@@ -15,3 +15,7 @@ pnpm prisma db push
 ```js
 pnpm prisma studio
 ```
+
+```js
+pnpm prisma migrate reset
+```

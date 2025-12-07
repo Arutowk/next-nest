@@ -1,15 +1,21 @@
+'use client';
 import Image from 'next/image';
-import { auth } from '../auth';
 import SignOut from '@/components/SignOut';
+import { authClient } from '@/lib/auth-client';
 
-export default async function Home() {
-  const session = await auth();
+export default function Home() {
+  const {
+    data: session,
+    isPending, //loading state
+    error, //error object
+    refetch, //refetch the session
+  } = authClient.useSession();
   const isLoggedIn = !!session?.user;
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <h1>Chat</h1>
+      <h1>{session?.user.name}</h1>
       <h1>page</h1>
-      <h1>{JSON.stringify(session)}</h1>
       {isLoggedIn && <SignOut />}
     </main>
   );
