@@ -1,11 +1,13 @@
 'use server';
 
+import { APIError } from 'better-auth';
+import { headers } from 'next/headers';
+
 import type { SignFormState } from '../types/formState';
+
+import { auth } from '../auth';
 import { LoginFormSchema } from '../zodSchemas/loginFormSchema';
 import { SignUpFormSchema } from '../zodSchemas/signUpFormSchema';
-import { APIError } from 'better-auth';
-import { auth } from '../auth';
-import { headers } from 'next/headers';
 
 export async function signInAction(
   state: SignFormState,

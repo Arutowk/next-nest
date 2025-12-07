@@ -1,13 +1,15 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 import { headers } from 'next/headers';
-import { auth } from '@/lib/auth';
+import { NextResponse } from 'next/server';
+
+import type { NextRequest } from 'next/server';
+
 import {
   APIAUTH_PREFIX,
   authRoutes,
   DEFAULT_LOGIN_REDIRECT,
   publicRoutes,
 } from '@/app/routeConfig';
+import { auth } from '@/lib/auth';
 
 export async function proxy(request: NextRequest) {
   const session = await auth.api.getSession({

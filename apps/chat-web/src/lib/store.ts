@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+
 import { authApiSlice } from './features/auth/authApiSlice';
 
 export const makeStore = () => {

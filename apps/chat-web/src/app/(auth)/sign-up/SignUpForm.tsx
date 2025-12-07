@@ -1,5 +1,11 @@
 'use client';
 
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { useActionState, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+
 import SubmitButton from '@/components/SubmitButton';
 import { Button } from '@/components/ui/button';
 import {
@@ -10,11 +16,6 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { signUpAction } from '@/lib/actions/auth';
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import { useActionState, useEffect, useState } from 'react';
-import { toast } from 'sonner';
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);

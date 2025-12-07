@@ -1,4 +1,9 @@
 import { GalleryVerticalEnd } from 'lucide-react';
+
+import GithubButton from './GithubButton';
+import GoogleButton from './GoogleButton';
+import SignInForm from './SignInForm';
+
 import {
   Card,
   CardContent,
@@ -12,9 +17,6 @@ import {
   FieldGroup,
   FieldSeparator,
 } from '@/components/ui/field';
-import SignInForm from './SignInForm';
-import GithubButton from './GithubButton';
-import GoogleButton from './GoogleButton';
 
 export default function Page() {
   return (
