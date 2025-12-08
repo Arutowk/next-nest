@@ -1,5 +1,6 @@
-import { Card } from "@/components/ui/card";
 import type { PropsWithChildren } from "react";
+
+import { Card } from "@/components/ui/card";
 
 export default function ConversationContainer({ children }: PropsWithChildren) {
   return (
