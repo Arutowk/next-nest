@@ -1,18 +1,15 @@
-'use server';
+import { authClient } from "../auth-client";
+import { InfoState, type SignFormState } from "../types/formState";
 
-import { APIError } from 'better-auth';
-import { headers } from 'next/headers';
-
-import type { SignFormState } from '../types/formState';
-
-import { auth } from '../auth';
-import { LoginFormSchema } from '../zodSchemas/loginFormSchema';
-import { SignUpFormSchema } from '../zodSchemas/signUpFormSchema';
+import { LoginFormSchema } from "../zodSchemas/loginFormSchema";
+import { SignUpFormSchema } from "../zodSchemas/signUpFormSchema";
 
 export async function signInAction(
   state: SignFormState,
   formData: FormData,
 ): Promise<SignFormState> {
+  if (state?.message === InfoState.SUCCESS) return state;
+
   const fields = Object.fromEntries(formData.entries());
   const validatedFields = LoginFormSchema.safeParse(fields);
 
@@ -20,26 +17,23 @@ export async function signInAction(
     return {
       data: fields,
       errors: validatedFields.error.flatten().fieldErrors,
+      message: InfoState.VALID,
     };
 
-  try {
-    const result = await auth.api.signInEmail({
-      body: { ...validatedFields.data },
-      headers: await headers(),
-    });
-    console.log('result:', result);
+  const { data, error } = await authClient.signIn.email({
+    ...validatedFields.data,
+  });
+  console.log(data);
+  if (error)
     return {
       data: fields,
-      message: 'success',
+      message: error.message || InfoState.FAILED,
     };
-  } catch (error) {
-    if (error instanceof APIError) {
-      return {
-        data: fields,
-        message: error.message,
-      };
-    }
-  }
+  else
+    return {
+      data: fields,
+      message: InfoState.SUCCESS,
+    };
 }
 
 export async function signUpAction(
@@ -52,24 +46,19 @@ export async function signUpAction(
     return {
       data: fields,
       errors: validateFields.error.flatten().fieldErrors,
+      message: InfoState.VALID,
     };
 
-  try {
-    await auth.api.signUpEmail({
-      body: {
-        ...validateFields.data,
-      },
-    });
+  const { data, error } = await authClient.signUp.email(validateFields.data);
+  console.log(data);
+  if (error)
     return {
       data: fields,
-      message: 'success',
+      message: error.message || InfoState.FAILED,
     };
-  } catch (error) {
-    if (error instanceof APIError) {
-      return {
-        data: fields,
-        message: error.message,
-      };
-    }
-  }
+  else
+    return {
+      data: fields,
+      message: InfoState.SUCCESS,
+    };
 }

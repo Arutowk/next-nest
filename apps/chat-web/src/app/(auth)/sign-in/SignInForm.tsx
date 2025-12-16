@@ -1,31 +1,28 @@
-'use client';
+"use client";
 
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import Link from 'next/link';
-import { useActionState, useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { EyeIcon, EyeOffIcon } from "lucide-react";
+import Link from "next/link";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import SubmitButton from '@/components/SubmitButton';
-import { Button } from '@/components/ui/button';
-import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { signInAction } from '@/lib/actions/auth';
-import { authClient } from '@/lib/auth-client';
+import SubmitButton from "@/components/SubmitButton";
+import { Button } from "@/components/ui/button";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { signInAction } from "@/lib/actions/auth";
+import { InfoState } from "@/lib/types/formState";
+import { redirect } from "next/navigation";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [state, action, isPending] = useActionState(signInAction, undefined);
 
   useEffect(() => {
-    if (state?.message === 'success') {
-      toast.success('Login successful!');
-      authClient.signIn.email({
-        email: state.data.email!,
-        password: state.data.password!,
-        callbackURL: '/',
-      });
+    if (state?.message === InfoState.SUCCESS) {
+      toast.success("Login successful!");
+      redirect("/");
     } else if (state?.errors)
-      toast.info('Please fix the errors and try again.');
+      toast.info("Please fix the errors and try again.");
     else if (state?.message) toast.error(state?.message);
   }, [state]);
 
@@ -62,7 +59,7 @@ export default function SignInForm() {
             name="password"
             defaultValue={state?.data.password}
             id="password"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             disabled={isPending}
           />
           <Button
@@ -78,7 +75,7 @@ export default function SignInForm() {
               <EyeOffIcon className="h-4 w-4" aria-hidden="true" />
             )}
             <span className="sr-only">
-              {showPassword ? 'Hide password' : 'Show password'}
+              {showPassword ? "Hide password" : "Show password"}
             </span>
           </Button>
         </div>

@@ -10,6 +10,12 @@ export type SignFormState =
         email?: string[];
         password?: string[];
       };
-      message?: string;
+      message?: string | InfoState;
     }
   | undefined;
+
+export enum InfoState {
+  VALID = "valid",
+  SUCCESS = "success",
+  FAILED = "failed",
+}

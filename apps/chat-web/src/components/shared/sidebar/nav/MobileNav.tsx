@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -11,6 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useNavigation } from "@/lib/hooks/useNavigation";
+import NavUser from "./NavUser";
 
 export default function MobileNav() {
   const paths = useNavigation();
@@ -39,16 +40,11 @@ export default function MobileNav() {
               </li>
             );
           })}
-
           <li>
-            {/* <UserButton /> */}
-            <Avatar className="rounded-lg">
-              <AvatarImage
-                src="https://github.com/evilrabbit.png"
-                alt="@evilrabbit"
-              />
-              <AvatarFallback>ER</AvatarFallback>
-            </Avatar>
+            <ThemeToggle />
+          </li>
+          <li>
+            <NavUser direction={"top"} />
           </li>
         </ul>
       </nav>

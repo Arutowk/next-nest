@@ -6,12 +6,20 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source:'/',
-        destination:'/conversations',
-        permanent:true
-      }
-    ]
+        source: "/",
+        destination: "/conversations",
+        permanent: true,
+      },
+    ];
   },
+  // rewrites() {
+  //   return [
+  //     {
+  //       source: "/api/:path*",
+  //       destination: "http://localhost:3001/api/:path*",
+  //     },
+  //   ];
+  // },
 };
 
 export default nextConfig;

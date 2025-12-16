@@ -1,0 +1,20 @@
+model Friendship {
+  id        String           @id @default(cuid())
+  userId    String
+  targetId  String
+  status    FriendshipStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  target    User             @relation("TargetFriendships", fields: [targetId], references: [id])
+  user      User             @relation("UserFriendships", fields: [userId], references: [id])
+
+  @@unique([userId, targetId])
+  @@map("Friendship")
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}

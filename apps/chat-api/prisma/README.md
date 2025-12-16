@@ -19,3 +19,11 @@ pnpm prisma studio
 ```js
 pnpm prisma migrate reset
 ```
+
+```js
+{
+  "name": "wwww",
+  "email": "123@qq.com",
+  "password": "0000"
+}
+```

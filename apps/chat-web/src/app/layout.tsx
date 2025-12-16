@@ -3,6 +3,7 @@ import { Toaster } from "sonner";
 
 import type { Metadata } from "next";
 
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
 
@@ -27,13 +28,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    //add suppressHydrationWarning to solve this error:
+    // A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <StoreProvider>
-          <main>{children}</main>
-          <Toaster />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <main>{children}</main>
+            <Toaster />
+          </ThemeProvider>
         </StoreProvider>
       </body>
     </html>

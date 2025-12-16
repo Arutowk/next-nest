@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -11,6 +11,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useNavigation } from "@/lib/hooks/useNavigation";
+import NavUser from "./NavUser";
 
 export default function DesktopNav() {
   const paths = useNavigation();
@@ -41,15 +42,9 @@ export default function DesktopNav() {
           })}
         </ul>
       </nav>
-      <div className="flex flex-col items-center gap=4">
-        {/* <UserButton /> */}
-        <Avatar className="rounded-lg">
-          <AvatarImage
-            src="https://github.com/evilrabbit.png"
-            alt="@evilrabbit"
-          />
-          <AvatarFallback>ER</AvatarFallback>
-        </Avatar>
+      <div className="flex flex-col items-center gap-4">
+        <ThemeToggle />
+        <NavUser direction="right" />
       </div>
     </Card>
   );
