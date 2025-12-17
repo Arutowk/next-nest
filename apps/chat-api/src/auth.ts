@@ -14,39 +14,54 @@ const prisma = new PrismaClient({
   adapter,
 });
 
-export const auth = betterAuth({
-  database: prismaAdapter(prisma, {
-    provider: 'sqlite', // or "mysql", "postgresql", ...
-  }),
-  //https://github.com/better-auth/better-auth/issues/4942
-  session: {
-    cookieCache: { enabled: true, maxAge: 300 },
+export const getConfig = () => ({
+  github: {
+    clientId: process.env.GITHUB_CLIENT_ID as string,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
   },
-  emailAndPassword: {
-    enabled: true,
-    minPasswordLength: 4,
-    maxPasswordLength: 32,
-  },
-  socialProviders: {
-    github: {
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    },
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    },
-  },
-  baseURL: 'http://localhost:3001',
-  trustedOrigins: ['http://localhost:3000'],
-
-  //http://localhost:3001/api/auth/reference
-  plugins: [openAPI(), nextCookies()],
-  advanced: {
-    defaultCookieAttributes: {
-      sameSite: 'none',
-      secure: true, // Requires HTTPS in production
-      httpOnly: true,
-    },
+  google: {
+    clientId: process.env.GOOGLE_CLIENT_ID as string,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
   },
 });
+
+export type SocialOptions = {
+  google: { clientId: string; clientSecret: string };
+  github: { clientId: string; clientSecret: string };
+};
+
+export function createAuth(options: SocialOptions) {
+  return betterAuth({
+    database: prismaAdapter(prisma, {
+      provider: 'sqlite',
+    }),
+    session: {
+      cookieCache: { enabled: true, maxAge: 300 },
+    },
+    emailAndPassword: {
+      enabled: true,
+      minPasswordLength: 4,
+      maxPasswordLength: 32,
+    },
+    socialProviders: {
+      github: {
+        clientId: options.github.clientId,
+        clientSecret: options.github.clientSecret,
+      },
+      google: {
+        clientId: options.google.clientId,
+        clientSecret: options.google.clientSecret,
+      },
+    },
+    baseURL: 'http://localhost:3001',
+    trustedOrigins: ['http://localhost:3000'],
+    plugins: [openAPI(), nextCookies()],
+    advanced: {
+      defaultCookieAttributes: {
+        sameSite: 'none',
+        secure: true,
+        httpOnly: true,
+      },
+    },
+  });
+}

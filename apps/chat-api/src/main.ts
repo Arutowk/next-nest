@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { toNodeHandler } from 'better-auth/node';
 import { AppModule } from './app.module';
-import { auth } from './auth';
+import { createAuth, getConfig } from './auth';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -16,7 +16,7 @@ async function bootstrap() {
 
   // https://github.com/better-auth/better-auth/issues/6636
   const express = app.getHttpAdapter().getInstance();
-  express.all(/^\/api\/auth\/.*$/, toNodeHandler(auth));
+  express.all(/^\/api\/auth\/.*$/, toNodeHandler(createAuth(getConfig())));
 
   // --- Swagger 配置开始 ---
 

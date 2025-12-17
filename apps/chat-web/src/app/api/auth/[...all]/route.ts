@@ -1,6 +1,8 @@
 import { toNextJsHandler } from "better-auth/next-js";
 
-import { auth } from "chat-api/auth";
+import { createAuth, getConfig } from "chat-api/auth";
+
+const auth = createAuth(getConfig());
 
 const { GET: baseGet, POST: basePost } = toNextJsHandler(auth);
 

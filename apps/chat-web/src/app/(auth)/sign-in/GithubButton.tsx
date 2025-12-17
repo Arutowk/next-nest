@@ -7,6 +7,7 @@ export default function GithubButton() {
   const loginWithGithub = async () => {
     authClient.signIn.social({
       provider: 'github',
+      callbackURL: "http://localhost:3000", 
     });
   };
   return (

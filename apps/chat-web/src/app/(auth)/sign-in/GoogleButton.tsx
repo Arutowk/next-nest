@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { authClient } from '@/lib/auth-client';
+import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 export default function GoogleButton() {
   const loginWithGoogle = async () => {
     authClient.signIn.social({
-      provider: 'google',
+      provider: "google",
+      callbackURL: "http://localhost:3000",
     });
   };
   return (
