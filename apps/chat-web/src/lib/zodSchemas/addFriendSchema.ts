@@ -14,7 +14,7 @@ export const AddFriednSchema = BaseSchema.refine(
   },
   {
     message: "name or email at least one",
-    // （可选）您可以指定哪个字段应该显示这个错误。
+    // （可选）可以指定哪个字段应该显示这个错误。
     // 如果不指定 path，错误会出现在整个对象上。
     path: ["name", "email"],
   },

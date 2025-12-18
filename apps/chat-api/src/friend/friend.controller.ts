@@ -8,13 +8,21 @@ import { FriendService } from './friend.service';
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
 
-  @Post(':id')
-  async friendRequest(@Session() session: UserSession, @Param() id: string) {
+  @Post('add/:id')
+  async friendRequest(
+    @Session() session: UserSession,
+    @Param('id') id: string,
+  ) {
     return this.friendService.sendFriendRequest(session.user.id, id);
   }
 
   @Get()
   async friendsList(@Session() session: UserSession) {
     return this.friendService.getFriendsList(session.user.id);
+  }
+
+  @Get('addMeList')
+  async getAddMeList(@Session() session: UserSession) {
+    return this.friendService.getPendingFriendRequests(session.user.id);
   }
 }

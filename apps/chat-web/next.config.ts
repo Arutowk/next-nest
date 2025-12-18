@@ -15,8 +15,8 @@ const nextConfig: NextConfig = {
   // rewrites() {
   //   return [
   //     {
-  //       source: "/api/:path*",
-  //       destination: "http://localhost:3001/api/:path*",
+  //       source: "/back/:path*",
+  //       destination: "http://localhost:3001/:path*",
   //     },
   //   ];
   // },

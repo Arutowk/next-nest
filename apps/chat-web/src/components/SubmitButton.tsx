@@ -1,17 +1,19 @@
-'use client';
+"use client";
 
-import { useFormStatus } from 'react-dom';
+import { useFormStatus } from "react-dom";
 
-import { Button, type ButtonProps } from './ui/button';
+import { LoaderCircle, MousePointerClick } from "lucide-react";
+import { Button, type ButtonProps } from "./ui/button";
 
 const SubmitButton = ({ children, ...props }: ButtonProps) => {
   const { pending } = useFormStatus();
   return (
-    <Button color="blue" type="submit" aria-disabled={pending} {...props}>
+    <Button color="blue" type="submit" disabled={pending} {...props}>
+      {children}
       {pending ? (
-        <span className="animate-pulse">Submitting...</span>
+        <LoaderCircle className="animate-spin" />
       ) : (
-        children
+        <MousePointerClick />
       )}
     </Button>
   );

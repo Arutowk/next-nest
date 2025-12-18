@@ -30,6 +30,7 @@ import { UserModule } from './user/user.module';
         };
         return {
           auth: createAuth(options),
+          disableGlobalAuthGuard: true,
         };
       },
       inject: [ConfigService],

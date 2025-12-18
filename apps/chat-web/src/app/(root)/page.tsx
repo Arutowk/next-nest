@@ -1,6 +1,6 @@
-'use client';
-import SignOut from '@/components/SignOut';
-import { authClient } from '@/lib/auth-client';
+"use client";
+import SignOut from "@/components/SignOut";
+import { authClient } from "@/lib/auth-client";
 
 export default function Home() {
   const { data: session } = authClient.useSession();

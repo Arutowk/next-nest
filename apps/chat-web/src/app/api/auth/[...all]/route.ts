@@ -1,8 +1,5 @@
+import { auth } from "@/lib/auth";
 import { toNextJsHandler } from "better-auth/next-js";
-
-import { createAuth, getConfig } from "chat-api/auth";
-
-const auth = createAuth(getConfig());
 
 const { GET: baseGet, POST: basePost } = toNextJsHandler(auth);
 
@@ -59,7 +56,6 @@ function withCors(handler: (req: Request) => Promise<Response>) {
     return response;
   };
 }
-// export const GET = baseGet;
-// export const POST = basePost;
+
 export const GET = withCors(baseGet);
 export const POST = withCors(basePost);

@@ -11,10 +11,12 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+import { Session, UserSession } from '@thallesp/nestjs-better-auth';
 import { FindUserQueryDto } from './dto/find-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
+// @AllowAnonymous()
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -35,5 +37,10 @@ export class UserController {
   async findOneUser(@Query() query: FindUserQueryDto) {
     const user = await this.userService.findUser(query);
     return user;
+  }
+
+  @Get('me')
+  async getProfile(@Session() session: UserSession) {
+    return session;
   }
 }

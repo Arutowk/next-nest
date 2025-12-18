@@ -37,7 +37,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   // --- Swagger 配置结束 ---
-
+  //http://localhost:3001/api/auth/reference
   await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();
