@@ -9,6 +9,15 @@ async function bootstrap() {
     bodyParser: false, // Required for Better Auth
   });
 
+  // // 1. 实例化自定义 Redis 适配器
+  // const redisIoAdapter = new RedisIoAdapter(app);
+
+  // // 2. 异步连接 Redis
+  // await redisIoAdapter.connectToRedis();
+
+  // // 3. 全局挂载适配器
+  // app.useWebSocketAdapter(redisIoAdapter as any);
+
   app.enableCors({
     origin: ['http://localhost:3000'],
     credentials: true,

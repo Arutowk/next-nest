@@ -78,13 +78,13 @@ export async function requestFriendAction(
 
 export async function acceptFriendAction(
   prevState: RequestState,
-  friendShipId: string,
+  requestId: string,
 ): Promise<RequestState> {
-  console.log("friendShipId:", friendShipId);
+  console.log("requestId:", requestId);
 
   try {
-    const response = await apiRequest(`/friend/add/${friendShipId}`, {
-      method: "POST",
+    const response = await apiRequest(`/friend/agree/${requestId}`, {
+      method: "PATCH",
     });
     console.log("response:", response);
     return { success: true, error: null };
@@ -95,15 +95,13 @@ export async function acceptFriendAction(
 
 export async function refuseFriendAction(
   prevState: RequestState,
-  friendShipId: string,
+  requestId: string,
 ): Promise<RequestState> {
-  console.log("friendShipId:", friendShipId);
+  console.log("requestId:", requestId);
 
   try {
-    const response = await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(1);
-      }, 3000);
+    const response = await apiRequest(`/friend/refuse/${requestId}`, {
+      method: "PATCH",
     });
     return { success: true, error: null };
   } catch (e) {

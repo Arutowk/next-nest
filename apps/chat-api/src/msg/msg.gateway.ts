@@ -14,7 +14,7 @@ import { MsgService } from './msg.service';
 const LOBBY_ROOM = 'lobby';
 
 @ApiTags('WebSocket: Chat Events')
-@WebSocketGateway(8888, { cors: { origin: '*' } })
+@WebSocketGateway(8888, { namespace: 'socket.io', cors: { origin: '*' } })
 export class MsgGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 

@@ -8,22 +8,20 @@ export class FriendService {
 
   //好友列表
   async getFriendsList(userId: string) {
-    const friends = await this.prisma.friendship.findMany({
+    const friendships = await this.prisma.friendship.findMany({
       where: {
-        userId,
-        status: FriendshipStatus.ACCEPTED,
+        status: 'ACCEPTED',
+        OR: [{ userId: userId }, { targetId: userId }],
       },
-      // 包含好友（targetId）的用户信息
       include: {
-        target: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true,
-          },
-        },
+        user: true,
+        target: true,
       },
+    });
+
+    // 提取出“对方”的用户信息
+    const friends = friendships.map((f) => {
+      return f.userId === userId ? f.target : f.user;
     });
     return friends;
   }
@@ -86,41 +84,29 @@ export class FriendService {
     if (!pendingRequest) {
       throw new Error('找不到待处理的好友申请');
     }
+    //2. 更新原记录 (Requester -> Acceptor) 为 ACCEPTED
+    const acceptedRelation = await this.prisma.friendship.update({
+      where: {
+        userId_targetId: {
+          userId: requesterId,
+          targetId: acceptorId,
+        },
+      },
+      data: {
+        status: FriendshipStatus.ACCEPTED,
+      },
+    });
 
-    // 使用事务确保双向关系同时建立
-    const acceptedRelations = await this.prisma.$transaction([
-      // A. 更新原记录 (Requester -> Acceptor) 为 ACCEPTED
-      this.prisma.friendship.update({
-        where: {
-          userId_targetId: {
-            userId: requesterId,
-            targetId: acceptorId,
-          },
-        },
-        data: {
-          status: FriendshipStatus.ACCEPTED,
-        },
-      }),
-
-      // B. 创建反向记录 (Acceptor -> Requester)
-      this.prisma.friendship.create({
-        data: {
-          userId: acceptorId,
-          targetId: requesterId,
-          status: FriendshipStatus.ACCEPTED,
-        },
-      }),
-    ]);
-    return acceptedRelations;
+    return acceptedRelation;
   }
 
-  //获取待处理的好友请求
-  async getPendingFriendRequests(currentUserId: string) {
+  //获取待处理或者已处理的好友请求
+  async getFriendRequests(currentUserId: string) {
     // 使用 include 关联 User model，以便显示发起请求者的信息
     const pendingRequests = await this.prisma.friendship.findMany({
       where: {
         targetId: currentUserId, // 接收方是当前用户
-        status: FriendshipStatus.PENDING,
+        // status: FriendshipStatus.PENDING,
       },
       include: {
         user: true, // 包含发起请求的用户信息 (User model)

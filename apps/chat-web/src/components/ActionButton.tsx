@@ -3,6 +3,7 @@
 import { LoaderCircle } from "lucide-react";
 import type { HTMLAttributes, PropsWithChildren, ReactNode } from "react";
 import { useActionState, useEffect } from "react";
+import { useFormStatus } from "react-dom";
 import { Button, type ButtonProps } from "./ui/button";
 
 type ActionButtonProps<T, F> = {
@@ -14,6 +15,7 @@ type ActionButtonProps<T, F> = {
   onSuccess?: () => void;
 };
 
+//需要在form内使用
 export default function ActionButton<
   T extends { success: boolean; error: string | null },
   F,
@@ -28,6 +30,7 @@ export default function ActionButton<
   ...props
 }: PropsWithChildren<ActionButtonProps<T, F> & ButtonProps>) {
   const [state, formAction, isPending] = useActionState(actionFn, initialState);
+  const { pending } = useFormStatus();
 
   useEffect(() => {
     if (state.success && onSuccess) {
@@ -39,7 +42,7 @@ export default function ActionButton<
     <Button
       formAction={() => formAction(data!)}
       type="submit"
-      disabled={isPending || !!!data}
+      disabled={isPending || !!!data || pending}
       className={className}
       {...props}
     >

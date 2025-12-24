@@ -17,14 +17,16 @@ export const friendApiSlice = createApi({
     // Supply generics for the (1)return type and the (2)expected query argument.
     // If there is no argument, use `void`for the argument type instead.
     getAddMeList: build.query<Array<{ user: User } & Friendship>, void>({
-      query: () => ({
-        url: `addMeList`,
-      }),
+      query: () => "addMeList",
       // `providesTags` determines which 'tag' is attached to the
       // cached data returned by the query.
+      providesTags: (result) => [{ type: "Friend" }],
+    }),
+    getFriendList: build.query<User[], void>({
+      query: () => "",
       providesTags: (result) => [{ type: "Friend" }],
     }),
   }),
 });
 
-export const { useGetAddMeListQuery } = friendApiSlice;
+export const { useGetAddMeListQuery, useGetFriendListQuery } = friendApiSlice;

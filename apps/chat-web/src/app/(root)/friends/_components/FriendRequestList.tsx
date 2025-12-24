@@ -7,35 +7,25 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { acceptFriendAction, refuseFriendAction } from "@/lib/actions/friend";
-import { useGetAddMeListQuery } from "@/lib/features/friend/friendApiSlice";
+import { useGetAddMeListQuery } from "@/lib/features/friend/friendApi";
 import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
 import { Check, ChevronsDownUp, ChevronsUpDown, Mail, X } from "lucide-react";
 import { Activity, useState } from "react";
-
-// 模拟好友申请数据
-const friendRequests = [
-  {
-    id: 1,
-    name: "张小明",
-    avatar: "https://github.com/shadcn.png",
-    message: "你好，我是上次会议认识的，想请教一下技术问题。",
-    time: "2小时前",
-    mutualFriends: 3,
-  },
-  {
-    id: 2,
-    name: "Sarah Wilson",
-    avatar: "", // 测试无头像情况
-    message: "加个好友交流一下 UI 设计？",
-    time: "昨天",
-    mutualFriends: 0,
-  },
-];
+import { toast } from "sonner";
 
 export default function FriendRequestList() {
-  const { data, error, isLoading, isUninitialized } = useGetAddMeListQuery();
+  const { data, error, isLoading, isUninitialized, refetch } =
+    useGetAddMeListQuery();
   const [open, setOpen] = useState(false);
+
+  const onActionSuccess = () => {
+    toast.success("已添加好友");
+    refetch();
+  };
+
+  const remain =
+    data?.filter((item: any) => item.status === "PENDING").length ?? 0;
 
   return (
     <Card className="w-full max-w-md mx-auto shadow-lg border-muted/40 py-2 gap-1">
@@ -53,7 +43,7 @@ export default function FriendRequestList() {
           </Button>
         </CardTitle>
         <Badge variant="secondary" className="rounded-full">
-          {data?.length ? `${data.length} 条待处理` : "没有新消息"}
+          {remain ? `${remain} 条待处理` : "没有新消息"}
         </Badge>
       </CardHeader>
       <div
@@ -102,25 +92,36 @@ export default function FriendRequestList() {
                     </div>
 
                     {/* 交互按钮 */}
-                    <form className="flex items-center gap-2 pl-15">
-                      <ActionButton
-                        data={request.id}
-                        actionFn={acceptFriendAction}
-                        className="h-8 flex-1"
-                        size="sm"
-                      >
-                        <Check className="mr-1 h-4 w-4" /> 接受
-                      </ActionButton>
-                      <ActionButton
-                        data={request.id}
-                        actionFn={refuseFriendAction}
-                        className="h-8 flex-1 border-slate-200"
-                        size="sm"
-                        variant="outline"
-                      >
-                        <X className="mr-1 h-4 w-4" /> 忽略
-                      </ActionButton>
-                    </form>
+                    {request.status === "PENDING" && (
+                      <form className="flex items-center gap-2 pl-15">
+                        <ActionButton
+                          data={request.user.id}
+                          actionFn={acceptFriendAction}
+                          onSuccess={onActionSuccess}
+                          className="h-8 flex-1"
+                          size="sm"
+                        >
+                          <Check className="mr-1 h-4 w-4" /> 接受
+                        </ActionButton>
+                        <ActionButton
+                          data={request.user.id}
+                          actionFn={refuseFriendAction}
+                          onSuccess={onActionSuccess}
+                          className="h-8 flex-1 border-slate-200"
+                          size="sm"
+                          variant="outline"
+                        >
+                          <X className="mr-1 h-4 w-4" /> 忽略
+                        </ActionButton>
+                      </form>
+                    )}
+                    {request.status === "ACCEPTED" && (
+                      <div className="flex items-center gap-2 pl-15 justify-end">
+                        <Button disabled className="w-1/2">
+                          已添加
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
