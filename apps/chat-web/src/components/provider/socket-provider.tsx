@@ -1,6 +1,10 @@
 "use client";
 
 import { SOCKET_URL } from "@/lib/default";
+import type {
+  ClientToServerEvents,
+  ServerToClientEvents,
+} from "@repo/socket-types";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
@@ -8,7 +12,7 @@ import { io, Socket } from "socket.io-client";
 type ConnectionStatus = "connecting" | "connected" | "disconnected" | "error";
 
 interface SocketContextType {
-  socket: Socket | null;
+  socket: Socket<ServerToClientEvents, ClientToServerEvents> | null;
   isConnected: boolean;
   status: ConnectionStatus;
 }

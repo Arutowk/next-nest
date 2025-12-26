@@ -402,6 +402,9 @@ importers:
       '@repo/jest-config':
         specifier: workspace:*
         version: link:../../packages/jest-config
+      '@repo/socket-types':
+        specifier: workspace:*
+        version: link:../../packages/socket-types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -562,6 +565,9 @@ importers:
       '@repo/jest-config':
         specifier: workspace:*
         version: link:../../packages/jest-config
+      '@repo/socket-types':
+        specifier: workspace:*
+        version: link:../../packages/socket-types
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -1238,6 +1244,12 @@ importers:
       next:
         specifier: ^15.3.1
         version: 15.3.2(@playwright/test@1.57.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.97.0)
+
+  packages/socket-types:
+    devDependencies:
+      chat-api:
+        specifier: workspace:*
+        version: link:../../apps/chat-api
 
   packages/typescript-config: {}
 

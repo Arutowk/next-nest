@@ -19,6 +19,7 @@ export default function MessageInput({ sendMessage, ref }: MessageInputProps) {
   const handleSend = () => {
     if (!inputText.trim()) return;
     sendMessage(inputText);
+    setInputText("");
   };
 
   return (

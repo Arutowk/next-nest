@@ -6,39 +6,60 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import type {
+  ClientToServerEvents,
+  EventPayload,
+  ServerToClientEvents,
+} from '@repo/socket-types';
 import { Server, Socket } from 'socket.io';
+import { createAuth, getConfig } from 'src/auth';
+import { FriendService } from 'src/friend/friend.service';
 import { MessageResponseDto } from './dto/message-response.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 import { MsgService } from './msg.service';
 
 const LOBBY_ROOM = 'lobby';
 
+type SocketType = Socket<ClientToServerEvents, ServerToClientEvents>;
+
 @ApiTags('WebSocket: Chat Events')
-@WebSocketGateway(8888, { namespace: 'socket.io', cors: { origin: '*' } })
+@WebSocketGateway(8888, {
+  transports: ['websocket'],
+  cors: {
+    origin: 'http://localhost:3000', // 前端地址
+    credentials: true,
+  },
+})
 export class MsgGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer() server: Server;
+  @WebSocketServer() server: Server<ClientToServerEvents, ServerToClientEvents>;
 
-  constructor(private messageService: MsgService) {}
+  constructor(
+    private messageService: MsgService,
+    private friendService: FriendService,
+  ) {}
 
-  handleConnection(client: Socket) {
+  async handleConnection(client: SocketType) {
     console.log(client.id + '--join');
     client.join(LOBBY_ROOM);
-    client.broadcast.emit('user-joined', {
-      message: `new user joined the chat ${client.id}`,
+    const socketHeaders = new Headers(client.handshake.headers as HeadersInit);
+    const auth = createAuth(getConfig());
+    const session = await auth.api.getSession({
+      headers: socketHeaders,
+    });
+    const userId = session?.user.id!;
+    const friends = await this.friendService.getFriendsIds(userId);
+    friends.forEach((friendId) => {
+      const roomId = [userId, friendId].sort().join('_');
+      client.join(roomId);
+      console.log('join_room:', roomId);
     });
   }
 
-  handleDisconnect(client: Socket) {
+  handleDisconnect(client: SocketType) {
     console.log(client.id + 'leave');
   }
 
-  @SubscribeMessage('newMessage')
-  handleNewMessage(client: Socket, message: any) {
-    console.log(message);
-    client.emit('reply', 'nihao');
-  }
-
-  @SubscribeMessage('sendMessage')
+  @SubscribeMessage('send_direct_message')
   @ApiOperation({
     summary: '发送聊天消息到服务器',
     description: '客户端调用此事件发送消息给特定用户。',
@@ -51,27 +72,32 @@ export class MsgGateway implements OnGatewayConnection, OnGatewayDisconnect {
     type: MessageResponseDto,
     description: '服务器收到消息后返回的确认或广播的消息结构',
   })
-  async handleMessage(
-    client: Socket,
-    payload: { roomId: string; content: string; userId: string },
+  async handlePrivateMessage(
+    client: SocketType,
+    payload: EventPayload<ClientToServerEvents, 'send_direct_message'>,
   ) {
-    // 1. 将消息保存到数据库
+    // 1. 获取/创建房间
+    const room = await this.messageService.getOrCreateRoom(
+      payload.userId,
+      payload.targetId,
+    );
+    // 2. 保存消息到数据库
     const newMessage = await this.messageService.createMessage(
       payload.userId,
-      payload.roomId,
+      room.id,
       payload.content,
     );
-    // 2. 向该房间内所有客户端广播这条新消息
-    this.server.to(payload.roomId).emit('newMessage', newMessage);
+    // 3. 向该房间内 所有客户端广播这条新消息
+    this.server.to(room.name).emit('new_message', newMessage);
   }
 
-  @SubscribeMessage('joinRoom')
+  @SubscribeMessage('join_room')
   handleJoinRoom(client: Socket, roomId: string) {
     client.join(roomId);
     // 可以通知房间内其他用户
   }
 
-  @SubscribeMessage('leaveRoom')
+  @SubscribeMessage('leave_room')
   handleLeaveRoom(client: Socket, roomId: string) {
     client.leave(roomId);
   }

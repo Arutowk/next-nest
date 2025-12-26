@@ -26,6 +26,11 @@ export class FriendService {
     return friends;
   }
 
+  async getFriendsIds(userId: string) {
+    const friends = await this.getFriendsList(userId);
+    return friends.map((friend) => friend.id);
+  }
+
   //好友申请
   async sendFriendRequest(senderId: string, receiverId: string) {
     if (senderId === receiverId) {
