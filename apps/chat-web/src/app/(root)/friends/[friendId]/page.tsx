@@ -75,15 +75,13 @@ export default function PrivateChatPage() {
 
   return (
     <ConversationContainer>
-      <div>
-        {/* 渲染消息列表和输入框 */}
-        <ChatMessage
-          localMessages={messages}
-          currentUserId={currentUserId}
-          ref={scrollRef}
-        />
-        <MessageInput sendMessage={onNewMessage} ref={inputRef} />
-      </div>
+      {/* 渲染消息列表和输入框 */}
+      <ChatMessage
+        localMessages={messages}
+        currentUserId={currentUserId}
+        ref={scrollRef}
+      />
+      <MessageInput sendMessage={onNewMessage} ref={inputRef} />
     </ConversationContainer>
   );
 }

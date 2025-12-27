@@ -39,9 +39,9 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@repo/socket-types": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "@repo/jest-config": "workspace:*",
+    "@repo/socket-types": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/node": "^20",
