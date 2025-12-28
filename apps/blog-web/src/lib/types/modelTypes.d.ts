@@ -1,4 +1,4 @@
-import { type Post, Tag, User, Comment } from '.prisma/blog-client';
+import { Comment, type Post, Tag, User } from "blog-api";
 
 export type PostType = Post & {
   _count: {
@@ -9,7 +9,7 @@ export type PostType = Post & {
   tags?: Tag[];
 };
 
-export type UserType = Omit<User, 'password' | 'avatar'> & { avatar?: string };
+export type UserType = Omit<User, "password" | "avatar"> & { avatar?: string };
 
 export type TagType = Tag;
 

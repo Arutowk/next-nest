@@ -1,6 +1,7 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
+    "exactOptionalPropertyTypes": false,
     "plugins": [
       {
         "name": "next"
@@ -8,15 +9,12 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      ".prisma/blog-client": [
-        "../../packages/db-blog/node_modules/.prisma/client/index"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
     "next-env.d.ts",
-    "next.config.js",
+    "next.config.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"

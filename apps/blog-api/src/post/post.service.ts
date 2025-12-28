@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { DEFAULT_PAGE_SIZE } from '../constants';
-import { CreatePostInput } from './dto/create-post.input';
-import { UpdatePostInput } from './dto/update-post.input';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { DEFAULT_PAGE_SIZE } from "../constants";
+import { PrismaService } from "../prisma/prisma.service";
+import { CreatePostInput } from "./dto/create-post.input";
+import { UpdatePostInput } from "./dto/update-post.input";
 
 @Injectable()
 export class PostService {
@@ -124,7 +124,7 @@ export class PostService {
         ...data,
         tags: {
           set: [],
-          connectOrCreate: updatePostInput.tags.map((tag) => ({
+          connectOrCreate: updatePostInput.tags?.map((tag) => ({
             where: { name: tag },
             create: { name: tag },
           })),
