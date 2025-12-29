@@ -9,10 +9,12 @@
     "lint": "eslint . --max-warnings 0",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.8",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-alert-dialog": "^1.1.13",
     "@radix-ui/react-avatar": "^1.1.7",
@@ -42,7 +44,6 @@
     "clsx": "^2.1.1",
     "dompurify": "^3.2.5",
     "graphql": "^16.10.0",
-    "graphql-tag": "^2.12.6",
     "jose": "^6.0.10",
     "lucide-react": "^0.503.0",
     "next": "16.1.1",
@@ -55,6 +56,9 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@graphql-codegen/cli": "6.1.0",
+    "@graphql-codegen/client-preset": "5.2.2",
+    "@graphql-codegen/introspection": "5.0.0",
     "@repo/api": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "@repo/jest-config": "workspace:*",
@@ -67,5 +71,9 @@
     "tailwindcss": "^4",
     "tw-animate-css": "^1.2.8",
     "typescript": "^5"
+  },
+  "graphql": {
+    "schema": "http://localhost:8000/graphql",
+    "documents": "**/*.{graphql,js,ts,jsx,tsx}"
   }
 }

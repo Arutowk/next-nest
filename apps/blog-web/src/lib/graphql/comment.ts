@@ -1,6 +1,6 @@
-import gql from 'graphql-tag';
+import { graphql } from "@/gql";
 
-export const GET_POST_COMMENTS = gql`
+export const GET_POST_COMMENTS = graphql(`
   query getPostComments($postId: Int!, $take: Int, $skip: Int) {
     getPostComments(postId: $postId, take: $take, skip: $skip) {
       id
@@ -13,12 +13,12 @@ export const GET_POST_COMMENTS = gql`
     }
     postCommentCount(postId: $postId)
   }
-`;
+`);
 
-export const CREATE_COMMENT_MUTATION = gql`
+export const CREATE_COMMENT_MUTATION = graphql(`
   mutation createComment($input: CreateCommentInput!) {
     createComment(createCommentInput: $input) {
       id
     }
   }
-`;
+`);

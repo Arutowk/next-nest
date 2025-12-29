@@ -9,6 +9,12 @@ type AuthPayload {
   accessToken: String!
 }
 
+type Tag {
+  id: Int!
+  name: String!
+  posts: [Post!]!
+}
+
 type User {
   id: Int!
   name: String!
@@ -17,12 +23,6 @@ type User {
   avatar: String
   posts: [Post!]!
   comments: [Comment!]!
-}
-
-type Tag {
-  id: Int!
-  name: String!
-  posts: [Post!]!
 }
 
 type Count {

@@ -1,10 +1,9 @@
 "use server";
 
-import { print } from "graphql";
-
 import type { PostFormState } from "../types/formState";
 import type { PostType } from "../types/modelTypes";
 
+import { UpdatePostInput } from "@/gql/graphql";
 import { authFetchGraphQL, fetchGraphQL } from "../fetchGraphQL";
 import {
   CREATE_POST_MUTATION,
@@ -26,16 +25,16 @@ export const fetchPosts = async ({
   pageSize?: number;
 }) => {
   const { skip, take } = transformTakeSkip({ page, pageSize });
-  const data = (await fetchGraphQL(print(GET_POSTS), { skip, take }))?.data;
+  const data = (await fetchGraphQL(GET_POSTS, { skip, take }))?.data;
 
   return {
-    posts: data.posts as PostType[],
-    totalPosts: data.postCount as number,
+    posts: data.posts,
+    totalPosts: data.postCount,
   };
 };
 
 export const fetchPostById = async (id: number) => {
-  const data = (await fetchGraphQL(print(GET_POST_BY_ID), { id }))?.data;
+  const data = (await fetchGraphQL(GET_POST_BY_ID, { id }))?.data;
 
   return data?.getPostById as Omit<
     PostType,
@@ -52,15 +51,15 @@ export async function fetchUserPosts({
 }) {
   const { take, skip } = transformTakeSkip({ page, pageSize });
   const data = (
-    await authFetchGraphQL(print(GET_USER_POSTS), {
+    await authFetchGraphQL(GET_USER_POSTS, {
       take,
       skip,
     })
   )?.data;
 
   return {
-    posts: data?.getUserPosts as PostType[],
-    totalPosts: data?.userPostCount as number,
+    posts: data?.getUserPosts,
+    totalPosts: data?.userPostCount,
   };
 }
 
@@ -87,7 +86,7 @@ export async function saveNewPost(
 
   // call garphql api
   const { postId, ...resDtata } = validatedFields.data;
-  const result = await authFetchGraphQL(print(CREATE_POST_MUTATION), {
+  const result = await authFetchGraphQL(CREATE_POST_MUTATION, {
     input: {
       ...resDtata,
       thumbnail: thumbnailUrl,
@@ -121,11 +120,11 @@ export async function updatePost(
   // Todo:Upload Thumbnail to supabase
   if (thumbnail) thumbnailUrl = await uploadThumbnail(thumbnail);
 
-  const data = await authFetchGraphQL(print(UPDATE_POST_MUTATION), {
+  const data = await authFetchGraphQL(UPDATE_POST_MUTATION, {
     input: {
       ...inputs,
       ...(thumbnailUrl && { thumbnail: thumbnailUrl }),
-    },
+    } as UpdatePostInput,
   });
 
   if (data) return { message: "Success! The Post Updated", ok: true };
@@ -137,7 +136,7 @@ export async function updatePost(
 
 export async function deletePost(postId: number) {
   const data = (
-    await authFetchGraphQL(print(DELETE_POST_MUTATION), {
+    await authFetchGraphQL(DELETE_POST_MUTATION, {
       postId,
     })
   )?.data;

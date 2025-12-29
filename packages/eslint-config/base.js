@@ -91,6 +91,7 @@ export const config = [
       "coverage/",
       "src/components/ui/**",
       "src/components/tiptap*/**",
+      "src/gql/**",
     ],
   },
 ];

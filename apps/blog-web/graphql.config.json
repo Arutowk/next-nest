@@ -1,0 +1,11 @@
+{
+  "schema": "./graphql.schema.json",
+  "documents": "src/**/*.{ts,tsx}",
+  "extensions": {
+    "codegen": {
+      "generates": {
+        "./src/gql/": { "preset": "client" }
+      }
+    }
+  }
+}

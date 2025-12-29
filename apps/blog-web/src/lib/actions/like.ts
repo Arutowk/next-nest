@@ -1,17 +1,15 @@
-'use server';
+"use server";
 
-import { print } from 'graphql';
-
-import { authFetchGraphQL } from '../fetchGraphQL';
+import { authFetchGraphQL } from "../fetchGraphQL";
 import {
   LIKE_POST_MUTATION,
   POST_LIKES,
   UNLIKE_POST_MUTATION,
-} from '../graphql/like';
+} from "../graphql/like";
 
 export async function getPostLikeData(postId: number) {
   const data = (
-    await authFetchGraphQL(print(POST_LIKES), {
+    await authFetchGraphQL(POST_LIKES, {
       postId,
     })
   ).data;
@@ -24,7 +22,7 @@ export async function getPostLikeData(postId: number) {
 
 export async function likePost(postId: number) {
   const data = (
-    await authFetchGraphQL(print(LIKE_POST_MUTATION), {
+    await authFetchGraphQL(LIKE_POST_MUTATION, {
       postId,
     })
   ).data;
@@ -32,7 +30,7 @@ export async function likePost(postId: number) {
 
 export async function unLikePost(postId: number) {
   const data = (
-    await authFetchGraphQL(print(UNLIKE_POST_MUTATION), {
+    await authFetchGraphQL(UNLIKE_POST_MUTATION, {
       postId,
     })
   ).data;
