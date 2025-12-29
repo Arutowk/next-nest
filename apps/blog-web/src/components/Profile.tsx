@@ -1,17 +1,19 @@
 'use client';
-import { SessionUser } from '@/lib/session';
-import { Popover } from '@radix-ui/react-popover';
-import { PopoverContent, PopoverTrigger } from './ui/popover';
-import { Avatar } from '@radix-ui/react-avatar';
-import { AvatarFallback, AvatarImage } from './ui/avatar';
 import {
   ArrowRightStartOnRectangleIcon,
   ListBulletIcon,
   PencilSquareIcon,
   UserIcon,
 } from '@heroicons/react/20/solid';
+import { Avatar } from '@radix-ui/react-avatar';
+import { Popover } from '@radix-ui/react-popover';
 import Link from 'next/link';
 import { useState } from 'react';
+
+import { AvatarFallback, AvatarImage } from './ui/avatar';
+import { PopoverContent, PopoverTrigger } from './ui/popover';
+
+import { type SessionUser } from '@/lib/session';
 
 type Props = {
   user: SessionUser;

@@ -1,9 +1,11 @@
-import { fetchPostById } from '@/lib/actions/postActions';
 import Image from 'next/image';
-import SanitizedContent from './_components/SanitizedContent';
+
 import Comments from './_components/comments';
-import { getSession } from '@/lib/session';
 import Like from './_components/like';
+import SanitizedContent from './_components/SanitizedContent';
+
+import { fetchPostById } from '@/lib/actions/postActions';
+import { getSession } from '@/lib/session';
 
 //https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
 type Props = {

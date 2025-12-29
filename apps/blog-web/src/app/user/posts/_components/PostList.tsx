@@ -1,6 +1,7 @@
-import { PostType } from '@/lib/types/modelTypes';
-import Pagination from '@/components/pagination';
 import PostListItem from './PostListItem';
+
+import Pagination from '@/components/pagination';
+import { type PostType } from '@/lib/types/modelTypes';
 
 type Props = {
   posts: PostType[];

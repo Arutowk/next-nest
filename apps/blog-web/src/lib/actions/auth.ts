@@ -1,14 +1,17 @@
 'use server';
 
 import { print } from 'graphql';
-import { fetchGraphQL } from '../fetchGraphQL';
-import { SignUpFormState } from '../types/formState';
-import { SignUpFormSchema } from '../zodSchemas/signUpFormSchema';
-import { CREATE_USER_MUTATION, SIGN_IN_MUTATION } from '../graphql/user';
-import { redirect } from 'next/navigation';
-import { LoginFormSchema } from '../zodSchemas/loginFormSchema';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+
+import { fetchGraphQL } from '../fetchGraphQL';
+import { CREATE_USER_MUTATION, SIGN_IN_MUTATION } from '../graphql/user';
 import { createSession } from '../session';
+import { type SignUpFormState } from '../types/formState';
+import { LoginFormSchema } from '../zodSchemas/loginFormSchema';
+import { SignUpFormSchema } from '../zodSchemas/signUpFormSchema';
+
+
 
 export async function signUp(
   state: SignUpFormState,

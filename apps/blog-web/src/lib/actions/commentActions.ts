@@ -1,10 +1,11 @@
 'use server';
 
 import { print } from 'graphql';
+
 import { authFetchGraphQL, fetchGraphQL } from '../fetchGraphQL';
 import { CREATE_COMMENT_MUTATION, GET_POST_COMMENTS } from '../graphql/comment';
-import { CommentType } from '../types/modelTypes';
-import { CreateCommentFormState } from '../types/formState';
+import { type CreateCommentFormState } from '../types/formState';
+import { type CommentType } from '../types/modelTypes';
 import { CommentFormSchema } from '../zodSchemas/commentFormSchema';
 
 export async function getPostComments({

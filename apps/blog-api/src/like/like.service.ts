@@ -1,7 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateLikeInput } from './dto/create-like.input';
-import { UpdateLikeInput } from './dto/update-like.input';
-import { PrismaService } from '../prisma/prisma.service';
+import { BadRequestException, Injectable } from "@nestjs/common";
+
+import { PrismaService } from "../prisma/prisma.service";
 
 @Injectable()
 export class LikeService {
@@ -15,7 +14,7 @@ export class LikeService {
         },
       }));
     } catch (err) {
-      throw new BadRequestException('You have already liked this post');
+      throw new BadRequestException("You have already liked this post");
     }
   }
 
@@ -31,7 +30,7 @@ export class LikeService {
       });
       return true;
     } catch (err) {
-      throw new BadRequestException('Like not found');
+      throw new BadRequestException("Like not found");
     }
   }
 

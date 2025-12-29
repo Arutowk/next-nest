@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
-import { saveNewPost } from '@/lib/actions/postActions';
-import { useActionState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import UpsertPostForm from './upsertPostForm';
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect } from "react";
+
+import UpsertPostForm from "./upsertPostForm";
+
+import { saveNewPost } from "@/lib/actions/postActions";
 
 const CreatePostContainer = () => {
   const [state, action] = useActionState(saveNewPost, undefined);
@@ -11,10 +13,10 @@ const CreatePostContainer = () => {
   useEffect(() => {
     if (state?.ok === true) {
       setTimeout(() => {
-        router.push('/user/posts');
+        router.push("/user/posts");
       }, 500);
     }
-  }, [state?.ok]);
+  }, [state?.ok, router]);
 
   return <UpsertPostForm state={state} formAction={action} />;
 };

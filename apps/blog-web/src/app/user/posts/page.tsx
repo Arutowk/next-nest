@@ -1,7 +1,8 @@
-import { fetchUserPosts } from '@/lib/actions/postActions';
-import { DEFAULT_PAGE_SIZE } from '@/lib/constants';
 import NoPost from './_components/NoPost';
 import PostList from './_components/PostList';
+
+import { fetchUserPosts } from '@/lib/actions/postActions';
+import { DEFAULT_PAGE_SIZE } from '@/lib/constants';
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

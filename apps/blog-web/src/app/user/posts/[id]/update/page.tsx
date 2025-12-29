@@ -1,5 +1,6 @@
-import { fetchPostById } from '@/lib/actions/postActions';
 import UpdatePostContainer from './_components/UpdatePostContainer';
+
+import { fetchPostById } from '@/lib/actions/postActions';
 
 type Props = {
   params: Promise<{ id: string }>;

@@ -1,7 +1,13 @@
-import nextJsConfig from '@repo/eslint-config/next-js';
+import { nextJsConfig } from "@repo/eslint-config/next-js";
 
 /** @type {import("eslint").Linter.Config} */
 export default [
   ...nextJsConfig,
   // Other configurations
+  {
+    rules: {
+      "turbo/no-undeclared-env-vars": "off",
+    },
+  },
+  { ignores: ["*/**/blog-editor.tsx"] },
 ];

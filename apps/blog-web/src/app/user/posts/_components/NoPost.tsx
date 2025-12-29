@@ -1,6 +1,7 @@
-import { Button } from '@/components/ui/button';
 import { PencilSquareIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
 
 const NoPost = () => {
   return (

@@ -1,10 +1,11 @@
-import { getSession } from '@/lib/session';
-import Link from 'next/link';
-import SignInPanel from './signInPanel';
-import Profile from './Profile';
+import Link from "next/link";
 
-type Props = {};
-const Navbar = async (props: Props) => {
+import Profile from "./Profile";
+import SignInPanel from "./signInPanel";
+
+import { getSession } from "@/lib/session";
+
+const Navbar = async () => {
   const session = await getSession();
   return (
     <>

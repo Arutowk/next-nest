@@ -1,6 +1,7 @@
 'use server';
 
 import { print } from 'graphql';
+
 import { authFetchGraphQL } from '../fetchGraphQL';
 import {
   LIKE_POST_MUTATION,

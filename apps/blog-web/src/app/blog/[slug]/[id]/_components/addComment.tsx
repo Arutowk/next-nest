@@ -1,20 +1,24 @@
-import SubmitButton from '@/components/SubmitButton';
-import { Button } from '@/components/ui/button';
+import { Dialog } from "@radix-ui/react-dialog";
+import {
+  type QueryObserverResult,
+  type RefetchOptions,
+} from "@tanstack/react-query";
+import { useActionState, useEffect, useState } from "react";
+import { toast, Toaster } from "sonner";
+
+import SubmitButton from "@/components/SubmitButton";
+import { Button } from "@/components/ui/button";
 import {
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { saveComment } from '@/lib/actions/commentActions';
-import { SessionUser } from '@/lib/session';
-import { CommentType } from '@/lib/types/modelTypes';
-import { cn } from '@/lib/utils';
-import { Dialog } from '@radix-ui/react-dialog';
-import { RefetchOptions, QueryObserverResult } from '@tanstack/react-query';
-import { useActionState, useEffect, useState } from 'react';
-import { toast, Toaster } from 'sonner';
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { saveComment } from "@/lib/actions/commentActions";
+import { type SessionUser } from "@/lib/session";
+import { type CommentType } from "@/lib/types/modelTypes";
+import { cn } from "@/lib/utils";
 
 type Props = {
   postId: number;
@@ -37,11 +41,11 @@ const AddComment = (props: Props) => {
 
   useEffect(() => {
     if (state?.message && state?.ok === true) {
-      toast.success('Success', { description: state?.message });
+      toast.success("Success", { description: state?.message });
       setShow(false);
     }
     if (state?.message && state?.ok === false) {
-      toast.error('Oops!', { description: state?.message });
+      toast.error("Oops!", { description: state?.message });
     }
     if (state?.ok) props.refetch();
   }, [state]);

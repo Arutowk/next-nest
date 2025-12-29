@@ -1,4 +1,4 @@
-import { Comment, type Post, Tag, User } from "blog-api";
+import type { Comment, Post, Tag, User } from "blog-api";
 
 export type PostType = Post & {
   _count: {

@@ -1,6 +1,7 @@
-import { PostType } from '@/lib/types/modelTypes';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { type PostType } from '@/lib/types/modelTypes';
 
 type Props = Partial<PostType>;
 const PostCard = ({

@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { AuthService } from '../auth.service';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { PassportStrategy } from "@nestjs/passport";
+import { Strategy, VerifyCallback } from "passport-google-oauth20";
+
+import { AuthService } from "../auth.service";
 
 //https://console.cloud.google.com/
 
@@ -15,10 +16,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     private readonly authService: AuthService,
   ) {
     super({
-      clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
-      clientSecret: configService.get<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: configService.get<string>('GOOGLE_CALLBACK_URL'),
-      scope: ['email', 'profile'],
+      clientID: configService.get<string>("GOOGLE_CLIENT_ID"),
+      clientSecret: configService.get<string>("GOOGLE_CLIENT_SECRET"),
+      callbackURL: configService.get<string>("GOOGLE_CALLBACK_URL"),
+      scope: ["email", "profile"],
     });
   }
   async validate(
@@ -32,7 +33,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
       email: profile.emails[0].value,
       name: profile.displayName,
       avatar: profile.photos[0].value,
-      password: '',
+      password: "",
     });
     done(null, user);
     //request.user

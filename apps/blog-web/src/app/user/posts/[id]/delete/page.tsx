@@ -1,16 +1,17 @@
-import SubmitButton from '@/components/SubmitButton';
-import { Button } from '@/components/ui/button';
+import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
+import SubmitButton from "@/components/SubmitButton";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { deletePost, fetchPostById } from '@/lib/actions/postActions';
-import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
-import Link from 'next/link';
-import { redirect } from 'next/navigation';
+} from "@/components/ui/card";
+import { deletePost, fetchPostById } from "@/lib/actions/postActions";
 
 type Props = {
   params: Promise<{
@@ -21,10 +22,10 @@ const DeletePostPage = async (props: Props) => {
   const params = await props.params;
   const post = await fetchPostById(+params.id);
 
-  const formAction = async (formData: FormData) => {
-    'use server';
+  const formAction = async () => {
+    "use server";
     await deletePost(+params.id);
-    redirect('/user/posts');
+    redirect("/user/posts");
   };
 
   return (
@@ -46,10 +47,10 @@ const DeletePostPage = async (props: Props) => {
       </CardDescription>
       <CardContent>
         <form action={formAction} className="flex justify-end gap-2">
-          <Button variant={'secondary'} asChild>
-            <Link href={'/user/posts'}>Cancel</Link>
+          <Button variant={"secondary"} asChild>
+            <Link href={"/user/posts"}>Cancel</Link>
           </Button>
-          <SubmitButton variant={'destructive'}>Delete</SubmitButton>
+          <SubmitButton variant={"destructive"}>Delete</SubmitButton>
         </form>
       </CardContent>
     </Card>

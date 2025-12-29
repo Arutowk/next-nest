@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { AuthResolver } from './auth.resolver';
-import { PrismaService } from '../prisma/prisma.service';
-import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { GoogleStrategy } from './strategies/google.strategy';
+import { JwtModule } from '@nestjs/jwt';
+
+import { PrismaService } from '../prisma/prisma.service';
+
 import { AuthController } from './auth.controller';
+import { AuthResolver } from './auth.resolver';
+import { AuthService } from './auth.service';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [

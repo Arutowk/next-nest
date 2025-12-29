@@ -1,4 +1,5 @@
-import { PropsWithChildren } from 'react';
+import { type PropsWithChildren } from 'react';
+
 import SideBar from './ui/SideBar';
 
 type Props = PropsWithChildren;

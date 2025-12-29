@@ -1,6 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { CommentType } from '@/lib/types/modelTypes';
 import { UserIcon } from '@heroicons/react/20/solid';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { type CommentType } from '@/lib/types/modelTypes';
 
 type Props = {
   comment: CommentType;

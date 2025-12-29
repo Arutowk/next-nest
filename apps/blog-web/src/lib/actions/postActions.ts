@@ -1,8 +1,11 @@
-'use server';
+"use server";
 
-import { print } from 'graphql';
-import { authFetchGraphQL, fetchGraphQL } from '../fetchGraphQL';
-import { PostType } from '../types/modelTypes';
+import { print } from "graphql";
+
+import type { PostFormState } from "../types/formState";
+import type { PostType } from "../types/modelTypes";
+
+import { authFetchGraphQL, fetchGraphQL } from "../fetchGraphQL";
 import {
   CREATE_POST_MUTATION,
   DELETE_POST_MUTATION,
@@ -10,11 +13,10 @@ import {
   GET_POSTS,
   GET_USER_POSTS,
   UPDATE_POST_MUTATION,
-} from '../graphql/post';
-import { transformTakeSkip } from '../helpers';
-import { PostFormState } from '../types/formState';
-import { PostFormSchema } from '../zodSchemas/postFormSchema';
-import { uploadThumbnail } from '../upload';
+} from "../graphql/post";
+import { transformTakeSkip } from "../helpers";
+import { uploadThumbnail } from "../upload";
+import { PostFormSchema } from "../zodSchemas/postFormSchema";
 
 export const fetchPosts = async ({
   page,
@@ -37,7 +39,7 @@ export const fetchPostById = async (id: number) => {
 
   return data?.getPostById as Omit<
     PostType,
-    'slug' | 'updatedAt' | '_count' | 'authorId'
+    "slug" | "updatedAt" | "_count" | "authorId"
   >;
 };
 
@@ -69,7 +71,7 @@ export async function saveNewPost(
   const validatedFields = PostFormSchema.safeParse(
     Object.fromEntries(formData.entries()),
   );
-  console.log('server action');
+  console.log("server action");
   if (!validatedFields.success) {
     return {
       data: Object.fromEntries(formData.entries()),
@@ -77,7 +79,7 @@ export async function saveNewPost(
     };
   }
 
-  let thumbnailUrl = '';
+  let thumbnailUrl = "";
   // Upload Thumbnail to supabase
   if (validatedFields.data.thumbnail) {
     thumbnailUrl = await uploadThumbnail(validatedFields.data.thumbnail);
@@ -91,9 +93,9 @@ export async function saveNewPost(
       thumbnail: thumbnailUrl,
     },
   });
-  if (result.data) return { message: 'Success! New Post Saved', ok: true };
+  if (result.data) return { message: "Success! New Post Saved", ok: true };
   return {
-    message: 'Oops, Something Went Wrong',
+    message: "Oops, Something Went Wrong",
     data: Object.fromEntries(formData.entries()),
   };
 }
@@ -115,7 +117,7 @@ export async function updatePost(
   // Todo: check if thumbnail has been changed
   const { thumbnail, ...inputs } = validatedFields.data;
 
-  let thumbnailUrl = '';
+  let thumbnailUrl = "";
   // Todo:Upload Thumbnail to supabase
   if (thumbnail) thumbnailUrl = await uploadThumbnail(thumbnail);
 
@@ -126,9 +128,9 @@ export async function updatePost(
     },
   });
 
-  if (data) return { message: 'Success! The Post Updated', ok: true };
+  if (data) return { message: "Success! The Post Updated", ok: true };
   return {
-    message: 'Oops, Something Went Wrong',
+    message: "Oops, Something Went Wrong",
     data: Object.fromEntries(formData.entries()),
   };
 }

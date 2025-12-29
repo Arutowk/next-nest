@@ -93,6 +93,9 @@ importers:
       graphql:
         specifier: ^16.10.0
         version: 16.12.0
+      https-proxy-agent:
+        specifier: ^7.0.6
+        version: 7.0.6
       passport:
         specifier: ^0.7.0
         version: 0.7.0

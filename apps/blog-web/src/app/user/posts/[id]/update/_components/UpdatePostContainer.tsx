@@ -1,13 +1,16 @@
-'use client';
+"use client";
 
-import UpsertPostForm from '@/app/user/create-post/_components/upsertPostForm';
-import { saveNewPost, updatePost } from '@/lib/actions/postActions';
-import { PostType } from '@/lib/types/modelTypes';
-import { useRouter } from 'next/navigation';
-import { useActionState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import { useActionState, useEffect } from "react";
+
+import type { Tag } from "blog-api";
+
+import UpsertPostForm from "@/app/user/create-post/_components/upsertPostForm";
+import { updatePost } from "@/lib/actions/postActions";
+import { type PostType } from "@/lib/types/modelTypes";
 
 type Props = {
-  post: Omit<PostType, 'slug' | 'updatedAt' | '_count' | 'authorId'>;
+  post: Omit<PostType, "slug" | "updatedAt" | "_count" | "authorId">;
 };
 
 const UpdatePostContainer = ({ post }: Props) => {
@@ -17,8 +20,8 @@ const UpdatePostContainer = ({ post }: Props) => {
       postId: post.id,
       title: post.title,
       content: JSON.parse(post?.content).json ?? post.content,
-      published: post.published ? 'on' : undefined,
-      tags: post.tags?.map((tag: any) => tag.name).join(','),
+      published: post.published ? "on" : undefined,
+      tags: post.tags?.map((tag: Tag) => tag.name).join(","),
       previousThumbnailUrl: post.thumbnail ?? undefined,
     },
   });
@@ -26,10 +29,10 @@ const UpdatePostContainer = ({ post }: Props) => {
   useEffect(() => {
     if (state?.ok === true) {
       setTimeout(() => {
-        router.push('/user/posts');
+        router.push("/user/posts");
       }, 500);
     }
-  }, [state?.ok]);
+  }, [state?.ok, router]);
   return <UpsertPostForm state={state} formAction={action} />;
 };
 

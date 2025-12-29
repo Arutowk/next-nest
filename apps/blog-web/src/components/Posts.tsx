@@ -1,7 +1,9 @@
-import { PostType } from '@/lib/types/modelTypes';
 import React from 'react';
-import PostCard from './postCard';
+
 import Pagination from './pagination';
+import PostCard from './postCard';
+
+import { type PostType } from '@/lib/types/modelTypes';
 
 type Props = {
   posts: PostType[];

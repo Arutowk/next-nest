@@ -1,6 +1,7 @@
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
+
 import { calculatePageNumbers } from '@/lib/helpers';
 import { cn } from '@/lib/utils';
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 
 type Props = {
   totalPages: number;

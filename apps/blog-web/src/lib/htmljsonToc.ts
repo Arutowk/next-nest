@@ -1,4 +1,4 @@
-import { JSONContent } from '@tiptap/react';
+import type { JSONContent } from "@tiptap/react";
 
 export interface TocItem {
   id?: string;
@@ -12,9 +12,9 @@ export const generateTocFromJSON = (doc: JSONContent): TocItem[] => {
   const stack: { item: TocItem; level: number }[] = [];
 
   doc.content?.map((node) => {
-    if (node.type === 'heading') {
+    if (node.type === "heading") {
       const level = node.attrs?.level;
-      const text = node?.content?.[0]?.text!;
+      const text = node.content?.[0]?.text as string;
       const id = node.attrs?.id || `${Date.now()}-${Math.random()}`;
 
       const item: TocItem = {
@@ -45,8 +45,8 @@ export const generateTocFromJSON = (doc: JSONContent): TocItem[] => {
 
 export const generateTocFromHTML = (html: string): TocItem[] => {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  const headings = Array.from(doc.querySelectorAll('h1, h2, h3'));
+  const doc = parser.parseFromString(html, "text/html");
+  const headings = Array.from(doc.querySelectorAll("h1, h2, h3"));
 
   const toc: TocItem[] = [];
   const stack: { item: TocItem; level: number }[] = [];
@@ -55,7 +55,7 @@ export const generateTocFromHTML = (html: string): TocItem[] => {
     const level = parseInt(heading.tagName[1]!);
     const item = {
       id: heading.id || `${Date.now()}-${Math.random()}`,
-      text: heading.textContent || '',
+      text: heading.textContent || "",
       level,
       children: [],
     };

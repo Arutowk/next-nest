@@ -1,4 +1,7 @@
-'use client';
+"use client";
+
+import { AlertDialogAction } from "@radix-ui/react-alert-dialog";
+import { use } from "react";
 
 import {
   AlertDialog,
@@ -8,12 +11,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { deletePost } from '@/lib/actions/postActions';
-import { AlertDialogAction } from '@radix-ui/react-alert-dialog';
-import Link from 'next/link';
-import { use } from 'react';
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { deletePost } from "@/lib/actions/postActions";
 
 type Props = {
   params: Promise<{
@@ -36,10 +36,10 @@ const InterceptorDeletePostPage = (props: Props) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel asChild>
-            <a href={'/user/posts'}>Cancel</a>
+            <a href={"/user/posts"}>Cancel</a>
           </AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Button onClick={() => deletePost(postId)} variant={'destructive'}>
+            <Button onClick={() => deletePost(postId)} variant={"destructive"}>
               <a href="/user/posts">Delete</a>
             </Button>
           </AlertDialogAction>

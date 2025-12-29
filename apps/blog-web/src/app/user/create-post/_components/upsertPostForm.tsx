@@ -1,16 +1,18 @@
-'use client';
+"use client";
 
-import SubmitButton from '@/components/SubmitButton';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { PostFormState } from '@/lib/types/formState';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { toast, Toaster } from 'sonner';
-import { Editor } from './DynamicEditor';
-import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import { JSONContent } from '@tiptap/react';
+import { type JSONContent } from "@tiptap/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast, Toaster } from "sonner";
+
+import { Editor } from "./DynamicEditor";
+
+import SubmitButton from "@/components/SubmitButton";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { type PostFormState } from "@/lib/types/formState";
 
 type Props = {
   state: PostFormState;
@@ -18,16 +20,16 @@ type Props = {
 };
 
 const UpsertPostForm = ({ state, formAction }: Props) => {
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
   const router = useRouter();
-  const [content, setContent] = useState(state?.data?.content || '');
+  const [content, setContent] = useState(state?.data?.content || "");
 
   useEffect(() => {
     if (state?.message && state?.ok === true) {
-      toast.success('Success', { description: state?.message });
+      toast.success("Success", { description: state?.message });
     }
     if (state?.message && state?.ok === false) {
-      toast.error('Oops!', { description: state?.message });
+      toast.error("Oops!", { description: state?.message });
     }
   }, [state]);
 
@@ -37,7 +39,7 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
       <div>
         {!!imageUrl || !!state?.data?.previousThumbnailUrl ? (
           <Image
-            src={(imageUrl || state?.data?.previousThumbnailUrl) ?? ''}
+            src={(imageUrl || state?.data?.previousThumbnailUrl) ?? ""}
             alt="post thumbnail"
             width={200}
             height={150}
@@ -62,7 +64,7 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
           value={content as string}
           onChange={(e) => setContent(e.target.value)}
         />
-        <input hidden name="published" defaultValue={'off'} />
+        <input hidden name="published" defaultValue={"off"} />
 
         <div>
           <Label htmlFor="title">Title</Label>
@@ -113,7 +115,7 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
                 className="mx-2 w-4 h-4"
                 type="checkbox"
                 name="published"
-                defaultChecked={state?.data?.published === 'on' ? true : false}
+                defaultChecked={state?.data?.published === "on" ? true : false}
               />
               <Label htmlFor="published">Published Now</Label>
               {!!state?.errors?.published && (

@@ -1,10 +1,11 @@
 'use client';
 
-import { getPostLikeData, likePost, unLikePost } from '@/lib/actions/like';
-import { SessionUser } from '@/lib/session';
-import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as SolidHeartIcon } from '@heroicons/react/20/solid';
+import { HeartIcon } from '@heroicons/react/24/outline';
 import { useMutation, useQuery } from '@tanstack/react-query';
+
+import { getPostLikeData, likePost, unLikePost } from '@/lib/actions/like';
+import { type SessionUser } from '@/lib/session';
 
 type Props = {
   postId: number;

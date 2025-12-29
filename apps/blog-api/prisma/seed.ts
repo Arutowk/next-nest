@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { hash } from "argon2";
 import * as dotenv from "dotenv";
+
 import { PrismaClient } from "../src/generated/prisma/client";
 
 // 显式加载 .env

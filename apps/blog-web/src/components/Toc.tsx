@@ -1,4 +1,4 @@
-import { TocItem } from '@/lib/htmljsonToc';
+import { type TocItem } from '@/lib/htmljsonToc';
 
 interface TocProps {
   tocItems: TocItem[];

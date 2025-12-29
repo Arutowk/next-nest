@@ -1,14 +1,17 @@
 'use client';
 
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+
+import AddComment from './addComment';
+import CommentCard from './commentCard';
+import CommentCardSkeleton from './commentCardSkeleton';
+import CommentPagination from './CommentPagination';
+
 import { getPostComments } from '@/lib/actions/commentActions';
 import { DEFAULT_PAGE_SIZE } from '@/lib/constants';
-import CommentCard from './commentCard';
-import CommentPagination from './CommentPagination';
-import CommentCardSkeleton from './commentCardSkeleton';
-import { SessionUser } from '@/lib/session';
-import AddComment from './addComment';
+import { type SessionUser } from '@/lib/session';
+
 
 type Props = {
   postId: number;

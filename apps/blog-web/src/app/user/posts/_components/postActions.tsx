@@ -1,11 +1,12 @@
+import { PencilIcon, TrashIcon } from '@heroicons/react/20/solid';
+import Link from 'next/link';
+
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { PencilIcon, TrashIcon } from '@heroicons/react/20/solid';
-import Link from 'next/link';
 
 type Props = {
   postId: number;

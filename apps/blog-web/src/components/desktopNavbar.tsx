@@ -1,8 +1,9 @@
 'use client';
 
-import { PropsWithChildren, useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
+import { type PropsWithChildren, useEffect, useState } from 'react';
+
+import { cn } from '@/lib/utils';
 
 type Props = PropsWithChildren;
 

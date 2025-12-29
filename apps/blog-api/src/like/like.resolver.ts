@@ -1,6 +1,8 @@
 import { UseGuards } from "@nestjs/common";
 import { Args, Context, Int, Mutation, Query, Resolver } from "@nestjs/graphql";
+
 import { JwtAuthGuard } from "../auth/guards/jwt-auth/jwt-auth.guard";
+
 import { Like } from "./entities/like.entity";
 import { LikeService } from "./like.service";
 
