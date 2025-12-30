@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 const Hero = () => {
   return (
     <div className="bg-gradient-to-br from-sky-500 to-indigo-500 text-white md:pt-20">
@@ -20,11 +18,7 @@ const Hero = () => {
         </div>
         {/* Right col */}
         <div className="w-full flex justify-center text-center py-7 md:w-3/5">
-          <Image
-            src="/hero.jpg"
-            alt="hero section"
-            className="w-full md:w-3/5"
-          />
+          <img src="/hero.jpg" alt="hero section" className="w-full md:w-3/5" />
         </div>
       </div>
 

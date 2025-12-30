@@ -317,6 +317,9 @@ importers:
       '@graphql-codegen/introspection':
         specifier: 5.0.0
         version: 5.0.0(encoding@0.1.13)(graphql@16.12.0)
+      '@parcel/watcher':
+        specifier: ^2.5.1
+        version: 2.5.1
       '@repo/api':
         specifier: workspace:*
         version: link:../../packages/api
@@ -12624,7 +12627,6 @@ snapshots:
       '@parcel/watcher-win32-arm64': 2.5.1
       '@parcel/watcher-win32-ia32': 2.5.1
       '@parcel/watcher-win32-x64': 2.5.1
-    optional: true
 
   '@phc/format@1.0.0': {}
 
@@ -15567,8 +15569,7 @@ snapshots:
 
   detect-indent@6.1.0: {}
 
-  detect-libc@1.0.3:
-    optional: true
+  detect-libc@1.0.3: {}
 
   detect-libc@2.1.2: {}
 
@@ -18377,8 +18378,7 @@ snapshots:
 
   node-addon-api@5.1.0: {}
 
-  node-addon-api@7.1.1:
-    optional: true
+  node-addon-api@7.1.1: {}
 
   node-addon-api@8.5.0: {}
 

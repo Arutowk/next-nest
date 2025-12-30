@@ -2,6 +2,7 @@ model User{
   id Int @id @default(autoincrement())
   name String
   email String  @unique
+  role Role     @default(USER)
   bio String?
   avatar String?
   password String?
@@ -12,13 +13,19 @@ model User{
   likes Like[]
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model Post{
   id Int @id @default(autoincrement())
   slug String? @unique
   title String
-  content String
+  content String @db.Text
   thumbnail String?
   published Boolean
+  publishedAt DateTime?
   authorId Int
   author User @relation(fields: [authorId],references: [id])
   createdAt DateTime @default(now())

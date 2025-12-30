@@ -1,11 +1,12 @@
-import Image from 'next/image';
+import Image from "next/image";
 
-import Comments from './_components/comments';
-import Like from './_components/like';
-import SanitizedContent from './_components/SanitizedContent';
+import Comments from "./_components/comments";
+import Like from "./_components/like";
+import SanitizedContent from "./_components/SanitizedContent";
 
-import { fetchPostById } from '@/lib/actions/postActions';
-import { getSession } from '@/lib/session';
+import { fetchPostById } from "@/lib/actions/postActions";
+import { getSession } from "@/lib/session";
+import { safeJsonParse } from "@/lib/utils";
 
 //https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
 type Props = {
@@ -16,7 +17,7 @@ type Props = {
 const PostPage = async ({ params }: Props) => {
   const postId = (await params).id;
   const post = await fetchPostById(+postId);
-  const content = JSON.parse(post?.content)?.html ?? post.content;
+  const content = safeJsonParse(post?.content)?.html ?? post.content;
   const session = await getSession();
 
   return (
@@ -28,7 +29,7 @@ const PostPage = async ({ params }: Props) => {
 
       <div className="relative w-80 h-60">
         <Image
-          src={post.thumbnail ?? '/no-image.jpg'}
+          src={post.thumbnail ?? "/no-image.jpg"}
           alt={post.title}
           fill
           className="rounded-md object-cover"

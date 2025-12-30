@@ -1,4 +1,5 @@
-import { TypedDocumentNode } from "@graphql-typed-document-node/core";
+import { type TypedDocumentNode } from "@graphql-typed-document-node/core";
+import { print } from "graphql";
 
 import { BACKEND_URL } from "./constants";
 import { getSession } from "./session";
@@ -13,7 +14,7 @@ export async function fetchGraphQL<TResult, TVariables>(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      query,
+      query: print(query),
       variables,
     }),
   });
@@ -23,7 +24,7 @@ export async function fetchGraphQL<TResult, TVariables>(
     console.error("GraphQL errors:", result.errors);
   }
 
-  return result as { data: TResult; errors?: { message: string }[] };
+  return result as { data?: TResult; errors?: { message: string }[] };
 }
 
 export async function authFetchGraphQL<TResult, TVariables>(
@@ -38,7 +39,7 @@ export async function authFetchGraphQL<TResult, TVariables>(
       Authorization: `Bearer ${session?.accessToken}`,
     },
     body: JSON.stringify({
-      query,
+      query: print(query),
       variables,
     }),
   });
@@ -48,5 +49,5 @@ export async function authFetchGraphQL<TResult, TVariables>(
     console.error("GraphQL errors:", result.errors);
   }
 
-  return result as { data: TResult; errors?: { message: string }[] };
+  return result as { data?: TResult; errors?: { message: string }[] };
 }
