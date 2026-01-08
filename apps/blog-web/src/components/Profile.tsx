@@ -1,19 +1,19 @@
-'use client';
+"use client";
 import {
   ArrowRightStartOnRectangleIcon,
   ListBulletIcon,
   PencilSquareIcon,
   UserIcon,
-} from '@heroicons/react/20/solid';
-import { Avatar } from '@radix-ui/react-avatar';
-import { Popover } from '@radix-ui/react-popover';
-import Link from 'next/link';
-import { useState } from 'react';
+} from "@heroicons/react/20/solid";
+import { Avatar } from "@radix-ui/react-avatar";
+import { Popover } from "@radix-ui/react-popover";
+import Link from "next/link";
+import { useState } from "react";
 
-import { AvatarFallback, AvatarImage } from './ui/avatar';
-import { PopoverContent, PopoverTrigger } from './ui/popover';
+import { AvatarFallback, AvatarImage } from "./ui/avatar";
+import { PopoverContent, PopoverTrigger } from "./ui/popover";
 
-import { type SessionUser } from '@/lib/session';
+import { type SessionUser } from "@/lib/session";
 
 type Props = {
   user: SessionUser;
@@ -43,6 +43,10 @@ const Profile = ({ user }: Props) => {
             <ArrowRightStartOnRectangleIcon className="w-4" />
             <span>Sign Out</span>
           </a>
+          <Link href="/admin" onNavigate={() => setProfileOpen(false)}>
+            <ListBulletIcon className="w-4" />
+            <span>Admin Page</span>
+          </Link>
           <Link
             href="/user/create-post"
             onNavigate={() => setProfileOpen(false)}

@@ -1,0 +1,7 @@
+'use client';
+
+import dynamic from 'next/dynamic';
+
+export const Editor = dynamic(() => import('@/components/blog-editor'), {
+  ssr: false,
+});

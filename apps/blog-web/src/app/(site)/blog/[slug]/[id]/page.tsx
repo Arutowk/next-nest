@@ -1,0 +1,48 @@
+import Image from "next/image";
+
+import Comments from "./_components/comments";
+import Like from "./_components/like";
+import SanitizedContent from "./_components/SanitizedContent";
+
+import { fetchPostById } from "@/lib/actions/postActions";
+import { getSession } from "@/lib/session";
+import { safeJsonParse } from "@/lib/utils";
+
+//https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
+type Props = {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+const PostPage = async ({ params }: Props) => {
+  const postId = (await params).id;
+  const post = await fetchPostById(+postId);
+  const content = safeJsonParse(post?.content)?.html ?? post.content;
+  const session = await getSession();
+
+  return (
+    <main className="container mx-auto px-4 py-8 mt-16">
+      <h1 className="text-4xl font-bold mb-4 text-slate-700">{post.title}</h1>
+      <p className="text-slate-500 text-sm mb-4">
+        By {post.author.name} | {new Date(post.createdAt).toLocaleDateString()}
+      </p>
+
+      <div className="relative w-80 h-60">
+        <Image
+          src={post.thumbnail ?? "/no-image.jpg"}
+          alt={post.title}
+          fill
+          className="rounded-md object-cover"
+        />
+      </div>
+
+      <SanitizedContent content={content} />
+
+      <Like postId={post.id} user={session?.user} />
+
+      <Comments user={session?.user} postId={post.id}></Comments>
+    </main>
+  );
+};
+
+export default PostPage;

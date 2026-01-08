@@ -1,6 +1,6 @@
-import { type PropsWithChildren } from 'react';
+import { type PropsWithChildren } from "react";
 
-import SideBar from './ui/SideBar';
+import SideBar from "./site/SideBar";
 
 type Props = PropsWithChildren;
 
