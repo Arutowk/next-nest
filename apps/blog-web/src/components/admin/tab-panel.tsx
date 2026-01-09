@@ -1,5 +1,6 @@
-import { Home, Plus, X } from "lucide-react"; // 使用 lucide-react 作为图标库
-import { useState } from "react";
+import { getMenuItemById } from "@/app/admin/menu_items";
+import { useTabsAction, useTabsState } from "@/hooks/use-admin-tabs";
+import { Plus, X } from "lucide-react";
 
 type TabPanelProps = {
   id: string;
@@ -18,6 +19,7 @@ const TabPanel = ({
   onClose,
   isLast,
 }: TabPanelProps) => {
+  const Icon = getMenuItemById(id)?.icon;
   return (
     <div
       onClick={() => onClick(id)}
@@ -30,7 +32,7 @@ const TabPanel = ({
       <div className="relative z-10 flex items-center justify-between w-full px-1 text-sm overflow-hidden">
         <div className="flex items-center gap-2 overflow-hidden">
           <span className="shrink-0 text-gray-500">
-            <Home size={14} />
+            {Icon && <Icon size={14} />}
           </span>
           <span
             className={`truncate ${isActive ? "text-gray-900 dark:text-white" : "text-gray-600 dark:text-gray-400"}`}
@@ -62,37 +64,20 @@ const TabPanel = ({
 };
 
 const TabsManager = () => {
-  const [tabs, setTabs] = useState([
-    { id: "1", title: "控制台" },
-    { id: "2", title: "用户管理" },
-    { id: "3", title: "系统设置 - 权限分配" },
-  ]);
-  const [activeTab, setActiveTab] = useState("1");
-
-  const closeTab = (id: string) => {
-    const newTabs = tabs.filter((t) => t.id !== id);
-    setTabs(newTabs);
-    if (activeTab === id && newTabs.length > 0) {
-      setActiveTab(newTabs[newTabs.length - 1]?.id!);
-    }
-  };
-
-  const addTab = () => {
-    const newId = Date.now().toString();
-    setTabs([...tabs, { id: newId, title: "新页面" }]);
-    setActiveTab(newId);
-  };
+  const { activeTabId, openTabIds, isPending } = useTabsState();
+  const { openTab, closeTab } = useTabsAction();
 
   return (
     <div className="sidebar-container w-fullp-2 pb-0 flex items-end overflow-x-auto no-scrollbar">
       <div className="flex items-end">
-        {tabs.map((tab, index) => (
+        {openTabIds.map((tab, index) => (
           <TabPanel
-            key={tab.id}
-            {...tab}
-            isActive={activeTab === tab.id}
-            isLast={index === tabs.length - 1}
-            onClick={setActiveTab}
+            key={tab}
+            id={tab}
+            title={getMenuItemById(tab)?.label || "未命名"}
+            isActive={activeTabId === tab}
+            isLast={index === openTabIds.length - 1}
+            onClick={openTab}
             onClose={closeTab}
           />
         ))}
@@ -100,7 +85,7 @@ const TabsManager = () => {
 
       {/* 新建标签按钮 */}
       <button
-        onClick={addTab}
+        onClick={openTab.bind(null, `tab-${Date.now()}`)}
         className="mb-1.5 ml-2 p-1 rounded-full hover:bg-gray-400/40 text-gray-600 transition-colors"
       >
         <Plus size={18} />

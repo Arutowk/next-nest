@@ -10,7 +10,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
       <main className="h-screen w-screen flex  bg-[#e4e9f5] dark:bg-[#1a1a2e] transition-all duration-500">
         <AppSidebar />
         <div className="flex flex-col w-[calc(100%-100px)]">
-          <div className="@container/main flex flex-1 flex-col gap-2 ml-[300px]">
+          <div className="@container/main flex flex-1 flex-col gap-2 ml-75">
             <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
               {children}
             </div>

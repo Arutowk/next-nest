@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 
-import type { Tag } from "blog-api";
+import { type Tag } from "blog-api";
 
-import UpsertPostForm from "@/app/(site)/user/create-post/_components/upsertPostForm";
 import { updatePost } from "@/lib/actions/postActions";
 import { type PostType } from "@/lib/types/modelTypes";
+import UpsertPostForm from "./upsert-post-form";
 
 type Props = {
   post: Omit<PostType, "slug" | "updatedAt" | "_count" | "authorId">;

@@ -1,3 +1,5 @@
+import { getMenuItemById, MENU_ITEMS } from "@/app/admin/menu_items";
+import { useTabsAction, useTabsState } from "@/hooks/use-admin-tabs";
 import { cn } from "@/lib/utils";
 import {
   Home,
@@ -21,12 +23,18 @@ const menuItems = [
 ];
 
 const AppSidebar = () => {
-  const [activeId, setActiveId] = useState("theme");
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const { openTab } = useTabsAction();
+  const { activeTabId } = useTabsState();
 
   // 演示用的切换函数
   const toggleDarkMode = () =>
     document.documentElement.classList.toggle("dark");
+
+  const handleMenuItemClick = (id: string) => {
+    openTab(id);
+  };
 
   return (
     <div className="sidebar-container min-h-screen transition-colors duration-500 bg-[#e4e9f5] dark:bg-[#1a1a2e]">
@@ -39,10 +47,7 @@ const AppSidebar = () => {
       >
         <ul className="relative h-full pt-6 flex flex-col gap-1">
           {/* Logo 区域 */}
-          <li
-            className="mb-10 px-2 cursor-pointer"
-            onClick={() => setActiveId("logo")}
-          >
+          <li className="mb-10 px-2 cursor-pointer">
             <div className="flex items-center h-[60px]">
               <div className="min-w-[60px] flex justify-center items-center">
                 <div className="w-[50px] h-[50px] rounded-full border-2 border-purple-500 dark:border-orange-400 p-0.5 overflow-hidden">
@@ -63,12 +68,15 @@ const AppSidebar = () => {
           </li>
 
           {/* 导航项循环 */}
-          {menuItems.map(({ id, icon: Icon, label }) => {
-            const isActive = activeId === id;
+          {MENU_ITEMS.map(({ id, icon: Icon, label, parent_id }) => {
+            if (parent_id) return null;
+            const isActive =
+              activeTabId === id ||
+              id === getMenuItemById(activeTabId)?.parent_id;
             return (
               <li
                 key={id}
-                onClick={() => setActiveId(id)}
+                onClick={() => handleMenuItemClick(id)}
                 className={`group/item cursor-pointer transition-[width] duration-300 ${isActive ? "nav-active" : ""}`}
               >
                 <div className="flex items-center h-[64px]">

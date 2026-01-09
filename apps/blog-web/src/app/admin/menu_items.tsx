@@ -1,8 +1,10 @@
-import { Database, LayoutDashboard, Users } from "lucide-react";
+import { Home, Pencil, Users } from "lucide-react";
+import BlogListPage from "./_route/blog/list/page";
+import NewBlogPage from "./_route/blog/new/page";
 
 // --- 模拟页面组件 (实际开发中应动态导入或通过配置映射) ---
 const Dashboard = () => (
-  <div className="p-6 bg-white rounded-lg shadow-sm border border-slate-200">
+  <div>
     <h2 className="text-xl font-bold mb-4">控制面板</h2>
     <p className="text-slate-500">React 19 Activity 正在后台保持此状态...</p>
     <input
@@ -42,16 +44,27 @@ const Inventory = () => (
 // --- 配置菜单项 ---
 export const MENU_ITEMS = [
   {
-    id: "dashboard",
-    label: "控制面板",
-    icon: LayoutDashboard,
+    id: "home",
+    label: "主页",
+    icon: Home,
     component: <Dashboard />,
   },
-  { id: "users", label: "用户管理", icon: Users, component: <UserList /> },
   {
-    id: "inventory",
-    label: "库存统计",
-    icon: Database,
-    component: <Inventory />,
+    id: "blog",
+    label: "文章列表",
+    icon: Pencil,
+    component: <BlogListPage />,
   },
+  {
+    id: "blog_create",
+    label: "文章新建",
+    icon: Pencil,
+    component: <NewBlogPage />,
+    parent_id: "blog",
+  },
+  { id: "users", label: "用户管理", icon: Users, component: <UserList /> },
 ];
+
+export function getMenuItemById(id: string) {
+  return MENU_ITEMS.find((item) => item.id === id);
+}
