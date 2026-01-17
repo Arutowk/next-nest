@@ -1,4 +1,4 @@
-import { type JSONContent } from '@tiptap/react';
+import { type JSONContent } from "@tiptap/react";
 
 export type SignUpFormState =
   | {
@@ -38,6 +38,7 @@ export type PostFormState =
         content?: string | JSONContent;
         thumbnail?: File | null;
         tags?: string;
+        slug?: string;
         published?: string;
         previousThumbnailUrl?: string;
       };
@@ -47,6 +48,7 @@ export type PostFormState =
         content?: string[];
         thumbnail?: string[];
         tags?: string[];
+        slug?: string[];
         published?: string[];
       };
       message?: string;

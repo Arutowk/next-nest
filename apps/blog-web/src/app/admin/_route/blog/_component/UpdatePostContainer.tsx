@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useReducer, useRef } from "react";
 
 import { type Tag } from "blog-api";
 
@@ -25,6 +25,8 @@ const UpdatePostContainer = ({ post }: Props) => {
       previousThumbnailUrl: post.thumbnail ?? undefined,
     },
   });
+  const ref = useRef<{ submit: () => void }>(null!);
+  const [publishNow, dispatch] = useReducer((checked) => !checked, false);
   const router = useRouter();
   useEffect(() => {
     if (state?.ok === true) {
@@ -33,7 +35,14 @@ const UpdatePostContainer = ({ post }: Props) => {
       }, 500);
     }
   }, [state?.ok, router]);
-  return <UpsertPostForm state={state} formAction={action} />;
+  return (
+    <UpsertPostForm
+      ref={ref}
+      state={state}
+      formAction={action}
+      dispatch={dispatch}
+    />
+  );
 };
 
 export default UpdatePostContainer;

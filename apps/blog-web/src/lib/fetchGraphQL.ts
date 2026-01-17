@@ -51,3 +51,22 @@ export async function authFetchGraphQL<TResult, TVariables>(
 
   return result as { data?: TResult; errors?: { message: string }[] };
 }
+
+export async function fetchUpload(fileType: string, file: File) {
+  const session = await getSession();
+  const nestFormData = new FormData();
+  nestFormData.append("file", file);
+  try {
+    const response = await fetch(`${BACKEND_URL}/upload/${fileType}`, {
+      method: "POST",
+      body: nestFormData,
+      headers: {
+        Authorization: `Bearer ${session?.accessToken}`,
+      },
+    });
+    const result = await response.json();
+    return result?.data as { url: string; name: string };
+  } catch (err) {
+    console.error("上传出错:", err);
+  }
+}

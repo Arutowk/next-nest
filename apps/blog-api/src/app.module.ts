@@ -14,6 +14,7 @@ import { LikeModule } from "./like/like.module";
 import { PostModule } from "./post/post.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { TagModule } from "./tag/tag.module";
+import { UploadModule } from "./upload/upload.module";
 import { UserModule } from "./user/user.module";
 
 export interface MyContext {
@@ -30,6 +31,7 @@ export interface MyContext {
     }),
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
+    UploadModule,
     PostModule,
     UserModule,
     CommentModule,

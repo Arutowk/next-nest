@@ -4,7 +4,7 @@ import type { PostFormState } from "../types/formState";
 import type { PostType } from "../types/modelTypes";
 
 import { UpdatePostInput } from "@/gql/graphql";
-import { authFetchGraphQL, fetchGraphQL } from "../fetchGraphQL";
+import { authFetchGraphQL, fetchGraphQL, fetchUpload } from "../fetchGraphQL";
 import {
   CREATE_POST_MUTATION,
   DELETE_POST_MUTATION,
@@ -25,7 +25,7 @@ export const fetchPosts = async ({
   pageSize?: number;
 }) => {
   const { skip, take } = transformTakeSkip({ page, pageSize });
-  const data = (await fetchGraphQL(GET_POSTS, { skip, take }))?.data;
+  const data = (await fetchGraphQL(GET_POSTS, { skip, take }))?.data!;
 
   return {
     posts: data.posts,
@@ -70,7 +70,7 @@ export async function saveNewPost(
   const validatedFields = PostFormSchema.safeParse(
     Object.fromEntries(formData.entries()),
   );
-  console.log("server action");
+  console.log("server action", validatedFields);
   if (!validatedFields.success) {
     return {
       data: Object.fromEntries(formData.entries()),
@@ -79,9 +79,13 @@ export async function saveNewPost(
   }
 
   let thumbnailUrl = "";
-  // Upload Thumbnail to supabase
+  // Upload Thumbnail
   if (validatedFields.data.thumbnail) {
-    thumbnailUrl = await uploadThumbnail(validatedFields.data.thumbnail);
+    const result = await fetchUpload("image", validatedFields.data.thumbnail);
+    console.log("upload result:", result);
+    if (result?.url) {
+      thumbnailUrl = result?.url;
+    }
   }
 
   // call garphql api
@@ -139,7 +143,7 @@ export async function deletePost(postId: number) {
     await authFetchGraphQL(DELETE_POST_MUTATION, {
       postId,
     })
-  )?.data;
+  )?.data!;
 
   return data.deletePost;
 }

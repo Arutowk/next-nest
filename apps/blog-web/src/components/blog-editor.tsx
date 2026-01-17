@@ -228,7 +228,7 @@ export default function BlogEditor({
       setToc(tocItems);
       const dataString = JSON.stringify(data);
       updateContent(dataString);
-    }, 1000),
+    }, 300),
     [],
   );
 

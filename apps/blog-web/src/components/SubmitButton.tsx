@@ -1,13 +1,19 @@
-'use client';
+"use client";
 
-import { useFormStatus } from 'react-dom';
+import { useFormStatus } from "react-dom";
 
-import { Button, type ButtonProps } from './ui/button';
+import { Button, type ButtonProps } from "./ui/button";
 
 const SubmitButton = ({ children, ...props }: ButtonProps) => {
   const { pending } = useFormStatus();
   return (
-    <Button color="blue" type="submit" aria-disabled={pending} {...props}>
+    <Button
+      color="blue"
+      type="submit"
+      aria-disabled={pending}
+      {...props}
+      className="cursor-pointer"
+    >
       {pending ? <span className="animate-pulse">Submitting</span> : children}
     </Button>
   );

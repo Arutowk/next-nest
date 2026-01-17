@@ -2,18 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { ImagePlus, X, ZoomIn } from "lucide-react";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
 
 interface ImageUploadProps {
   name: string;
-  label?: string;
   required?: boolean;
 }
 
-export function ImageUpload({ name, label, required }: ImageUploadProps) {
+export function ImageUpload({ name, required = false }: ImageUploadProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -21,10 +19,11 @@ export function ImageUpload({ name, label, required }: ImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 处理文件选择
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       setFile(selectedFile);
+
       // 创建预览 URL
       const url = URL.createObjectURL(selectedFile);
       setPreviewUrl(url);
@@ -42,8 +41,6 @@ export function ImageUpload({ name, label, required }: ImageUploadProps) {
 
   return (
     <div className="space-y-1">
-      {label && <Label className="text-sm font-medium">{label}</Label>}
-
       <div className="flex items-center gap-4">
         {/* 隐藏的真实文件输入框 */}
         <input
@@ -78,7 +75,7 @@ export function ImageUpload({ name, label, required }: ImageUploadProps) {
               </Button>
               <Button
                 type="button"
-                variant="destructive"
+                variant="secondary"
                 size="icon"
                 className="h-8 w-8"
                 onClick={handleRemove}
