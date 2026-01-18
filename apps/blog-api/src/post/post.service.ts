@@ -56,6 +56,8 @@ export class PostService {
         id: true,
         content: true,
         createdAt: true,
+        updatedAt: true,
+        publishedAt: true,
         published: true,
         slug: true,
         title: true,

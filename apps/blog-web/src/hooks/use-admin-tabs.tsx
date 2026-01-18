@@ -17,6 +17,7 @@ const TabStateContext = createContext<
       activeTabId: string;
       openTabIds: string[];
       isPending: boolean;
+      refreshSignals: Record<string, number>;
     }
   | undefined
 >(undefined);
@@ -26,6 +27,7 @@ const TabApiContext = createContext<
   | {
       openTab: (id: string) => void;
       closeTab: (id: string) => void;
+      refreshCurrentTab: (id: string) => void;
     }
   | undefined
 >(undefined);
@@ -39,6 +41,17 @@ export function TabProvider({ children }: { children: React.ReactNode }) {
 
   const activeTabId = searchParams.get("tab") || INITIAL_TAB;
   const [openTabIds, setOpenTabIds] = useState<string[]>([INITIAL_TAB]);
+
+  const [refreshSignals, setRefreshSignals] = useState<Record<string, number>>(
+    {},
+  );
+
+  const refreshCurrentTab = useCallback((id: string) => {
+    setRefreshSignals((prev) => ({
+      ...prev,
+      [id]: Date.now(), // 使用时间戳强制触发更新
+    }));
+  }, []);
 
   const openTab = useCallback(
     (id: string) => {
@@ -71,8 +84,10 @@ export function TabProvider({ children }: { children: React.ReactNode }) {
   }, [router, activeTabId]);
 
   return (
-    <TabApiContext.Provider value={{ openTab, closeTab }}>
-      <TabStateContext.Provider value={{ activeTabId, openTabIds, isPending }}>
+    <TabApiContext.Provider value={{ openTab, closeTab, refreshCurrentTab }}>
+      <TabStateContext.Provider
+        value={{ activeTabId, openTabIds, isPending, refreshSignals }}
+      >
         {children}
       </TabStateContext.Provider>
     </TabApiContext.Provider>

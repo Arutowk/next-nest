@@ -21,7 +21,7 @@ type Documents = {
     "\n  mutation UnLikePost($postId: Int!) {\n    unlikePost(postId: $postId)\n  }\n": typeof types.UnLikePostDocument,
     "\n  query posts($skip: Float, $take: Float) {\n    posts(skip: $skip, take: $take) {\n      id\n      title\n      thumbnail\n      content\n      createdAt\n      slug\n    }\n    postCount\n  }\n": typeof types.PostsDocument,
     "\n  query getPostById($id: Int!) {\n    getPostById(id: $id) {\n      id\n      title\n      thumbnail\n      content\n      createdAt\n      published\n      author {\n        name\n      }\n      tags {\n        id\n        name\n      }\n    }\n  }\n": typeof types.GetPostByIdDocument,
-    "\n  query GetUserPosts($skip: Int, $take: Int) {\n    getUserPosts(skip: $skip, take: $take) {\n      id\n      title\n      slug\n      thumbnail\n      published\n      createdAt\n      content\n      _count {\n        likes\n        comments\n      }\n    }\n    userPostCount\n  }\n": typeof types.GetUserPostsDocument,
+    "\n  query GetUserPosts($skip: Int, $take: Int) {\n    getUserPosts(skip: $skip, take: $take) {\n      id\n      title\n      slug\n      thumbnail\n      published\n      createdAt\n      updatedAt\n      publishedAt\n      content\n      _count {\n        likes\n        comments\n      }\n    }\n    userPostCount\n  }\n": typeof types.GetUserPostsDocument,
     "\n  mutation CreatePostMutation($input: CreatePostInput!) {\n    createPost(createPostInput: $input) {\n      id\n    }\n  }\n": typeof types.CreatePostMutationDocument,
     "\n  mutation UpdatePost($input: UpdatePostInput!) {\n    updatePost(updatePostInput: $input) {\n      id\n    }\n  }\n": typeof types.UpdatePostDocument,
     "\n  mutation DeletePost($postId: Int!) {\n    deletePost(postId: $postId)\n  }\n": typeof types.DeletePostDocument,
@@ -36,7 +36,7 @@ const documents: Documents = {
     "\n  mutation UnLikePost($postId: Int!) {\n    unlikePost(postId: $postId)\n  }\n": types.UnLikePostDocument,
     "\n  query posts($skip: Float, $take: Float) {\n    posts(skip: $skip, take: $take) {\n      id\n      title\n      thumbnail\n      content\n      createdAt\n      slug\n    }\n    postCount\n  }\n": types.PostsDocument,
     "\n  query getPostById($id: Int!) {\n    getPostById(id: $id) {\n      id\n      title\n      thumbnail\n      content\n      createdAt\n      published\n      author {\n        name\n      }\n      tags {\n        id\n        name\n      }\n    }\n  }\n": types.GetPostByIdDocument,
-    "\n  query GetUserPosts($skip: Int, $take: Int) {\n    getUserPosts(skip: $skip, take: $take) {\n      id\n      title\n      slug\n      thumbnail\n      published\n      createdAt\n      content\n      _count {\n        likes\n        comments\n      }\n    }\n    userPostCount\n  }\n": types.GetUserPostsDocument,
+    "\n  query GetUserPosts($skip: Int, $take: Int) {\n    getUserPosts(skip: $skip, take: $take) {\n      id\n      title\n      slug\n      thumbnail\n      published\n      createdAt\n      updatedAt\n      publishedAt\n      content\n      _count {\n        likes\n        comments\n      }\n    }\n    userPostCount\n  }\n": types.GetUserPostsDocument,
     "\n  mutation CreatePostMutation($input: CreatePostInput!) {\n    createPost(createPostInput: $input) {\n      id\n    }\n  }\n": types.CreatePostMutationDocument,
     "\n  mutation UpdatePost($input: UpdatePostInput!) {\n    updatePost(updatePostInput: $input) {\n      id\n    }\n  }\n": types.UpdatePostDocument,
     "\n  mutation DeletePost($postId: Int!) {\n    deletePost(postId: $postId)\n  }\n": types.DeletePostDocument,
@@ -89,7 +89,7 @@ export function graphql(source: "\n  query getPostById($id: Int!) {\n    getPost
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetUserPosts($skip: Int, $take: Int) {\n    getUserPosts(skip: $skip, take: $take) {\n      id\n      title\n      slug\n      thumbnail\n      published\n      createdAt\n      content\n      _count {\n        likes\n        comments\n      }\n    }\n    userPostCount\n  }\n"): (typeof documents)["\n  query GetUserPosts($skip: Int, $take: Int) {\n    getUserPosts(skip: $skip, take: $take) {\n      id\n      title\n      slug\n      thumbnail\n      published\n      createdAt\n      content\n      _count {\n        likes\n        comments\n      }\n    }\n    userPostCount\n  }\n"];
+export function graphql(source: "\n  query GetUserPosts($skip: Int, $take: Int) {\n    getUserPosts(skip: $skip, take: $take) {\n      id\n      title\n      slug\n      thumbnail\n      published\n      createdAt\n      updatedAt\n      publishedAt\n      content\n      _count {\n        likes\n        comments\n      }\n    }\n    userPostCount\n  }\n"): (typeof documents)["\n  query GetUserPosts($skip: Int, $take: Int) {\n    getUserPosts(skip: $skip, take: $take) {\n      id\n      title\n      slug\n      thumbnail\n      published\n      createdAt\n      updatedAt\n      publishedAt\n      content\n      _count {\n        likes\n        comments\n      }\n    }\n    userPostCount\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

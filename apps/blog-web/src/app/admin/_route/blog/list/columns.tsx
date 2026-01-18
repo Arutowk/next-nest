@@ -1,7 +1,6 @@
 "use client";
 
 import { createColumnHelper } from "@tanstack/react-table";
-import { Post } from "blog-api";
 import dayjs from "dayjs";
 import {
   Check,
@@ -21,8 +20,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { GetUserPostsQuery } from "@/gql/graphql";
 
-const columnHelper = createColumnHelper<Post>();
+type GenPostType = GetUserPostsQuery["getUserPosts"][number];
+
+const columnHelper = createColumnHelper<GenPostType>();
 
 export const columns = [
   columnHelper.accessor("id", { header: "ID" }),

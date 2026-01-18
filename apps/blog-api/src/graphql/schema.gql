@@ -39,6 +39,7 @@ type Post {
   published: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
+  publishedAt: DateTime
   author: User!
   tags: [Tag!]!
   comments: [Comment!]!

@@ -43,6 +43,8 @@ export const GET_USER_POSTS = graphql(`
       thumbnail
       published
       createdAt
+      updatedAt
+      publishedAt
       content
       _count {
         likes

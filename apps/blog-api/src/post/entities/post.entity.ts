@@ -1,8 +1,8 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from "@nestjs/graphql";
 
-import { Comment } from '../../comment/entities/comment.entity';
-import { Tag } from '../../tag/entities/tag.entity';
-import { User } from '../../user/entities/user.entity';
+import { Comment } from "../../comment/entities/comment.entity";
+import { Tag } from "../../tag/entities/tag.entity";
+import { User } from "../../user/entities/user.entity";
 
 @ObjectType()
 export class Count {
@@ -38,6 +38,9 @@ export class Post {
 
   @Field()
   updatedAt: Date;
+
+  @Field(() => Date, { nullable: true })
+  publishedAt?: Date;
 
   @Field(() => User)
   author: User;

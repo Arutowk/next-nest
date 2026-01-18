@@ -1,6 +1,5 @@
 "use client";
 
-import { type JSONContent } from "@tiptap/react";
 import {
   type ActionDispatch,
   type RefObject,
@@ -26,7 +25,7 @@ type Props = {
 };
 
 const UpsertPostForm = ({ state, formAction, ref, dispatch }: Props) => {
-  const [content, setContent] = useState(state?.data?.content || "");
+  const [content, setContent] = useState(state?.data?.content || undefined);
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -60,7 +59,12 @@ const UpsertPostForm = ({ state, formAction, ref, dispatch }: Props) => {
       >
         {/* id和content需要隐藏在表单中 */}
         <input hidden name="postId" defaultValue={state?.data?.postId} />
-        <input hidden name="content" value={content as string} readOnly />
+        <input
+          hidden
+          name="content"
+          value={JSON.stringify(content) || ""}
+          readOnly
+        />
 
         {/* 标题 */}
         <FormRow
@@ -137,8 +141,9 @@ const UpsertPostForm = ({ state, formAction, ref, dispatch }: Props) => {
         <p className="text-destructive animate-shake">{state.errors.content}</p>
       )}
       <Editor
+        value={content}
         updateContent={setContent}
-        defaultContent={state?.data?.content as JSONContent}
+        defaultContent={state?.data?.content}
       />
     </>
   );

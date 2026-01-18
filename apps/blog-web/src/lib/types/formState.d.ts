@@ -35,7 +35,7 @@ export type PostFormState =
       data?: {
         postId?: number;
         title?: string;
-        content?: string | JSONContent;
+        content?: JSONContent;
         thumbnail?: File | null;
         tags?: string;
         slug?: string;

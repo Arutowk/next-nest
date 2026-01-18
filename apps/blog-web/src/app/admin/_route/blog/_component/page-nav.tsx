@@ -1,3 +1,4 @@
+import { useTabsState } from "@/hooks/use-admin-tabs";
 import { type PropsWithChildren, useEffect, useRef, useState } from "react";
 
 type Props = PropsWithChildren<{ title: string; unVisibleHeight?: number }>;
@@ -12,8 +13,12 @@ export default function PageNavbar({
   // 使用 useRef 来记录上一次的滚动位置，修改它不会触发组件重新渲染，性能更好
   const lastScrollY = useRef(0);
 
+  const { activeTabId } = useTabsState();
+
   useEffect(() => {
-    const container = document.getElementById("scroll-container")!;
+    const container = document.getElementById(
+      `scroll-container-${activeTabId}`,
+    )!;
 
     const handleScroll = () => {
       const currentScrollY = container.scrollTop;

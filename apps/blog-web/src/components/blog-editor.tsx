@@ -9,7 +9,7 @@ import {
   useEditor,
 } from "@tiptap/react";
 import * as React from "react";
-import { Dispatch, SetStateAction, useCallback } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 
 // --- Tiptap Core Extensions ---
 import { Highlight } from "@tiptap/extension-highlight";
@@ -195,13 +195,15 @@ const MobileToolbarContent = ({
 export type BlogEditorProps = {
   defaultContent?: JSONContent;
   readonly?: boolean;
-  updateContent: Dispatch<SetStateAction<any>>;
+  value?: JSONContent;
+  updateContent: Dispatch<SetStateAction<JSONContent>>;
 };
 
 export default function BlogEditor({
   defaultContent,
   readonly = false,
   updateContent,
+  value,
 }: BlogEditorProps) {
   const isMobile = useIsMobile();
   const windowSize = useWindowSize();
@@ -214,20 +216,14 @@ export default function BlogEditor({
     defaultContent ? generateTocFromJSON(defaultContent) : [],
   );
 
-  const debouncedUpdate = useCallback(
+  const debouncedUpdate = React.useCallback(
     debounce((props: EditorEvents["update"]) => {
-      const html = props.editor.getHTML();
       const json = props.editor.getJSON();
-      const data = {
-        html: html,
-        json: json,
-      };
       console.log(json);
       const tocItems = generateTocFromJSON(json);
       console.log(tocItems);
       setToc(tocItems);
-      const dataString = JSON.stringify(data);
-      updateContent(dataString);
+      updateContent(json);
     }, 300),
     [],
   );
@@ -281,6 +277,17 @@ export default function BlogEditor({
     }
   }, [isMobile, mobileView]);
 
+  //Activity组件切换为visible时，更新编辑器内容
+  React.useEffect(() => {
+    if (
+      editor &&
+      value &&
+      JSON.stringify(editor.getJSON()) !== JSON.stringify(value)
+    ) {
+      editor.commands.setContent(value);
+    }
+  }, [value, editor]);
+
   return (
     <EditorContext.Provider value={{ editor }}>
       <div className="sidebar">
@@ -320,3 +327,23 @@ export default function BlogEditor({
     </EditorContext.Provider>
   );
 }
+
+export const commonExtensions = [
+  StarterKit,
+  TextAlign.configure({ types: ["heading", "paragraph"] }),
+  Underline,
+  TaskList,
+  TaskItem.configure({ nested: true }),
+  Highlight.configure({ multicolor: true }),
+  Image,
+  Typography,
+  Superscript,
+  Subscript,
+  Link.configure({ openOnClick: false }),
+  // 自定义 Node 也需要放进去，以便 generateHTML 知道如何处理它
+  ImageUploadNode.configure({
+    accept: "image/*",
+    maxSize: MAX_FILE_SIZE,
+    limit: 3,
+  }),
+];

@@ -1,29 +1,21 @@
 import { DataTable } from "@/components/admin/data-table";
 import { Button } from "@/components/ui/button";
-import { useTabsAction } from "@/hooks/use-admin-tabs";
-import { Post } from "blog-api";
+import { useTabsAction, useTabsState } from "@/hooks/use-admin-tabs";
+import { fetchUserPosts } from "@/lib/actions/postActions";
+import { DEFAULT_PAGE_SIZE } from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
 import { columns } from "./columns";
 
 export default function BlogListPage() {
   const { openTab } = useTabsAction();
+  const { activeTabId, refreshSignals } = useTabsState();
 
-  const data: Post[] = [
-    {
-      id: 1,
-      title:
-        "示例博文-很长的标题用来测试表格的显示效果很长的标题用来测试表格的显示效果",
-      thumbnail: "",
-      content: "这是一个示例博文的内容。",
-      slug: "example-post",
-      published: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      publishedAt: null,
-      authorId: 1,
-    },
-    // ...
-  ];
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["BLOG_LIST", activeTabId, refreshSignals[activeTabId]],
+    queryFn: async () =>
+      fetchUserPosts({ page: 1, pageSize: DEFAULT_PAGE_SIZE }),
+  });
 
   const renderEmptyFallBack = () => {
     return (
@@ -44,7 +36,7 @@ export default function BlogListPage() {
     <div className="container mx-auto py-10">
       <DataTable
         columns={columns}
-        data={[]}
+        data={data?.posts || []}
         emptyFallback={renderEmptyFallBack()}
       />
     </div>
