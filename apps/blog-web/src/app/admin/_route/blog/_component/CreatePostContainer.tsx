@@ -1,10 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useReducer, useRef } from "react";
+import { use, useActionState, useEffect, useReducer, useRef } from "react";
 
+import { TabInstanceContext } from "@/app/admin/page";
 import { Button } from "@/components/ui/button";
+import { useTabsAction } from "@/hooks/use-admin-tabs";
 import { saveNewPost } from "@/lib/actions/postActions";
+import { useQueryClient } from "@tanstack/react-query";
 import PageNavbar from "./page-nav";
 import UpsertPostForm from "./upsert-post-form";
 
@@ -12,15 +14,19 @@ const CreatePostContainer = () => {
   const [state, action, isPending] = useActionState(saveNewPost, undefined);
   const ref = useRef<{ submit: () => void }>(null!);
   const [publishNow, dispatch] = useReducer((checked) => !checked, false);
+  const queryClient = useQueryClient();
+  const { openTab, closeTab } = useTabsAction();
+  const thisTabId = use(TabInstanceContext);
 
-  const router = useRouter();
   useEffect(() => {
     if (state?.ok === true) {
-      setTimeout(() => {
-        router.push("/user/posts");
-      }, 500);
+      queryClient.invalidateQueries({
+        queryKey: ["blog", "list"],
+      });
+      closeTab(thisTabId);
+      openTab("blog");
     }
-  }, [state?.ok, router]);
+  }, [state?.ok, queryClient, closeTab, openTab, thisTabId]);
 
   return (
     <>

@@ -1,6 +1,7 @@
 import { getMenuItemById } from "@/app/admin/menu_items";
 import { useTabsAction, useTabsState } from "@/hooks/use-admin-tabs";
-import { Plus, X } from "lucide-react";
+import { useIsFetching, useQueryClient } from "@tanstack/react-query";
+import { RotateCw, X } from "lucide-react";
 
 type TabPanelProps = {
   id: string;
@@ -67,6 +68,25 @@ const TabsManager = () => {
   const { activeTabId, openTabIds, isPending } = useTabsState();
   const { openTab, closeTab } = useTabsAction();
 
+  const queryClient = useQueryClient();
+  // 1. 监听所有包含当前 tabId 的请求
+  // 只要该标签页内有任何一个 query 正在 fetching，isFetching 就会 > 0
+  const isFetching = useIsFetching({
+    predicate: (query) => {
+      // 检查 QueryKey 中是否包含当前的 activeId
+      return query.queryKey.some((key: any) => key?.tabId === activeTabId);
+    },
+  });
+
+  const handleRefresh = () => {
+    // 2. 刷新所有匹配该标签的请求
+    queryClient.invalidateQueries({
+      predicate: (query) =>
+        query.queryKey.some((k: any) => k?.tabId === activeTabId),
+      refetchType: "all",
+    });
+  };
+
   return (
     <div className="sidebar-container w-fullp-2 pb-0 flex items-end overflow-x-auto no-scrollbar">
       <div className="flex items-end">
@@ -83,12 +103,17 @@ const TabsManager = () => {
         ))}
       </div>
 
-      {/* 新建标签按钮 */}
+      {/* 刷新当前页面按钮 */}
       <button
-        onClick={openTab.bind(null, `tab-${Date.now()}`)}
-        className="mb-1.5 ml-2 p-1 rounded-full hover:bg-gray-400/40 text-gray-600 transition-colors"
+        disabled={isFetching > 0}
+        onClick={() => handleRefresh()}
+        className="p-2 hover:bg-slate-100 rounded-full"
+        title="刷新当前页面"
       >
-        <Plus size={18} />
+        <RotateCw
+          size={16}
+          className={isPending || isFetching > 0 ? "animate-spin" : ""}
+        />
       </button>
     </div>
   );

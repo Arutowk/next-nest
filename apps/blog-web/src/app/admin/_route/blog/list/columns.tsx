@@ -21,8 +21,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { GetUserPostsQuery } from "@/gql/graphql";
+import { useTabsAction } from "@/hooks/use-admin-tabs";
 
-type GenPostType = GetUserPostsQuery["getUserPosts"][number];
+export type GenPostType = GetUserPostsQuery["getUserPosts"][number];
 
 const columnHelper = createColumnHelper<GenPostType>();
 
@@ -42,16 +43,16 @@ export const columns = [
     cell: (info) => {
       const published = info.getValue();
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-0.5">
           {published ? (
             <>
               <Check size={14} />
-              <span>已发布</span>
+              <span className="text-xs whitespace-nowrap">已发布</span>
             </>
           ) : (
             <>
               <Paperclip size={14} />
-              <span>待发布</span>
+              <span className="text-xs whitespace-nowrap">待发布</span>
             </>
           )}
         </div>
@@ -83,39 +84,59 @@ export const columns = [
   columnHelper.display({
     id: "actions",
     header: "操作",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const blog = row.original;
-      return (
-        <div className="flex gap-1">
-          <Button variant="outline" className="h-8" title="Edit">
-            <Pencil className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" className="h-8" title="View">
-            <Eye className="h-4 w-4" />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(blog.title)}
-              >
-                Copy blog title
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">
-                <Delete />
-                <span>Delete</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
+      return <ActionCell articleId={blog.id} title={blog.title} />;
     },
   }),
 ];
+
+const ActionCell = ({
+  articleId,
+  title,
+}: {
+  articleId: number;
+  title: string;
+}) => {
+  const { openTab } = useTabsAction(); // 组件内部获取 Context
+
+  const handleEdit = (id: number) => {
+    openTab("blog_edit", { id });
+  };
+  return (
+    <div className="flex gap-1">
+      <Button
+        onClick={() => handleEdit(articleId)}
+        variant="outline"
+        className="h-8"
+        title="Edit"
+      >
+        <Pencil className="h-4 w-4" />
+      </Button>
+      <Button variant="outline" className="h-8" title="View">
+        <Eye className="h-4 w-4" />
+      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={() => navigator.clipboard.writeText(title)}
+          >
+            Copy blog title
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem className="text-destructive">
+            <Delete />
+            <span>Delete</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+};

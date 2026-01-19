@@ -3,8 +3,10 @@
 import TabsManager from "@/components/admin/tab-panel";
 import { useTabsAction, useTabsState } from "@/hooks/use-admin-tabs";
 import { cn } from "@/lib/tiptap-utils";
-import { Activity } from "react";
+import { Activity, createContext } from "react";
 import { MENU_ITEMS } from "./menu_items";
+
+export const TabInstanceContext = createContext<string>("");
 
 export default function MultiTabManager() {
   const { activeTabId, openTabIds } = useTabsState();
@@ -35,7 +37,9 @@ export default function MultiTabManager() {
               //查找该容器监控滚动
               id={`scroll-container-${tab.id}`}
             >
-              {tab.component}
+              <TabInstanceContext.Provider value={tab.id}>
+                {tab.component}
+              </TabInstanceContext.Provider>
             </main>
           </Activity>
         );

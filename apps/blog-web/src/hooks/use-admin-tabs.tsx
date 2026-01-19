@@ -17,7 +17,6 @@ const TabStateContext = createContext<
       activeTabId: string;
       openTabIds: string[];
       isPending: boolean;
-      refreshSignals: Record<string, number>;
     }
   | undefined
 >(undefined);
@@ -25,9 +24,8 @@ const TabStateContext = createContext<
 // 2. 纯方法 Context (引用保持不变，避免子组件重渲染)
 const TabApiContext = createContext<
   | {
-      openTab: (id: string) => void;
+      openTab: (id: string, params?: Record<string, string | number>) => void;
       closeTab: (id: string) => void;
-      refreshCurrentTab: (id: string) => void;
     }
   | undefined
 >(undefined);
@@ -42,24 +40,19 @@ export function TabProvider({ children }: { children: React.ReactNode }) {
   const activeTabId = searchParams.get("tab") || INITIAL_TAB;
   const [openTabIds, setOpenTabIds] = useState<string[]>([INITIAL_TAB]);
 
-  const [refreshSignals, setRefreshSignals] = useState<Record<string, number>>(
-    {},
-  );
-
-  const refreshCurrentTab = useCallback((id: string) => {
-    setRefreshSignals((prev) => ({
-      ...prev,
-      [id]: Date.now(), // 使用时间戳强制触发更新
-    }));
-  }, []);
-
   const openTab = useCallback(
-    (id: string) => {
-      if (!openTabIds.includes(id)) {
-        setOpenTabIds((prev) => [...prev, id]);
+    (id: string, params?: Record<string, string | number>) => {
+      const queryString = params
+        ? new URLSearchParams(params as any).toString()
+        : "";
+      const tabKey = queryString ? `${id}?${queryString}` : id;
+      if (!openTabIds.includes(tabKey)) {
+        setOpenTabIds((prev) => [...prev, tabKey]);
       }
       startTransition(() => {
-        router.push(`?tab=${id}`, { scroll: false });
+        router.push(`?tab=${id}${queryString ? "&" + queryString : ""}`, {
+          scroll: false,
+        });
       });
     },
     [openTabIds],
@@ -84,10 +77,8 @@ export function TabProvider({ children }: { children: React.ReactNode }) {
   }, [router, activeTabId]);
 
   return (
-    <TabApiContext.Provider value={{ openTab, closeTab, refreshCurrentTab }}>
-      <TabStateContext.Provider
-        value={{ activeTabId, openTabIds, isPending, refreshSignals }}
-      >
+    <TabApiContext.Provider value={{ openTab, closeTab }}>
+      <TabStateContext.Provider value={{ activeTabId, openTabIds, isPending }}>
         {children}
       </TabStateContext.Provider>
     </TabApiContext.Provider>

@@ -19,9 +19,12 @@ export const GET_POST_BY_ID = graphql(`
     getPostById(id: $id) {
       id
       title
+      slug
       thumbnail
       content
       createdAt
+      updatedAt
+      publishedAt
       published
       author {
         name

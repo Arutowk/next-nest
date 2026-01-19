@@ -3,25 +3,23 @@
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useReducer, useRef } from "react";
 
-import { type Tag } from "blog-api";
-
+import { GetPostByIdQuery } from "@/gql/graphql";
 import { updatePost } from "@/lib/actions/postActions";
-import { type PostType } from "@/lib/types/modelTypes";
 import UpsertPostForm from "./upsert-post-form";
 
 type Props = {
-  post: Omit<PostType, "slug" | "updatedAt" | "_count" | "authorId">;
+  post: GetPostByIdQuery["getPostById"];
 };
 
 const UpdatePostContainer = ({ post }: Props) => {
-  console.log({ post });
   const [state, action] = useActionState(updatePost, {
     data: {
       postId: post.id,
       title: post.title,
-      content: JSON.parse(post?.content).json ?? post.content,
-      published: post.published ? "on" : undefined,
-      tags: post.tags?.map((tag: Tag) => tag.name).join(","),
+      slug: post.slug ?? undefined,
+      content: JSON.parse(post.content),
+      published: post.published ? "on" : "off",
+      tags: post.tags?.map((tag) => tag.name).join(","),
       previousThumbnailUrl: post.thumbnail ?? undefined,
     },
   });

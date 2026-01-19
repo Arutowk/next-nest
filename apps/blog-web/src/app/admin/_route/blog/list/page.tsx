@@ -1,18 +1,20 @@
+import { TabInstanceContext } from "@/app/admin/page";
 import { DataTable } from "@/components/admin/data-table";
 import { Button } from "@/components/ui/button";
-import { useTabsAction, useTabsState } from "@/hooks/use-admin-tabs";
+import { useTabsAction } from "@/hooks/use-admin-tabs";
 import { fetchUserPosts } from "@/lib/actions/postActions";
 import { DEFAULT_PAGE_SIZE } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import { Pencil } from "lucide-react";
+import { use } from "react";
 import { columns } from "./columns";
 
 export default function BlogListPage() {
   const { openTab } = useTabsAction();
-  const { activeTabId, refreshSignals } = useTabsState();
+  const thisTabId = use(TabInstanceContext);
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["BLOG_LIST", activeTabId, refreshSignals[activeTabId]],
+    queryKey: ["blog", "list", { tabId: thisTabId }],
     queryFn: async () =>
       fetchUserPosts({ page: 1, pageSize: DEFAULT_PAGE_SIZE }),
   });
@@ -38,6 +40,7 @@ export default function BlogListPage() {
         columns={columns}
         data={data?.posts || []}
         emptyFallback={renderEmptyFallBack()}
+        isFetching={isLoading}
       />
     </div>
   );

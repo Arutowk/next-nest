@@ -1,7 +1,6 @@
 "use server";
 
 import type { PostFormState } from "../types/formState";
-import type { PostType } from "../types/modelTypes";
 
 import { UpdatePostInput } from "@/gql/graphql";
 import { authFetchGraphQL, fetchGraphQL, fetchUpload } from "../fetchGraphQL";
@@ -36,10 +35,7 @@ export const fetchPosts = async ({
 export const fetchPostById = async (id: number) => {
   const data = (await fetchGraphQL(GET_POST_BY_ID, { id }))?.data;
 
-  return data?.getPostById as Omit<
-    PostType,
-    "slug" | "updatedAt" | "_count" | "authorId"
-  >;
+  return data?.getPostById;
 };
 
 export async function fetchUserPosts({

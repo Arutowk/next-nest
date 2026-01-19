@@ -1,4 +1,5 @@
 import { Home, Pencil, Users } from "lucide-react";
+import EditBlogPage from "./_route/blog/edit/page";
 import BlogListPage from "./_route/blog/list/page";
 import NewBlogPage from "./_route/blog/new/page";
 
@@ -60,6 +61,13 @@ export const MENU_ITEMS = [
     label: "文章新建",
     icon: Pencil,
     component: <NewBlogPage />,
+    parent_id: "blog",
+  },
+  {
+    id: "blog_edit",
+    label: "文章编辑",
+    icon: Pencil,
+    component: <EditBlogPage />,
     parent_id: "blog",
   },
   { id: "users", label: "用户管理", icon: Users, component: <UserList /> },

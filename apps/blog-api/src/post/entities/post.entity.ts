@@ -39,7 +39,7 @@ export class Post {
   @Field()
   updatedAt: Date;
 
-  @Field(() => Date, { nullable: true })
+  @Field({ nullable: true })
   publishedAt?: Date;
 
   @Field(() => User)
