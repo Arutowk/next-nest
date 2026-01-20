@@ -1,16 +1,15 @@
 "use client";
 
 import TabsManager from "@/components/admin/tab-panel";
-import { useTabsAction, useTabsState } from "@/hooks/use-admin-tabs";
+import { useTabsState } from "@/hooks/use-admin-tabs";
 import { cn } from "@/lib/tiptap-utils";
 import { Activity, createContext } from "react";
-import { MENU_ITEMS } from "./menu_items";
+import { getMenuItemById } from "./menu_items";
 
 export const TabInstanceContext = createContext<string>("");
 
 export default function MultiTabManager() {
   const { activeTabId, openTabIds } = useTabsState();
-  const { openTab } = useTabsAction();
 
   return (
     <div className="flex flex-col h-full">
@@ -19,26 +18,27 @@ export default function MultiTabManager() {
 
       {/* 内容区域：使用 Activity 缓存 */}
 
-      {MENU_ITEMS.map((tab) => {
+      {openTabIds.map((fullId) => {
         // 只有被打开过的标签才会进入 Activity
-        if (!openTabIds.includes(tab.id)) return null;
+        const config = getMenuItemById(fullId);
+        if (!config) return null;
         return (
           <Activity
-            key={tab.id}
-            mode={activeTabId === tab.id ? "visible" : "hidden"}
+            key={fullId}
+            mode={activeTabId === fullId ? "visible" : "hidden"}
           >
             <main
               className={cn(
-                activeTabId === tab.id ? "block" : "hidden",
+                activeTabId === fullId ? "block" : "hidden",
                 "flex-1 relative px-6 py-2 bg-white rounded-lg shadow-sm border border-slate-200 max-h-[calc(100vh-80px)] overflow-y-auto group",
                 "[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent  [&::-webkit-scrollbar-thumb]:rounded-full ",
                 "[&::-webkit-scrollbar-thumb]:bg-slate-300 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400 ",
               )}
               //查找该容器监控滚动
-              id={`scroll-container-${tab.id}`}
+              id={`scroll-container-${fullId}`}
             >
-              <TabInstanceContext.Provider value={tab.id}>
-                {tab.component}
+              <TabInstanceContext.Provider value={fullId}>
+                {config?.component}
               </TabInstanceContext.Provider>
             </main>
           </Activity>

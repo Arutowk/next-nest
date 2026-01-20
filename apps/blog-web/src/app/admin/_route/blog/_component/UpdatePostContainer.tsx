@@ -1,10 +1,21 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useReducer, useRef } from "react";
+import {
+  startTransition,
+  use,
+  useActionState,
+  useEffect,
+  useReducer,
+  useRef,
+} from "react";
 
+import { TabInstanceContext } from "@/app/admin/page";
+import { Button } from "@/components/ui/button";
 import { GetPostByIdQuery } from "@/gql/graphql";
+import { useTabsAction } from "@/hooks/use-admin-tabs";
 import { updatePost } from "@/lib/actions/postActions";
+import { useQueryClient } from "@tanstack/react-query";
+import PageNavbar from "./page-nav";
 import UpsertPostForm from "./upsert-post-form";
 
 type Props = {
@@ -12,7 +23,7 @@ type Props = {
 };
 
 const UpdatePostContainer = ({ post }: Props) => {
-  const [state, action] = useActionState(updatePost, {
+  const [state, action, isPending] = useActionState(updatePost, {
     data: {
       postId: post.id,
       title: post.title,
@@ -23,23 +34,68 @@ const UpdatePostContainer = ({ post }: Props) => {
       previousThumbnailUrl: post.thumbnail ?? undefined,
     },
   });
-  const ref = useRef<{ submit: () => void }>(null!);
+  const ref = useRef<{ submit: () => void; reset: () => void }>(null!);
   const [publishNow, dispatch] = useReducer((checked) => !checked, false);
-  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { openTab, closeTab } = useTabsAction();
+  const thisTabId = use(TabInstanceContext);
+
   useEffect(() => {
     if (state?.ok === true) {
+      if (publishNow) {
+        queryClient.invalidateQueries({
+          queryKey: ["blog", "list"],
+        });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: ["blog", "edit", post.id],
+        });
+      }
+
       setTimeout(() => {
-        router.push("/user/posts");
-      }, 500);
+        if (publishNow) {
+          closeTab(thisTabId);
+          openTab("blog");
+        }
+      }, 1000);
     }
-  }, [state?.ok, router]);
+  }, [state?.ok, queryClient, closeTab, openTab, thisTabId]);
+
+  useEffect(() => {
+    if (state?.ok === true) {
+      const formData = new FormData();
+      formData.append("props", JSON.stringify(post));
+      startTransition(() => {
+        action(formData);
+      });
+    }
+  }, [post]);
+
   return (
-    <UpsertPostForm
-      ref={ref}
-      state={state}
-      formAction={action}
-      dispatch={dispatch}
-    />
+    <>
+      {/* 操作按钮 */}
+      <PageNavbar title="编辑博客">
+        <Button
+          onClick={() => {
+            closeTab(thisTabId);
+            openTab("blog");
+          }}
+          type="button"
+          variant="outline"
+        >
+          返回列表
+        </Button>
+        <Button onClick={() => ref.current?.submit()} disabled={isPending}>
+          {publishNow ? "发布博客" : "保存草稿"}
+        </Button>
+      </PageNavbar>
+      <UpsertPostForm
+        ref={ref}
+        state={state}
+        formAction={action}
+        dispatch={dispatch}
+      />
+    </>
   );
 };
 

@@ -1,12 +1,13 @@
 "use client";
 
-import { MENU_ITEMS } from "@/app/admin/menu_items";
+import { MENU_ITEMS, fomatId } from "@/app/admin/menu_items";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, {
   createContext,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
   useTransition,
 } from "react";
@@ -37,25 +38,34 @@ export function TabProvider({ children }: { children: React.ReactNode }) {
 
   const INITIAL_TAB = MENU_ITEMS[0]!.id;
 
-  const activeTabId = searchParams.get("tab") || INITIAL_TAB;
+  const activeTabId = useMemo(() => {
+    const getFullActiveTabId = () => {
+      const id = searchParams.get("id");
+      const tab = searchParams.get("tab");
+      return id ? `${tab}_${id}` : tab;
+    };
+    const tabId = getFullActiveTabId();
+    return tabId || INITIAL_TAB;
+  }, [searchParams]);
+
   const [openTabIds, setOpenTabIds] = useState<string[]>([INITIAL_TAB]);
 
   const openTab = useCallback(
-    (id: string, params?: Record<string, string | number>) => {
+    (tab: string, params?: Record<string, string | number>) => {
       const queryString = params
         ? new URLSearchParams(params as any).toString()
         : "";
-      const tabKey = queryString ? `${id}?${queryString}` : id;
+      const tabKey = queryString ? `${tab}_${params?.id}` : tab;
       if (!openTabIds.includes(tabKey)) {
         setOpenTabIds((prev) => [...prev, tabKey]);
       }
       startTransition(() => {
-        router.push(`?tab=${id}${queryString ? "&" + queryString : ""}`, {
+        router.push(`?tab=${tab}${queryString ? "&" + queryString : ""}`, {
           scroll: false,
         });
       });
     },
-    [openTabIds],
+    [openTabIds, router],
   );
 
   const closeTab = useCallback(
@@ -63,8 +73,15 @@ export function TabProvider({ children }: { children: React.ReactNode }) {
       if (id === INITIAL_TAB) return; // 禁止关闭首页
       const newTabs = openTabIds.filter((t) => t !== id);
       setOpenTabIds(newTabs);
+
       if (activeTabId === id && newTabs.length > 0) {
-        openTab(newTabs[newTabs.length - 1]!);
+        const lastId = newTabs[newTabs.length - 1]!;
+        let params = {};
+        if (fomatId(lastId) !== lastId) {
+          const idPart = lastId.substring(fomatId(lastId).length + 1);
+          params = { id: idPart };
+        }
+        openTab(fomatId(lastId), params);
       }
     },
     [openTabIds, activeTabId, openTab],

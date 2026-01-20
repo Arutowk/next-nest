@@ -86,6 +86,7 @@ input CreatePostInput {
   title: String!
   content: String!
   thumbnail: String
+  slug: String
   tags: [String!]!
   published: Boolean!
 }
@@ -94,6 +95,7 @@ input UpdatePostInput {
   title: String
   content: String
   thumbnail: String
+  slug: String
   tags: [String!]
   published: Boolean
   postId: Int!

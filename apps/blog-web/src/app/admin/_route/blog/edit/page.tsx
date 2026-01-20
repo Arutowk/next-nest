@@ -12,19 +12,20 @@ export default function EditBlogPage() {
 
   const { data, isLoading } = useQuery({
     // QueryKey 必须包含参数，以区分不同文章的缓存
-    queryKey: [
-      "blog",
-      "edit",
-      articleId,
-      { tabId: `${thisTabId}_${articleId}` },
-    ],
+    queryKey: ["blog", "edit", articleId, { tabId: thisTabId }],
     queryFn: async () => fetchPostById(articleId),
     enabled: !!articleId,
   });
 
   return (
     <>
-      <UpdatePostContainer post={data!} />
+      {isLoading ? (
+        "加载中..."
+      ) : data ? (
+        <UpdatePostContainer post={data} />
+      ) : (
+        "未找到文章"
+      )}
     </>
   );
 }

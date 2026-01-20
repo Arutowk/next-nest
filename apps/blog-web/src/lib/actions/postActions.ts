@@ -2,7 +2,7 @@
 
 import type { PostFormState } from "../types/formState";
 
-import { UpdatePostInput } from "@/gql/graphql";
+import { GetPostByIdQuery, UpdatePostInput } from "@/gql/graphql";
 import { authFetchGraphQL, fetchGraphQL, fetchUpload } from "../fetchGraphQL";
 import {
   CREATE_POST_MUTATION,
@@ -13,7 +13,6 @@ import {
   UPDATE_POST_MUTATION,
 } from "../graphql/post";
 import { transformTakeSkip } from "../helpers";
-import { uploadThumbnail } from "../upload";
 import { PostFormSchema } from "../zodSchemas/postFormSchema";
 
 export const fetchPosts = async ({
@@ -103,6 +102,24 @@ export async function updatePost(
   state: PostFormState,
   formData: FormData,
 ): Promise<PostFormState> {
+  //reset latest post data
+  if (state?.ok && formData.get("props")) {
+    const post = JSON.parse(
+      formData.get("props") as string,
+    ) as GetPostByIdQuery["getPostById"];
+    return {
+      data: {
+        postId: post.id,
+        title: post.title,
+        slug: post.slug ?? undefined,
+        content: JSON.parse(post.content),
+        published: post.published ? "on" : "off",
+        tags: post.tags?.map((tag) => tag.name).join(","),
+        previousThumbnailUrl: post.thumbnail ?? undefined,
+      },
+    };
+  }
+
   const validatedFields = PostFormSchema.safeParse(
     Object.fromEntries(formData.entries()),
   );
@@ -117,8 +134,14 @@ export async function updatePost(
   const { thumbnail, ...inputs } = validatedFields.data;
 
   let thumbnailUrl = "";
-  // Todo:Upload Thumbnail to supabase
-  if (thumbnail) thumbnailUrl = await uploadThumbnail(thumbnail);
+  // Todo:Upload Thumbnail to ali-oss
+  if (thumbnail) {
+    const result = await fetchUpload("image", validatedFields.data.thumbnail!);
+    console.log("upload result:", result);
+    if (result?.url) {
+      thumbnailUrl = result?.url;
+    }
+  }
 
   const data = await authFetchGraphQL(UPDATE_POST_MUTATION, {
     input: {

@@ -20,7 +20,7 @@ import { ImageUpload } from "./image-uploader";
 type Props = {
   state: PostFormState;
   formAction: (payload: FormData) => void;
-  ref: RefObject<{ submit: () => void }>;
+  ref: RefObject<{ submit: () => void; reset: () => void }>;
   dispatch: ActionDispatch<[]>;
 };
 
@@ -35,6 +35,9 @@ const UpsertPostForm = ({ state, formAction, ref, dispatch }: Props) => {
       submit: () => {
         // 触发原生提交，这会自动调用 action 里的 formAction
         formRef.current?.requestSubmit();
+      },
+      reset: () => {
+        formRef.current?.reset();
       },
     }),
     [formRef],
@@ -71,7 +74,7 @@ const UpsertPostForm = ({ state, formAction, ref, dispatch }: Props) => {
           label="文章标题"
           id="title"
           errors={state?.errors?.title}
-          description="吸引读者的第一印象。"
+          description="吸引读者的第一印象"
         >
           <Input
             id="title"
@@ -86,7 +89,7 @@ const UpsertPostForm = ({ state, formAction, ref, dispatch }: Props) => {
           label="文章封面"
           id="thumbnail"
           errors={state?.errors?.thumbnail}
-          description="建议尺寸 1200x630px。"
+          description="建议尺寸 1200x630px"
         >
           <ImageUpload name="thumbnail" />
         </FormRow>
@@ -96,7 +99,7 @@ const UpsertPostForm = ({ state, formAction, ref, dispatch }: Props) => {
           label="自定义链接 (Slug)"
           id="slug"
           errors={state?.errors?.slug}
-          description="文章的 URL 后缀，留空则自动生成。"
+          description="文章的 URL 后缀，用-隔开单词"
         >
           <Input
             id="slug"
@@ -111,7 +114,7 @@ const UpsertPostForm = ({ state, formAction, ref, dispatch }: Props) => {
           label="标签"
           id="tags"
           errors={state?.errors?.tags}
-          description="文章的分类标签"
+          description="文章的分类标签，用逗号隔开"
         >
           <Input
             id="tags"

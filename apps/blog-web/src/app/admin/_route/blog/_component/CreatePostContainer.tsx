@@ -12,7 +12,7 @@ import UpsertPostForm from "./upsert-post-form";
 
 const CreatePostContainer = () => {
   const [state, action, isPending] = useActionState(saveNewPost, undefined);
-  const ref = useRef<{ submit: () => void }>(null!);
+  const ref = useRef<{ submit: () => void; reset: () => void }>(null!);
   const [publishNow, dispatch] = useReducer((checked) => !checked, false);
   const queryClient = useQueryClient();
   const { openTab, closeTab } = useTabsAction();
@@ -32,7 +32,14 @@ const CreatePostContainer = () => {
     <>
       {/* 操作按钮 */}
       <PageNavbar title="新增博客">
-        <Button type="button" variant="outline">
+        <Button
+          onClick={() => {
+            closeTab(thisTabId);
+            openTab("blog");
+          }}
+          type="button"
+          variant="outline"
+        >
           返回列表
         </Button>
         <Button onClick={() => ref.current?.submit()} disabled={isPending}>

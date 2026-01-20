@@ -74,5 +74,14 @@ export const MENU_ITEMS = [
 ];
 
 export function getMenuItemById(id: string) {
-  return MENU_ITEMS.find((item) => item.id === id);
+  return MENU_ITEMS.find((item) => item.id === fomatId(id));
+}
+
+export function fomatId(id: string): string {
+  const firstIndex = id.indexOf("_");
+  const secondIndex = id.indexOf("_", firstIndex + 1);
+  if (firstIndex !== -1 && secondIndex !== -1) {
+    return id.substring(0, secondIndex);
+  }
+  return id;
 }

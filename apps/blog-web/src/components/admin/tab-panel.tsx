@@ -1,4 +1,4 @@
-import { getMenuItemById } from "@/app/admin/menu_items";
+import { fomatId, getMenuItemById } from "@/app/admin/menu_items";
 import { useTabsAction, useTabsState } from "@/hooks/use-admin-tabs";
 import { useIsFetching, useQueryClient } from "@tanstack/react-query";
 import { RotateCw, X } from "lucide-react";
@@ -8,7 +8,7 @@ type TabPanelProps = {
   title: string;
   isActive: boolean;
   isLast: boolean;
-  onClick: (id: string) => void;
+  onClick: (id: string, params?: Record<string, string | number>) => void;
   onClose: (id: string) => void;
 };
 
@@ -21,14 +21,41 @@ const TabPanel = ({
   isLast,
 }: TabPanelProps) => {
   const Icon = getMenuItemById(id)?.icon;
+  const formattedId = fomatId(id);
+  let params = {};
+  if (formattedId !== id) {
+    const idPart = id.substring(formattedId.length + 1);
+    params = { id: idPart };
+  }
+
+  const { isPending } = useTabsState();
+
+  const isLoading =
+    useIsFetching({
+      predicate: (query) => {
+        // 检查 QueryKey 中是否包含当前的 tabId
+        return query.queryKey.some((key: any) => key?.tabId === formattedId);
+      },
+    }) > 0;
+
   return (
     <div
-      onClick={() => onClick(id)}
-      className={`relative h-[32px] flex items-center px-6 -ml-3 first:ml-0 cursor-default group transition-all duration-200 ${
+      onClick={() => onClick(fomatId(id), params)}
+      className={`overflow-hidden relative h-[32px] flex items-center px-6 -ml-3 first:ml-0 cursor-default group transition-all duration-200 ${
         isActive ? "z-30 bg-background " : "z-10 hover:z-20 hover:bg-gray-300"
       }`}
       style={{ width: "200px" }}
     >
+      {/* 加载特效层 */}
+      {(isLoading || (isPending && isActive)) && (
+        <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden">
+          <div
+            className="w-[100px] h-full animate-shimmer-fly bg-shimmer-highlight skew-x-[-20deg] absolute"
+            /* 这里的 w-[100px] 决定了光的宽度，增加斜切让效果更动感 */
+          />
+        </div>
+      )}
+
       {/* 内容区域 */}
       <div className="relative z-10 flex items-center justify-between w-full px-1 text-sm overflow-hidden">
         <div className="flex items-center gap-2 overflow-hidden">

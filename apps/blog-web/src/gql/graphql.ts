@@ -46,6 +46,7 @@ export type CreateCommentInput = {
 export type CreatePostInput = {
   content: Scalars['String']['input'];
   published: Scalars['Boolean']['input'];
+  slug?: InputMaybe<Scalars['String']['input']>;
   tags: Array<Scalars['String']['input']>;
   thumbnail?: InputMaybe<Scalars['String']['input']>;
   title: Scalars['String']['input'];
@@ -192,6 +193,7 @@ export type UpdatePostInput = {
   content?: InputMaybe<Scalars['String']['input']>;
   postId: Scalars['Int']['input'];
   published?: InputMaybe<Scalars['Boolean']['input']>;
+  slug?: InputMaybe<Scalars['String']['input']>;
   tags?: InputMaybe<Array<Scalars['String']['input']>>;
   thumbnail?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;

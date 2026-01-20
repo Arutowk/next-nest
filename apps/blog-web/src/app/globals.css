@@ -141,3 +141,44 @@
     box-shadow: 15px -15px 0 0 var(--page-bg);
   }
 }
+
+@layer components {
+  @keyframes shimmer-fly {
+    0% {
+      transform: translateX(-150%); /* 增加起始位移，确保从完全不可见开始 */
+    }
+    100% {
+      transform: translateX(150%);
+    }
+  }
+
+  .animate-shimmer-fly {
+    animation: shimmer-fly 1.2s infinite ease-in-out; /* 稍微加快一点速度感 */
+  }
+
+  /* 明显的光束效果 */
+  .bg-shimmer-highlight {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(59, 130, 246, 0.05) 30%,
+      /* 蓝色基调边缘 */ rgba(255, 255, 255, 0.8) 50%,
+      /* 中心高亮白色，不透明度调高到 0.8 */ rgba(59, 130, 246, 0.05) 70%,
+      transparent 100%
+    );
+    /* 增加一个微弱的投影，让光看起来有厚度 */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  }
+
+  /* 暗色模式下光感更锐利一些 */
+  .dark .bg-shimmer-highlight {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0) 20%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0) 80%,
+      transparent 100%
+    );
+  }
+}

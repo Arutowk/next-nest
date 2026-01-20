@@ -16,6 +16,11 @@ export class CreatePostInput {
   @Field({ nullable: true })
   thumbnail?: string;
 
+  @IsString()
+  @IsOptional()
+  @Field({ nullable: true })
+  slug?: string;
+
   @IsString({ each: true })
   @Field(() => [String])
   tags: string[];
