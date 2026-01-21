@@ -70,11 +70,11 @@ export async function signIn(
   // create a session
   await createSession({
     user: {
-      id: result.data.signIn.id.toString(),
-      name: result.data.signIn.name,
-      avatar: result.data.signIn.avatar as string,
+      id: result?.data?.signIn.id.toString(),
+      name: result?.data?.signIn.name,
+      avatar: result?.data?.signIn.avatar!,
     },
-    accessToken: result.data.signIn.accessToken,
+    accessToken: result?.data?.signIn.accessToken!,
   });
 
   revalidatePath("/");

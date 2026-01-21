@@ -13,6 +13,8 @@ export class OssService {
       accessKeySecret: process.env.ACCESSKEY_SECRET as string,
       bucket: process.env.MY_BUCKET,
       secure: true, // 如果使用 https
+      endpoint: "staycool.top", // 关键配置：将 endpoint 设为你的自定义域名
+      cname: true, // 告知 SDK 使用的是自定义域名
     });
   }
 

@@ -14,6 +14,7 @@ export const PostFormSchema = z.object({
     .refine((value) => value.split(",").every((tag) => tag.trim() !== ""))
     .transform((value) => value.split(",")),
   thumbnail: z.instanceof(File).optional(),
+  existing_thumbnail: z.string().optional(),
   published: z.string().transform((value) => value === "on"),
 });
 

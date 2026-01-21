@@ -3,7 +3,6 @@
 import { authFetchGraphQL, fetchGraphQL } from "../fetchGraphQL";
 import { CREATE_COMMENT_MUTATION, GET_POST_COMMENTS } from "../graphql/comment";
 import { type CreateCommentFormState } from "../types/formState";
-import { type CommentType } from "../types/modelTypes";
 import { CommentFormSchema } from "../zodSchemas/commentFormSchema";
 
 export async function getPostComments({
@@ -22,8 +21,8 @@ export async function getPostComments({
   });
 
   return {
-    comments: result.data.getPostComments as CommentType[],
-    count: result.data.postCommentCount as number,
+    comments: result?.data?.getPostComments,
+    count: result?.data?.postCommentCount,
   };
 }
 

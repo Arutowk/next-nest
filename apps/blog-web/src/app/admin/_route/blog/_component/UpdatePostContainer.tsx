@@ -31,7 +31,7 @@ const UpdatePostContainer = ({ post }: Props) => {
       content: JSON.parse(post.content),
       published: post.published ? "on" : "off",
       tags: post.tags?.map((tag) => tag.name).join(","),
-      previousThumbnailUrl: post.thumbnail ?? undefined,
+      existing_thumbnail: post.thumbnail ?? undefined,
     },
   });
   const ref = useRef<{ submit: () => void; reset: () => void }>(null!);
@@ -46,18 +46,15 @@ const UpdatePostContainer = ({ post }: Props) => {
         queryClient.invalidateQueries({
           queryKey: ["blog", "list"],
         });
+        setTimeout(() => {
+          closeTab(thisTabId);
+          openTab("blog");
+        }, 1000);
       } else {
         queryClient.invalidateQueries({
           queryKey: ["blog", "edit", post.id],
         });
       }
-
-      setTimeout(() => {
-        if (publishNow) {
-          closeTab(thisTabId);
-          openTab("blog");
-        }
-      }, 1000);
     }
   }, [state?.ok, queryClient, closeTab, openTab, thisTabId]);
 

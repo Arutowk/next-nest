@@ -40,7 +40,7 @@ export type PostFormState =
         tags?: string;
         slug?: string;
         published?: string;
-        previousThumbnailUrl?: string;
+        existing_thumbnail?: string;
       };
 
       errors?: {

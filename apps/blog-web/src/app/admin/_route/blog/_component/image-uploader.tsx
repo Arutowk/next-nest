@@ -8,13 +8,18 @@ import React, { useRef, useState } from "react";
 
 interface ImageUploadProps {
   name: string;
-  required?: boolean;
+  defaultValue?: string | null; // 初始图片 URL（编辑时用）
 }
 
-export function ImageUpload({ name, required = false }: ImageUploadProps) {
+export function ImageUpload({ name, defaultValue }: ImageUploadProps) {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    defaultValue || null,
+  );
+  const [existingUrl, setExistingUrl] = useState<string | null>(
+    defaultValue || null,
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -27,6 +32,8 @@ export function ImageUpload({ name, required = false }: ImageUploadProps) {
       // 创建预览 URL
       const url = URL.createObjectURL(selectedFile);
       setPreviewUrl(url);
+      // 一旦选了新文件，旧图的引用就不重要了，可以清除以减少后端干扰
+      setExistingUrl(null);
     }
   };
 
@@ -34,6 +41,7 @@ export function ImageUpload({ name, required = false }: ImageUploadProps) {
   const handleRemove = () => {
     setFile(null);
     setPreviewUrl(null);
+    setExistingUrl(null); // 关键：标记旧图已被删除
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // 清空 input 的值
     }
@@ -49,8 +57,14 @@ export function ImageUpload({ name, required = false }: ImageUploadProps) {
           ref={fileInputRef}
           onChange={handleFileChange}
           accept="image/*"
-          required={required}
           className="hidden"
+        />
+
+        {/* 隐藏的 Input：用于告诉后端旧图是否还在 */}
+        <input
+          type="hidden"
+          name={`existing_${name}`}
+          value={existingUrl || ""}
         />
 
         {previewUrl ? (

@@ -91,7 +91,10 @@ const UpsertPostForm = ({ state, formAction, ref, dispatch }: Props) => {
           errors={state?.errors?.thumbnail}
           description="建议尺寸 1200x630px"
         >
-          <ImageUpload name="thumbnail" />
+          <ImageUpload
+            name="thumbnail"
+            defaultValue={state?.data?.existing_thumbnail}
+          />
         </FormRow>
 
         {/* Slug */}

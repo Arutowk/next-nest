@@ -15,8 +15,8 @@ export async function getPostLikeData(postId: number) {
   ).data;
 
   return {
-    likeCount: data.postLikesCount as number,
-    userLikedPost: data.userLikedPost as boolean,
+    likeCount: data?.postLikesCount,
+    userLikedPost: data?.userLikedPost,
   };
 }
 

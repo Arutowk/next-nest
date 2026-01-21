@@ -84,7 +84,7 @@ export async function saveNewPost(
   }
 
   // call garphql api
-  const { postId, ...resDtata } = validatedFields.data;
+  const { postId, existing_thumbnail, ...resDtata } = validatedFields.data;
   const result = await authFetchGraphQL(CREATE_POST_MUTATION, {
     input: {
       ...resDtata,
@@ -115,7 +115,7 @@ export async function updatePost(
         content: JSON.parse(post.content),
         published: post.published ? "on" : "off",
         tags: post.tags?.map((tag) => tag.name).join(","),
-        previousThumbnailUrl: post.thumbnail ?? undefined,
+        existing_thumbnail: post.thumbnail ?? undefined,
       },
     };
   }
@@ -130,23 +130,30 @@ export async function updatePost(
       errors: validatedFields.error.flatten().fieldErrors,
     };
 
-  // Todo: check if thumbnail has been changed
-  const { thumbnail, ...inputs } = validatedFields.data;
-
-  let thumbnailUrl = "";
-  // Todo:Upload Thumbnail to ali-oss
-  if (thumbnail) {
-    const result = await fetchUpload("image", validatedFields.data.thumbnail!);
+  //  check if thumbnail has been changed
+  let thumbnailUrl: string | null = null;
+  const { thumbnail, existing_thumbnail, ...inputs } = validatedFields.data;
+  if (thumbnail && thumbnail.size > 0) {
+    // 情况 A：用户上传了新文件
+    // 1. 调用 OSS 或本地存储服务上传文件
+    const result = await fetchUpload("image", thumbnail);
+    console.log("检测到新文件，执行上传...");
     console.log("upload result:", result);
-    if (result?.url) {
-      thumbnailUrl = result?.url;
-    }
+    thumbnailUrl = result?.url!;
+  } else if (existing_thumbnail) {
+    // 情况 B：用户没传新图，但 existingUrl 还在
+    thumbnailUrl = existing_thumbnail;
+    console.log("保持原图不变");
+  } else {
+    // 情况 C：用户既没传新图，也删除了旧图预览
+    thumbnailUrl = null;
+    console.log("用户删除了图片");
   }
 
   const data = await authFetchGraphQL(UPDATE_POST_MUTATION, {
     input: {
       ...inputs,
-      ...(thumbnailUrl && { thumbnail: thumbnailUrl }),
+      thumbnail: thumbnailUrl,
     } as UpdatePostInput,
   });
 

@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "jzqfesxsndovtyoyqgpb.supabase.co",
+        hostname: "staycool.top",
         port: "",
         pathname: "/**",
       },
