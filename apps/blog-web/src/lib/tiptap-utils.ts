@@ -1,7 +1,8 @@
-import type { Attrs, Node } from "@tiptap/pm/model"
-import type { Editor } from "@tiptap/react"
+import type { Attrs, Node } from "@tiptap/pm/model";
+import type { Editor } from "@tiptap/react";
+import { BACKEND_URL } from "./constants";
 
-export const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 /**
  * Checks if a mark exists in the editor schema
@@ -11,11 +12,11 @@ export const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
  */
 export const isMarkInSchema = (
   markName: string,
-  editor: Editor | null
+  editor: Editor | null,
 ): boolean => {
-  if (!editor?.schema) return false
-  return editor.schema.spec.marks.get(markName) !== undefined
-}
+  if (!editor?.schema) return false;
+  return editor.schema.spec.marks.get(markName) !== undefined;
+};
 
 /**
  * Checks if a node exists in the editor schema
@@ -25,11 +26,11 @@ export const isMarkInSchema = (
  */
 export const isNodeInSchema = (
   nodeName: string,
-  editor: Editor | null
+  editor: Editor | null,
 ): boolean => {
-  if (!editor?.schema) return false
-  return editor.schema.spec.nodes.get(nodeName) !== undefined
-}
+  if (!editor?.schema) return false;
+  return editor.schema.spec.nodes.get(nodeName) !== undefined;
+};
 
 /**
  * Gets the active attributes of a specific mark in the current editor selection.
@@ -40,21 +41,21 @@ export const isNodeInSchema = (
  */
 export function getActiveMarkAttrs(
   editor: Editor | null,
-  markName: string
+  markName: string,
 ): Attrs | null {
-  if (!editor) return null
-  const { state } = editor
-  const marks = state.storedMarks || state.selection.$from.marks()
-  const mark = marks.find((mark) => mark.type.name === markName)
+  if (!editor) return null;
+  const { state } = editor;
+  const marks = state.storedMarks || state.selection.$from.marks();
+  const mark = marks.find((mark) => mark.type.name === markName);
 
-  return mark?.attrs ?? null
+  return mark?.attrs ?? null;
 }
 
 /**
  * Checks if a node is empty
  */
 export function isEmptyNode(node?: Node | null): boolean {
-  return !!node && node.content.size === 0
+  return !!node && node.content.size === 0;
 }
 
 /**
@@ -67,7 +68,7 @@ export function isEmptyNode(node?: Node | null): boolean {
 export function cn(
   ...classes: (string | boolean | undefined | null)[]
 ): string {
-  return classes.filter(Boolean).join(" ")
+  return classes.filter(Boolean).join(" ");
 }
 
 /**
@@ -79,52 +80,52 @@ export function cn(
  * @returns An object with the position and node, or null if not found
  */
 export function findNodePosition(props: {
-  editor: Editor | null
-  node?: Node | null
-  nodePos?: number | null
+  editor: Editor | null;
+  node?: Node | null;
+  nodePos?: number | null;
 }): { pos: number; node: Node } | null {
-  const { editor, node, nodePos } = props
+  const { editor, node, nodePos } = props;
 
-  if (!editor || !editor.state?.doc) return null
+  if (!editor || !editor.state?.doc) return null;
 
   // Zero is valid position
-  const hasValidNode = node !== undefined && node !== null
-  const hasValidPos = nodePos !== undefined && nodePos !== null
+  const hasValidNode = node !== undefined && node !== null;
+  const hasValidPos = nodePos !== undefined && nodePos !== null;
 
   if (!hasValidNode && !hasValidPos) {
-    return null
+    return null;
   }
 
   if (hasValidPos) {
     try {
-      const nodeAtPos = editor.state.doc.nodeAt(nodePos!)
+      const nodeAtPos = editor.state.doc.nodeAt(nodePos!);
       if (nodeAtPos) {
-        return { pos: nodePos!, node: nodeAtPos }
+        return { pos: nodePos!, node: nodeAtPos };
       }
     } catch (error) {
-      console.error("Error checking node at position:", error)
-      return null
+      console.error("Error checking node at position:", error);
+      return null;
     }
   }
 
   // Otherwise search for the node in the document
-  let foundPos = -1
-  let foundNode: Node | null = null
+  let foundPos = -1;
+  let foundNode: Node | null = null;
 
   editor.state.doc.descendants((currentNode, pos) => {
     // TODO: Needed?
     // if (currentNode.type && currentNode.type.name === node!.type.name) {
     if (currentNode === node) {
-      foundPos = pos
-      foundNode = currentNode
-      return false
+      foundPos = pos;
+      foundNode = currentNode;
+      return false;
     }
-    return true
-  })
+    return true;
+  });
 
   return foundPos !== -1 && foundNode !== null
     ? { pos: foundPos, node: foundNode }
-    : null
+    : null;
 }
 
 /**
@@ -137,33 +138,68 @@ export function findNodePosition(props: {
 export const handleImageUpload = async (
   file: File,
   onProgress?: (event: { progress: number }) => void,
-  abortSignal?: AbortSignal
+  abortSignal?: AbortSignal,
 ): Promise<string> => {
-  // Validate file
+  // 1. 基础校验
   if (!file) {
-    throw new Error("No file provided")
+    throw new Error("No file provided");
   }
-
   if (file.size > MAX_FILE_SIZE) {
     throw new Error(
-      `File size exceeds maximum allowed (${MAX_FILE_SIZE / (1024 * 1024)}MB)`
-    )
+      `File size exceeds maximum allowed (${MAX_FILE_SIZE / (1024 * 1024)}MB)`,
+    );
   }
 
-  // For demo/testing: Simulate upload progress
-  for (let progress = 0; progress <= 100; progress += 10) {
-    if (abortSignal?.aborted) {
-      throw new Error("Upload cancelled")
-    }
-    await new Promise((resolve) => setTimeout(resolve, 500))
-    onProgress?.({ progress })
-  }
+  // 2. 准备上传数据
+  const formData = new FormData();
+  formData.append("file", file);
 
-  return "/images/placeholder-image.png"
+  // 3. 使用 XMLHttpRequest 以支持进度监听 (fetch 原生不支持上传进度)
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    // 监听进度
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const progress = Math.round((event.loaded / event.total) * 100);
+        onProgress?.({ progress });
+      }
+    };
+
+    // 监听完成
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        const response = JSON.parse(xhr.responseText);
+        console.log("上传结果为：", response);
+        resolve(response.data.url); // 后端返回 {success:true,data:{ url: "...",name:"..." }}
+      } else {
+        reject(new Error(`Upload failed with status ${xhr.status}`));
+      }
+    };
+
+    // 监听错误
+    xhr.onerror = () => {
+      console.error("XHR Status:", xhr.status); // 状态码
+      console.error("XHR ReadyState:", xhr.readyState); // 准备状态
+      reject(new Error("Network error"));
+    };
+
+    // 监听取消
+    abortSignal?.addEventListener("abort", () => {
+      xhr.abort();
+      reject(new Error("Upload cancelled"));
+    });
+
+    // 4. 发送请求
+    xhr.open("POST", `${BACKEND_URL}/upload/image`);
+    // 如果需要 Token，在这里设置
+    // xhr.setRequestHeader("Authorization", `Bearer ${session?.accessToken}`);
+    xhr.send(formData);
+  });
 
   // Uncomment for production use:
   // return convertFileToBase64(file, abortSignal);
-}
+};
 
 /**
  * Converts a File to base64 string
@@ -173,38 +209,38 @@ export const handleImageUpload = async (
  */
 export const convertFileToBase64 = (
   file: File,
-  abortSignal?: AbortSignal
+  abortSignal?: AbortSignal,
 ): Promise<string> => {
   if (!file) {
-    return Promise.reject(new Error("No file provided"))
+    return Promise.reject(new Error("No file provided"));
   }
 
   return new Promise((resolve, reject) => {
-    const reader = new FileReader()
+    const reader = new FileReader();
 
     const abortHandler = () => {
-      reader.abort()
-      reject(new Error("Upload cancelled"))
-    }
+      reader.abort();
+      reject(new Error("Upload cancelled"));
+    };
 
     if (abortSignal) {
-      abortSignal.addEventListener("abort", abortHandler)
+      abortSignal.addEventListener("abort", abortHandler);
     }
 
     reader.onloadend = () => {
       if (abortSignal) {
-        abortSignal.removeEventListener("abort", abortHandler)
+        abortSignal.removeEventListener("abort", abortHandler);
       }
 
       if (typeof reader.result === "string") {
-        resolve(reader.result)
+        resolve(reader.result);
       } else {
-        reject(new Error("Failed to convert File to base64"))
+        reject(new Error("Failed to convert File to base64"));
       }
-    }
+    };
 
     reader.onerror = (error) =>
-      reject(new Error(`File reading error: ${error}`))
-    reader.readAsDataURL(file)
-  })
-}
+      reject(new Error(`File reading error: ${error}`));
+    reader.readAsDataURL(file);
+  });
+};

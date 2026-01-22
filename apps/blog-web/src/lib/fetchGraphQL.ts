@@ -1,6 +1,7 @@
 import { type TypedDocumentNode } from "@graphql-typed-document-node/core";
 import { print } from "graphql";
 
+import { toast } from "sonner";
 import { BACKEND_URL } from "./constants";
 import { getSession } from "./session";
 
@@ -22,6 +23,7 @@ export async function fetchGraphQL<TResult, TVariables>(
   const result = await response.json();
   if (result.errors) {
     console.error("GraphQL errors:", result.errors);
+    toast.error(result.errors.message);
   }
 
   return result as { data?: TResult; errors?: { message: string }[] };
@@ -47,6 +49,7 @@ export async function authFetchGraphQL<TResult, TVariables>(
   const result = await response.json();
   if (result.errors) {
     console.error("GraphQL errors:", result.errors);
+    toast.error(result.errors.message);
   }
 
   return result as { data?: TResult; errors?: { message: string }[] };

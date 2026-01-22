@@ -76,7 +76,6 @@ import { useWindowSize } from "@/hooks/use-window-size";
 
 // --- Components ---
 import { ThemeToggle } from "@/components/tiptap-templates/simple/theme-toggle";
-import Toc from "./Toc";
 
 // --- Lib ---
 import { generateTocFromJSON, TocItem } from "@/lib/htmljsonToc";
@@ -290,9 +289,9 @@ export default function BlogEditor({
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <div className="sidebar">
+      {/* <div className="sidebar">
         <Toc tocItems={toc} scrollContainer="simple-editor-content" />
-      </div>
+      </div> */}
       <Toolbar
         ref={toolbarRef}
         style={
