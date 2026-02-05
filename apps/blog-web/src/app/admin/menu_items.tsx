@@ -1,7 +1,8 @@
-import { Home, Pencil, Users } from "lucide-react";
+import { CloudUpload, Home, Pencil, Users } from "lucide-react";
 import EditBlogPage from "./_route/blog/edit/page";
 import BlogListPage from "./_route/blog/list/page";
 import NewBlogPage from "./_route/blog/new/page";
+import UploadListPage from "./_route/upload/page";
 
 // --- 模拟页面组件 (实际开发中应动态导入或通过配置映射) ---
 const Dashboard = () => (
@@ -69,6 +70,12 @@ export const MENU_ITEMS = [
     icon: Pencil,
     component: <EditBlogPage />,
     parent_id: "blog",
+  },
+  {
+    id: "upload",
+    label: "资源上传",
+    icon: CloudUpload,
+    component: <UploadListPage />,
   },
   { id: "users", label: "用户管理", icon: Users, component: <UserList /> },
 ];

@@ -10,6 +10,7 @@ import {
   Paperclip,
   Pencil,
 } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +38,19 @@ export const columns = [
       </div>
     ),
   }),
-  columnHelper.accessor("thumbnail", { header: "缩略图" }),
+  columnHelper.accessor("thumbnail", {
+    header: "缩略图",
+    cell: (info) => (
+      <div>
+        <Image
+          src={info.getValue() || "public/no-image.png"}
+          alt="thumbnail"
+          width={100}
+          height={100}
+        />
+      </div>
+    ),
+  }),
   columnHelper.accessor("published", {
     header: "发布状态",
     cell: (info) => {

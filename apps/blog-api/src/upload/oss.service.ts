@@ -23,7 +23,7 @@ export class OssService {
    * @param file Express.Multer.File 对象
    * @param folder 指定存储目录
    */
-  async uploadFile(file: Express.Multer.File, folder: string = "blog") {
+  async uploadFile(file: Express.Multer.File, folder: string = "upload") {
     // 生成唯一文件名：时间戳 + 随机数 + 原后缀
     const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
     const targetPath = `${folder}/${filename}`;
@@ -37,6 +37,31 @@ export class OssService {
       };
     } catch (error) {
       throw new Error(`OSS Upload Error: ${error}`);
+    }
+  }
+
+  async getFileList(prefix: string = "thumbnail/", maxKeys: number = 20) {
+    try {
+      const result = await this.client.list(
+        {
+          prefix: prefix, // 只列出某个目录下的文件
+          "max-keys": maxKeys, // 每次获取的数量
+        },
+        {},
+      );
+
+      // 格式化返回数据
+      return (
+        result.objects?.map((obj) => ({
+          name: obj.name,
+          // 使用你的自定义域名拼接完整 URL
+          url: `https://staycool.top/${obj.name}`,
+          lastModified: obj.lastModified,
+          size: obj.size,
+        })) || []
+      );
+    } catch (error) {
+      throw new Error(`获取文件列表失败: ${error}`);
     }
   }
 }

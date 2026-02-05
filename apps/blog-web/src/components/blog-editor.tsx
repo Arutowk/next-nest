@@ -16,6 +16,7 @@ import { Highlight } from "@tiptap/extension-highlight";
 import { Image } from "@tiptap/extension-image";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
+import { TableKit } from "@tiptap/extension-table";
 import { TaskItem } from "@tiptap/extension-task-item";
 import { TaskList } from "@tiptap/extension-task-list";
 import { TextAlign } from "@tiptap/extension-text-align";
@@ -63,6 +64,7 @@ import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu";
 import { MarkButton } from "@/components/tiptap-ui/mark-button";
 import { TextAlignButton } from "@/components/tiptap-ui/text-align-button";
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button";
+import { TableButton } from "./tiptap-ui/table-button/table-button";
 
 // --- Icons ---
 import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon";
@@ -84,6 +86,7 @@ import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss";
 import "@/styles/_variables.scss"; // import '@/styles/_keyframes-animations.scss';
+import "@/styles/table.css";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -148,6 +151,7 @@ const MainToolbarContent = ({
 
       <ToolbarGroup>
         <ImageUploadButton text="Add" />
+        <TableButton />
       </ToolbarGroup>
 
       <Spacer />
@@ -248,7 +252,6 @@ export default function BlogEditor({
       Typography,
       Superscript,
       Subscript,
-
       Selection,
       ImageUploadNode.configure({
         accept: "image/*",
@@ -259,6 +262,9 @@ export default function BlogEditor({
       }),
       TrailingNode,
       Link.configure({ openOnClick: false }),
+      TableKit.configure({
+        table: { resizable: true },
+      }),
     ],
     content: defaultContent,
     editable: !readonly,

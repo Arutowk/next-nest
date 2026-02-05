@@ -1,6 +1,8 @@
 import {
   BadRequestException,
   Controller,
+  Get,
+  Param,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -33,5 +35,10 @@ export class UploadController {
       success: true,
       data: result,
     };
+  }
+
+  @Get("list")
+  async listFiles(@Param("locate") locate: string) {
+    return await this.ossService.getFileList(locate);
   }
 }
