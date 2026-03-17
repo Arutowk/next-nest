@@ -9,6 +9,7 @@ type Props = {
 const UpdatePostPage = async (props: Props) => {
   const params = await props.params;
   const post = await fetchPostById(parseInt(params.id));
+  if(!!!post)return null
   return (
     <>
       <h2 className="text-lg text-center font-bold text-slate-700">

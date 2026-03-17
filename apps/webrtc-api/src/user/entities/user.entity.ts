@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { Exclude } from 'class-transformer';
 import {
   BeforeInsert,

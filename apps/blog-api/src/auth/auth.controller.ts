@@ -1,10 +1,13 @@
 import { Controller, Get, Request, Res, UseGuards } from "@nestjs/common";
-import { Request as ExpressRequest, Response } from "express";
+import { Request as ERequest, Response } from "express";
 import { User } from "src/generated/prisma/client";
 
 import { AuthService } from "./auth.service";
 import { GoogleAuthGuard } from "./guards/google-auth/google-auth.guard";
 import { JwtAuthGuard } from "./guards/jwt-auth/jwt-auth.guard";
+
+type ExpressRequest = ERequest & { user: User };
+type ExpressResponse = Response & { redirect: (url: string) => void };
 
 @Controller("auth")
 export class AuthController {
@@ -15,7 +18,7 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get("google/callback")
-  async googleCallback(@Request() req: ExpressRequest, @Res() res: Response) {
+  async googleCallback(@Request() req: ExpressRequest, @Res() res: ExpressResponse) {
     console.log("user111:", req.user);
 
     const userData = await this.authService.login(req.user as User);

@@ -359,7 +359,7 @@ export const ImageUploadNode: React.FC<NodeViewProps> = (props) => {
     const url = await uploadFiles(files)
 
     if (url) {
-      const pos = props.getPos()
+      const pos = props.getPos()!
       const filename = files[0]?.name.replace(/\.[^/.]+$/, "") || "unknown"
 
       props.editor

@@ -41,9 +41,9 @@ const Comments = ({ postId, user }: Props) => {
           ? Array.from({ length: 12 }).map((_, index) => (
               <CommentCardSkeleton key={index} />
             ))
-          : data?.comments.map((comment) => (
+          : data?.comments?data.comments.map((comment) => (
               <CommentCard key={comment.id} comment={comment} />
-            ))}
+            )):null}
       </div>
       <CommentPagination
         className="p-2"

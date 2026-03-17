@@ -4,11 +4,24 @@ import Pagination from '@/components/pagination';
 import { type PostType } from '@/lib/types/modelTypes';
 
 type Props = {
-  posts: PostType[];
+  posts:{
+      id: number;
+      title: string;
+      slug: string | null;
+      thumbnail: string | null;
+      published: boolean;
+      createdAt: Date;
+      updatedAt: Date;
+      publishedAt: Date | null;
+      content: string;
+      _count: {
+          likes: number;
+          comments: number;
+    };
+  }[];
   currentPage: number;
   totalPages: number;
 };
-
 const PostList = ({ posts, currentPage, totalPages }: Props) => {
   return (
     <>

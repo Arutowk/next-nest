@@ -6,7 +6,21 @@ import PostActions from "./postActions";
 import { type PostType } from "@/lib/types/modelTypes";
 
 type Props = {
-  post: PostType;
+  post:{
+    id: number;
+    title: string;
+    slug: string | null;
+    thumbnail: string | null;
+    published: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    publishedAt: Date | null;
+    content: string;
+    _count: {
+        likes: number;
+        comments: number;
+    };
+  }
 };
 
 const PostListItem = ({ post }: Props) => {

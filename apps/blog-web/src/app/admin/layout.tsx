@@ -2,10 +2,11 @@
 
 import AppSidebar from "@/components/admin/app-sidebar";
 import { TabProvider } from "@/hooks/use-admin-tabs";
-import { type PropsWithChildren } from "react";
+import { Suspense, type PropsWithChildren } from "react";
 
 export default function AdminLayout({ children }: PropsWithChildren) {
   return (
+    <Suspense fallback={<>...</>}>
     <TabProvider>
       <main className="h-screen w-screen flex  bg-[#e4e9f5] dark:bg-[#1a1a2e] transition-all duration-500">
         <AppSidebar />
@@ -18,5 +19,6 @@ export default function AdminLayout({ children }: PropsWithChildren) {
         </div>
       </main>
     </TabProvider>
+    </Suspense>
   );
 }

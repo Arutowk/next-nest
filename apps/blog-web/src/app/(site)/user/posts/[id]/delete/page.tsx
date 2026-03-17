@@ -43,7 +43,7 @@ const DeletePostPage = async (props: Props) => {
         </p>
         <hr className="m-3" />
         <p className="text-slate-400 font-bold">Title of the Post</p>
-        <p>{post.title}</p>
+        <p>{post?.title}</p>
       </CardDescription>
       <CardContent>
         <form action={formAction} className="flex justify-end gap-2">

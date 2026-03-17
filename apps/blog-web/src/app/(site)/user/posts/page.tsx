@@ -23,7 +23,7 @@ const UserPostPage = async ({ searchParams }: Props) => {
         <PostList
           posts={posts}
           currentPage={page ? +page : 1}
-          totalPages={Math.ceil(totalPosts / DEFAULT_PAGE_SIZE)}
+          totalPages={Math.ceil(totalPosts! / DEFAULT_PAGE_SIZE)}
         />
       )}
     </div>

@@ -37,9 +37,9 @@ const UpsertPostForm = ({ state, formAction }: Props) => {
     <>
       <Toaster richColors={true} />
       <div>
-        {!!imageUrl || !!state?.data?.previousThumbnailUrl ? (
+        {!!imageUrl || !!state?.data?.existing_thumbnail ? (
           <Image
-            src={(imageUrl || state?.data?.previousThumbnailUrl) ?? ""}
+            src={(imageUrl || state?.data?.existing_thumbnail) ?? ""}
             alt="post thumbnail"
             width={200}
             height={150}

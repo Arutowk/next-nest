@@ -17,7 +17,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { saveComment } from "@/lib/actions/commentActions";
 import { type SessionUser } from "@/lib/session";
-import { type CommentType } from "@/lib/types/modelTypes";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -27,8 +26,16 @@ type Props = {
   refetch: (options?: RefetchOptions) => Promise<
     QueryObserverResult<
       {
-        comments: CommentType[];
-        count: number;
+        comments: {
+          id: number;
+          content: string;
+          createdAt: Date;
+          author: {
+              name: string;
+              avatar: string | null;
+          };
+        }[]|undefined;
+        count: number|undefined;
       },
       Error
     >

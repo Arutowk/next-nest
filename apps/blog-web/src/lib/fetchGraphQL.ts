@@ -23,7 +23,7 @@ export async function fetchGraphQL<TResult, TVariables>(
   const result = await response.json();
   if (result.errors) {
     console.error("GraphQL errors:", result.errors);
-    toast.error(result.errors.message);
+    toast?.error(result.errors.message);
   }
 
   return result as { data?: TResult; errors?: { message: string }[] };
@@ -49,7 +49,7 @@ export async function authFetchGraphQL<TResult, TVariables>(
   const result = await response.json();
   if (result.errors) {
     console.error("GraphQL errors:", result.errors);
-    toast.error(result.errors.message);
+    toast?.error(result.errors.message);
   }
 
   return result as { data?: TResult; errors?: { message: string }[] };

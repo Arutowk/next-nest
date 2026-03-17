@@ -7,10 +7,26 @@ import type { Tag } from "blog-api";
 
 import UpsertPostForm from "@/app/(site)/user/create-post/_components/upsertPostForm";
 import { updatePost } from "@/lib/actions/postActions";
-import { type PostType } from "@/lib/types/modelTypes";
 
 type Props = {
-  post: Omit<PostType, "slug" | "updatedAt" | "_count" | "authorId">;
+  post:  {
+    id: number;
+    title: string;
+    slug: string | null;
+    thumbnail: string | null;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+    publishedAt: Date | null;
+    published: boolean;
+    author: {
+        name: string;
+    };
+    tags: {
+        id: number;
+        name: string;
+    }[];
+};
 };
 
 const UpdatePostContainer = ({ post }: Props) => {
@@ -22,7 +38,7 @@ const UpdatePostContainer = ({ post }: Props) => {
       content: JSON.parse(post?.content).json ?? post.content,
       published: post.published ? "on" : undefined,
       tags: post.tags?.map((tag: Tag) => tag.name).join(","),
-      previousThumbnailUrl: post.thumbnail ?? undefined,
+      existing_thumbnail: post.thumbnail ?? undefined,
     },
   });
   const router = useRouter();

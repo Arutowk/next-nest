@@ -1,17 +1,24 @@
 import { UserIcon } from '@heroicons/react/20/solid';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { type CommentType } from '@/lib/types/modelTypes';
 
 type Props = {
-  comment: CommentType;
+  comment: {
+        id: number;
+        content: string;
+        createdAt: Date;
+        author: {
+            name: string;
+            avatar: string | null;
+        };
+    };
 };
 const CommentCard = ({ comment }: Props) => {
   return (
     <div className="p-2 shadow rounded">
       <div className="flex gap-2 text-slate-500 items-center">
         <Avatar className="border-2">
-          <AvatarImage src={comment.author.avatar} />
+          <AvatarImage src={comment.author.avatar!} />
           <AvatarFallback>
             <UserIcon className="w-8" />
           </AvatarFallback>
